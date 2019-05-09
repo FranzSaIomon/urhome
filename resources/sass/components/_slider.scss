@@ -3,7 +3,7 @@
 }
 
 .noUi-connect {
-  background: $blue;
+  background: $purple;
 }
 
 .noUi-horizontal .noUi-handle {
@@ -25,5 +25,7 @@
     display: flex;
     justify-content: space-between;
     margin-top: 12.5px;
+    font-size: $font-size-sm;
+    color: #666;
   }
 }

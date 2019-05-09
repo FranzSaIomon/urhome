@@ -16505,7 +16505,7 @@ readers do not read off random characters that represent icons */
 }
 
 .noUi-connect {
-  background: #3490dc;
+  background: #9561e2;
 }
 
 .noUi-horizontal .noUi-handle {
@@ -16526,6 +16526,8 @@ readers do not read off random characters that represent icons */
   display: flex;
   justify-content: space-between;
   margin-top: 12.5px;
+  font-size: 0.7875rem;
+  color: #666;
 }
 
 body {
