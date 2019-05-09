@@ -1,0 +1,29 @@
+.noUi-horizontal {
+  height: 10px;
+}
+
+.noUi-connect {
+  background: $blue;
+}
+
+.noUi-horizontal .noUi-handle {
+  cursor: pointer;
+  border-radius: 25px;
+  height: 25px;
+  width: 25px;
+  box-shadow: none;
+  border: 1px solid #8888;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+}
+
+.slider {
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12.5px;
+  }
+}

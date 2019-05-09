@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top" id="nav">
     <a class="navbar-brand" href="#">
         <img src="{{ asset('img/icons/logo.svg') }}" alt=""> 
-        <span>urhome</span>
+        <span><b>urhome</b></span>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

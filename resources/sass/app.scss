@@ -4,6 +4,9 @@
 // Variables
 @import 'variables';
 
+// NoUISlider
+@import '~nouislider/distribute/nouislider.min.css';
+
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 @import '~bootstrap/scss/functions';
@@ -18,8 +21,17 @@
 // Page CSS
 @import 'page/home';
 
+// Component CSS
+@import 'components/slider';
+
 body {
     min-height: 1000px;
+}
+
+*:hover,
+*:active,
+*:focus {
+    box-shadow: none !important;
 }
 
 .fas,
@@ -58,7 +70,6 @@ body {
 
     a.navbar-brand {
         * {
-            vertical-align: middle;
             transition: all 250ms ease-in;
         }
 
@@ -81,7 +92,7 @@ body {
 
         ul {
             &:first-child {
-                flex: 7 1;
+                flex: 6 1;
             }
 
             &:nth-child(2) {
@@ -113,12 +124,12 @@ body {
         border-bottom: 1px solid $nav-bg-accent;
 
         .dropdown-item {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.7);
             opacity: 0.5;
             transition: color 250ms ease-in-out;
 
             &:hover {
-                color: rgba(255, 255, 255, 0.75);
+                color: rgba(255, 255, 255, 0.9);
                 background-color: inherit;
 
             }

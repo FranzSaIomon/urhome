@@ -2,6 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
+                <br/>
                 <h1>Find Your Next Home</h1>
             </div>
         </div>  
@@ -40,7 +41,7 @@
             <form action="" class="container">
                 <div class="row">
                     <div class="col-md-3 form-group">
-                        <select class="custom-select custom-select-sm">
+                        <select name="type" class="custom-select custom-select-sm">
                             <option value="1">Townhouse</option>
                             <option value="2">Commercial</option>
                             <option value="3">Building</option>
@@ -61,7 +62,7 @@
                     <div class="col-md-7">
                         <div class="form-group iconed">
                             <i class="fas fa-search"></i>
-                            <input type="text" name="q" id="q" placeholder="Search Here..." class="form-control form-control-sm">
+                            <input type="text" name="q" id="q" placeholder="Search for property, developer, or location..." class="form-control form-control-sm">
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -69,6 +70,7 @@
                     </div>
                 </div>
             </form>
+            <br/>
     </div>
 </div>
 
@@ -82,12 +84,30 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="">
+            <form action="" id="filter">
                 <div class="modal-body">
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-6">
-                                    
+                                    <div class="form-group">
+                                        <label for="search">Search</label>
+                                        <input type="text" class="form-control form-control-sm" name="q" id="search" placeholder="Search for property, developer, or location...">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="location">Location</label>
+                                        <input type="text" name="location" id="location" class="form-control form-control-sm" placeholder="Location...">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="slider">
+                                            <slider name="sl1" min=0 steps=1 max=10></slider>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <slider name="sl2" min=0 steps=1 max=10></slider>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
     
