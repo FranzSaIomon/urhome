@@ -14,6 +14,7 @@
     <link rel="shortcut icon" href="{{ asset('img/icons/favicon.ico') }}" type="image/x-icon">
 </head>
 <body>
+    @csrf
     @include('includes.navigation')
     <div class="content">
         @yield('content')

@@ -11,6 +11,7 @@
 @import '~bootstrap/scss/mixins/_breakpoints';
 
 // Fontawesome
+@import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/regular';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
 
@@ -28,6 +29,22 @@ body {
     }
     &.right {
         margin-right: 0.5px;
+    }
+}
+
+.iconed {
+    position: relative;
+    .fas,
+    .far {
+        position: absolute;
+        top: 50%;
+        left: 8px;
+        transform: translateY(-50%);
+        font-size: $font-size-base;
+    }
+
+    input {
+        padding-left: calc( 16px + 0.9rem) !important;
     }
 }
 
@@ -61,6 +78,16 @@ body {
 
     #navbarCollapse {
         margin: 0 15px 0 25px;
+
+        ul {
+            &:first-child {
+                flex: 7 1;
+            }
+
+            &:nth-child(2) {
+                flex: 1 0;
+            }
+        }
     }
 
     @mixin darken {

@@ -14,6 +14,8 @@ $nav-bg-accent: #222;
 
 // Colors
 $blue: #3490dc;
+$blue-hover: darken($blue, 5%);
+$blue-active: light($blue, 5%);
 $indigo: #6574cd;
 $purple: #9561e2;
 $pink: #f66d9b;
@@ -23,3 +25,7 @@ $yellow: #ffed4a;
 $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
+
+$palette: #111e1e;
+$palette-accent: #354747;
+$palette-highlight: #869090;

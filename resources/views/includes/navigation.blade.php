@@ -9,22 +9,16 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home</a>
+                <a class="nav-link" href="/">Home</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="propertiesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Properties
-                </a>
-                <div class="dropdown-menu" aria-labelledby="propertiesDropdown">
-                    <a class="dropdown-item" href="#">View Properties</a>
-                    <a class="dropdown-item" href="#">Search Properties</a>
-                </div>
+                <a href="/properties" class="nav-link">Properties</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">About Us</a>
+                <a class="nav-link" href="/about">About Us</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Contact Us</a>
+                <a class="nav-link" href="/contact">Contact Us</a>
             </li>
             
         </ul>
