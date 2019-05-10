@@ -27,20 +27,10 @@
                     <div class="col-md-3 form-group">
                         <select name="type" class="custom-select custom-select-sm">
                             <option value="1">Townhouse</option>
-                            <option value="2">Commercial</option>
-                            <option value="3">Building</option>
                             <option value="4">Condominium</option>
-                            <option value="5">Warehosue</option>
                             <option value="6">House</option>
-                            <option value="7">Lot</option>
-                            <option value="8">Beachfront</option>
-                            <option value="9">Storage</option>
-                            <option value="10">Office</option>
-                            <option value="11">Island</option>
-                            <option value="12">Memorial Lot</option>
                             <option value="13">Service Apartment</option>
                             <option value="14">Condotel</option>
-                            <option value="15">Retail</option>
                         </select>
                     </div>
                     <div class="col-md-7">
@@ -120,17 +110,9 @@
                                         <div class="form-group">
                                             <multi-select label="Property Type" name="property_type" v-bind:options="[
                                                 {name: 'Townhouse', value: 1},
-                                                {name: 'Commercial', value: 2},
-                                                {name: 'Building', value: 3},
                                                 {name: 'Condominium', value: 4},
-                                                {name: 'Warehosue', value: 5},
                                                 {name: 'House', value: 6},
                                                 {name: 'Lot', value: 7},
-                                                {name: 'Beachfront', value: 8},
-                                                {name: 'Storage', value: 9},
-                                                {name: 'Office', value: 10},
-                                                {name: 'Island', value: 11},
-                                                {name: 'Memorial Lot', value: 12},
                                                 {name: 'Service Apartment', value: 13},
                                                 {name: 'Condotel', value: 14},
                                                 {name: 'Retail', value: 15},

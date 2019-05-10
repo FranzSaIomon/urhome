@@ -26,8 +26,30 @@
 @import 'components/property';
 @import 'components/multiselect';
 
+@mixin darken {
+    background-color: $nav-bg;
+    border-bottom: 1px solid $nav-bg-accent;
+
+    a.navbar-brand {
+        font-size: 1.5rem;
+
+        img {
+            height: 2rem;
+            width: 2rem;
+        }
+    }
+}
+
 body {
     min-height: 1000px;
+
+    &.nolanding {
+        margin-top: 70px;
+
+        #nav {
+            @include darken;
+        }
+    }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -121,21 +143,7 @@ h1, h2, h3, h4, h5, h6 {
         }
     }
 
-    @mixin darken {
-        background-color: $nav-bg;
-        border-bottom: 1px solid $nav-bg-accent;
-
-        a.navbar-brand {
-            font-size: 1.5rem;
-
-            img {
-                height: 2rem;
-                width: 2rem;
-            }
-        }
-    }
-
-    &.moved {
+    &.moved{
         @include darken;
     }
 

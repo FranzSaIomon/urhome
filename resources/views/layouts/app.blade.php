@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
     <link rel="shortcut icon" href="{{ asset('img/icons/favicon.ico') }}" type="image/x-icon">
 </head>
-<body>
+<body class="{{ isset($nolanding) ? $nolanding : '' }}">
     @include('includes.navigation')
     <div class="content">
         @yield('content')
