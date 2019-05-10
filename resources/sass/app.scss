@@ -23,9 +23,25 @@
 
 // Component CSS
 @import 'components/slider';
+@import 'components/property';
+@import 'components/multiselect';
 
 body {
     min-height: 1000px;
+}
+
+.btn {
+    transition: color 100ms ease-in-out, background-color 100ms ease-in-out, border-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
+}
+
+.btn-outline-primary:not(:disabled):not(.disabled):active,
+.btn-outline-primary:not(:disabled):not(.disabled).active {
+    background-color: #2a79b9;
+}
+
+.btn-outline-secondary:not(:disabled):not(.disabled):active,
+.btn-outline-secondary:not(:disabled):not(.disabled).active {
+    background-color: #5c646b;
 }
 
 *:hover,

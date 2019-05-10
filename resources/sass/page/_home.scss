@@ -75,3 +75,12 @@
         }
     }
 }
+
+#advanced_purpose {
+    display: flex;
+
+    > button {
+        width: 100%;
+        margin: 10px;
+    }
+}

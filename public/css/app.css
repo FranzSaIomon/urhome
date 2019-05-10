@@ -16500,19 +16500,28 @@ readers do not read off random characters that represent icons */
   text-align: center;
 }
 
+#advanced_purpose {
+  display: flex;
+}
+
+#advanced_purpose > button {
+  width: 100%;
+  margin: 10px;
+}
+
 .noUi-horizontal {
   height: 10px;
 }
 
 .noUi-connect {
-  background: #9561e2;
+  background: #3490dc;
 }
 
 .noUi-horizontal .noUi-handle {
   cursor: pointer;
-  border-radius: 25px;
-  height: 25px;
-  width: 25px;
+  border-radius: 20px;
+  height: 20px;
+  width: 20px;
   box-shadow: none;
   border: 1px solid #8888;
 }
@@ -16522,16 +16531,64 @@ readers do not read off random characters that represent icons */
   display: none;
 }
 
+.slider .slider-header {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 10px;
+}
+
+.slider .slider-header > label {
+  flex: 3 0;
+}
+
+.slider .slider-header select {
+  flex: 1 1;
+}
+
+.slider .slider-header select + label {
+  text-align: center;
+}
+
 .slider .slider-labels {
   display: flex;
   justify-content: space-between;
   margin-top: 12.5px;
   font-size: 0.7875rem;
   color: #666;
+  margin-right: -10px;
+}
+
+.multi-select {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 991.98px) {
+  .multi-select {
+    justify-content: center;
+  }
+}
+
+.multi-select > button {
+  margin: 6px 3px;
 }
 
 body {
   min-height: 1000px;
+}
+
+.btn {
+  transition: color 100ms ease-in-out, background-color 100ms ease-in-out, border-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
+}
+
+.btn-outline-primary:not(:disabled):not(.disabled):active,
+.btn-outline-primary:not(:disabled):not(.disabled).active {
+  background-color: #2a79b9;
+}
+
+.btn-outline-secondary:not(:disabled):not(.disabled):active,
+.btn-outline-secondary:not(:disabled):not(.disabled).active {
+  background-color: #5c646b;
 }
 
 *:hover,

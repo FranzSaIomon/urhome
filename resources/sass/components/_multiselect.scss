@@ -1,0 +1,12 @@
+.multi-select {
+    display: flex;
+    flex-wrap: wrap;
+
+    @include media-breakpoint-down(md){
+        justify-content: center;
+    }
+
+    > button {
+        margin: 6px 3px;
+    }
+}

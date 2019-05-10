@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'UrHome') }} - {{ $title }}</title>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -15,7 +16,6 @@
     <link rel="shortcut icon" href="{{ asset('img/icons/favicon.ico') }}" type="image/x-icon">
 </head>
 <body>
-    @csrf
     @include('includes.navigation')
     <div class="content">
         @yield('content')

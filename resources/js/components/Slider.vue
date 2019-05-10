@@ -1,30 +1,96 @@
 <template>
     <div class="slider">
+        <div class="slider-header">
+            <select class="custom-select custom-select-sm" v-if="minimums" @change="updateLimits" v-model="min">
+                <option v-for="minimum in minimums" :value="minimum">{{returnDisplayValue(minimum)}}</option>
+            </select>
+            <label v-if="label">{{label}}</label>
+            <select class="custom-select custom-select-sm" v-if="maximums" @change="updateLimits" v-model="max">
+                <option v-for="maximum in maximums" :value="maximum">{{returnDisplayValue(maximum)}}</option>
+            </select>
+        </div>
         <div ref="slider"></div>
         <div class="slider-labels">
-            <span>{{start}}</span>
-            <span>{{end}}</span>
+            <div>
+                <b v-if="prefix">{{prefix}}</b>
+                <span v-if="start < min"> {{commaDisplayValue(min)}} </span>
+                <span v-else>{{commaDisplayValue(start)}}</span>
+                <i v-if="suffix">{{suffix}}</i>
+            </div>
+
+            <div>
+                <b v-if="prefix">{{prefix}}</b>
+                <span v-if="end == max && !inclusive">{{commaDisplayValue(end)}}+</span>
+                <span v-else-if="end > max && !inclusive">{{commaDisplayValue(max)}}+</span>
+                <span v-else-if="end > max && inclusive">{{commaDisplayValue(max)}}</span>
+                <span v-else>{{commaDisplayValue(end)}}</span>
+                <i v-if="suffix">{{suffix}}</i>
+            </div>
         </div>
-        <input type="hidden" :name="name" ref="value" :value="'[' + start + ',' + end + ']'">
+        <input type="hidden" :name="name" ref="value" :value="[start, end]">
     </div>
 </template>
 
 <script>
+    import CurrencyMixin from './mixins/CurrencyMixin';
+    
     export default {
+        mixins: [CurrencyMixin],
+        data() {
+            return {
+                min: parseInt(this.$attrs['min']) || 0,
+                max: parseInt(this.$attrs['max']) || 10,
+                start: parseInt(this.$attrs['start']),
+                end: parseInt(this.$attrs['end']),
+                step: parseInt(this.$attrs['step']) || 1,
+                name: this.$attrs['name'],
+                label: this.$attrs['label'],
+                maximums: this.$attrs['maximums'],
+                minimums: this.$attrs['minimums'],
+                inclusive: this.$attrs['inclusive'] || 'false',
+                prefix: this.$attrs['prefix'],
+                suffix: this.$attrs['suffix'],
+            }
+        },
         mounted() {
-            console.log('Component mounted.')
+            this.inclusive = (this.inclusive === 'true')
 
             /* In case no initial start and end range is given assume minmax is default */
             this.start = this.start || this.min
             this.end = this.end || this.max
 
-            const slider = noUiSlider.create(this.$refs['slider'], {
+            /* If maximums or minimums exists, split into array and filter out all valid values */
+            this.minimums = (this.minimums) ? this.minimums
+                                .replace(/\s+/, '')
+                                .split(',')
+                                .reduce((prev, curr) => {
+                                    let c = parseInt(curr)
+                                    if (c)
+                                        prev.push(c)
+
+                                    return prev
+                                }, [])
+                            : this.minimums;
+
+            this.maximums = (this.maximums) ? this.maximums
+                                .replace(/\s+/gi, '')
+                                .split(',')
+                                .reduce((prev, curr) => {
+                                    let c = parseInt(curr)
+                                    if (c)
+                                        prev.push(c)
+
+                                    return prev
+                                }, [])
+                            : this.maximums;
+
+            noUiSlider.create(this.$refs['slider'], {
                 start: [this.start || this.min, this.end || this.max],
-                step: this.steps || 1,
+                step: this.step,
                 connect: true,
                 range: {
-                    'min': this.min || 0,
-                    'max': this.max || 10
+                    'min': this.min,
+                    'max': this.max
                 }
             }).on('slide', adjust.bind(this))
 
@@ -33,14 +99,20 @@
                 this.end = parseInt(values[1])
             }
         },
-        data() {
-            return {
-                min: parseInt(this.$attrs['min']) || 0,
-                max: parseInt(this.$attrs['max']) || 10,
-                start: parseInt(this.$attrs['start']) || null,
-                end: parseInt(this.$attrs['end']) || null,
-                name: this.$attrs['name'],
+        methods: {
+            updateLimits(e) {
+
+                /* Update input in case current values are out of bounds */
+                this.start = (this.min > this.start) ? this.min : this.start;
+                this.end = (this.max < this.end) ? this.max : this.end;
+
+                this.$refs['slider'].noUiSlider.updateOptions({
+                    range: {
+                        min: this.min,
+                        max: this.max
+                    }
+                })
             }
-        }
+        },
     }
 </script>
