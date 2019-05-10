@@ -4,6 +4,7 @@
     @include('includes.landing')
     
     <div id="properties_cards">
-        <Properties :cards="cards"></Properties>
+        <Properties></Properties>
+        <button @click="add">Add</button>
     </div>
 @endsection

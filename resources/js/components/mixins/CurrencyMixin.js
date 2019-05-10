@@ -10,17 +10,8 @@ export default {
             else
                 return (val / 1000000000) + "B"
         },
-        commaDisplayValue (val) {
-            return (val && val > 999) ? 
-                (val + '').split('').reduceRight((p, c, i, a) => {
-                    let rIndex = a.length - i;
-                    if (rIndex % 3 == 0 && rIndex != 0 && rIndex != a.length)
-                        p = ',' + c + p
-                    else
-                        p = c + '' + p
-                    return p;
-                }, "") 
-            : val
+        commaDisplayValue (val, hasDeci=true) {
+            return val.toFixed(hasDeci ? 2 : 0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
         }
     }
 }

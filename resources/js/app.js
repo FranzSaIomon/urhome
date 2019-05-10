@@ -21,13 +21,48 @@ $(document).ready(() => {
         el: "#properties_cards",
         data: {
             cards: [{
-                id: 1
-            }, {
-                id: 2
-            }]
+                PropertyID: 1,
+                Name: "2 Bedroom Condominium",
+                City: "Pasig",
+                PropertyType: {
+                    PropertyType: "condominium"
+                },
+                Price: 1234567.00,
+                NumberOfBedrooms: 2,
+                NumberOfBathrooms: 3,
+                FloorArea: 190,
+                ListingType: {
+                    ListingType: "rent"
+                },
+                PropertyDocument: {
+                    ImageAttachment1: "https://via.placeholder.com/300",
+                    ImageAttachment2: "https://via.placeholder.com/300",
+                }
+            }],
+            count: 0,
         },
         methods: {
-            
+            add () {
+                this.cards.push({
+                    PropertyID: 1,
+                    Name: "2 Bedroom Condominium",
+                    City: "Pasig",
+                    PropertyType: {
+                        PropertyType: "condominium"
+                    },
+                    Price: 1234567.00,
+                    NumberOfBedrooms: 2,
+                    NumberOfBathrooms: 3,
+                    FloorArea: 190,
+                    ListingType: {
+                        ListingType: "rent"
+                    },
+                    PropertyDocument: {
+                        ImageAttachment1: "https://via.placeholder.com/300",
+                        ImageAttachment2: "https://via.placeholder.com/300",
+                    }
+                })
+            }
         }
     })
 })

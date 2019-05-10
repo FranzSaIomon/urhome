@@ -1,0 +1,60 @@
+.properties {
+    .card {
+        &:hover {
+            border: 1px solid $primary;
+        }
+
+        text-decoration: none;
+        position: relative;
+        margin-top: 30px;
+
+        .badge {
+            position: absolute;
+            top: 0.8em;
+            left: 0.8em;
+            color: #ffffff;
+            font-size: $font-size-base;
+            padding: 0.5em 1em;
+            text-transform: capitalize;
+
+            &.rent {
+                background-color: $green;
+            }
+
+            &.sale {
+                background-color: $yellow;
+            }
+        }
+
+        .card-subtitle {
+            color: #888;
+            font-size: $font-size-sm;
+            font-family: $font-family-sans-serif;
+            text-transform: capitalize;
+        }
+
+        .card-title {
+            color: #222;
+            margin-top: 10px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            width: 100%;
+            font-weight: bold;
+            overflow: hidden;
+            font-size: $font-size-lg;
+
+            &.price {
+                font-size: 1rem;
+                font-weight: normal;
+                color: #555;
+            }
+        }
+
+        .footer {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: $font-size-sm;
+        }
+    }
+}

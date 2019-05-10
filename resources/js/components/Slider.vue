@@ -13,17 +13,17 @@
         <div class="slider-labels">
             <div>
                 <b v-if="prefix">{{prefix}}</b>
-                <span v-if="start < min"> {{commaDisplayValue(min)}} </span>
-                <span v-else>{{commaDisplayValue(start)}}</span>
+                <span v-if="start < min"> {{commaDisplayValue(min, this.currency)}} </span>
+                <span v-else>{{commaDisplayValue(start, this.currency)}}</span>
                 <i v-if="suffix">{{suffix}}</i>
             </div>
 
             <div>
                 <b v-if="prefix">{{prefix}}</b>
-                <span v-if="end == max && !inclusive">{{commaDisplayValue(end)}}+</span>
-                <span v-else-if="end > max && !inclusive">{{commaDisplayValue(max)}}+</span>
-                <span v-else-if="end > max && inclusive">{{commaDisplayValue(max)}}</span>
-                <span v-else>{{commaDisplayValue(end)}}</span>
+                <span v-if="end == max && !inclusive">{{commaDisplayValue(end, this.currency)}}+</span>
+                <span v-else-if="end > max && !inclusive">{{commaDisplayValue(max, this.currency)}}+</span>
+                <span v-else-if="end > max && inclusive">{{commaDisplayValue(max, this.currency)}}</span>
+                <span v-else>{{commaDisplayValue(end, this.currency)}}</span>
                 <i v-if="suffix">{{suffix}}</i>
             </div>
         </div>
@@ -50,10 +50,12 @@
                 inclusive: this.$attrs['inclusive'] || 'false',
                 prefix: this.$attrs['prefix'],
                 suffix: this.$attrs['suffix'],
+                currency: this.$attrs['currency'] || 'false'
             }
         },
         mounted() {
             this.inclusive = (this.inclusive === 'true')
+            this.currency = (this.currency === 'true')
 
             /* In case no initial start and end range is given assume minmax is default */
             this.start = this.start || this.min

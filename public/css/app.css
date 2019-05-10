@@ -16558,6 +16558,65 @@ readers do not read off random characters that represent icons */
   margin-right: -10px;
 }
 
+.properties .card {
+  text-decoration: none;
+  position: relative;
+  margin-top: 30px;
+}
+
+.properties .card:hover {
+  border: 1px solid #3490dc;
+}
+
+.properties .card .badge {
+  position: absolute;
+  top: 0.8em;
+  left: 0.8em;
+  color: #ffffff;
+  font-size: 0.9rem;
+  padding: 0.5em 1em;
+  text-transform: capitalize;
+}
+
+.properties .card .badge.rent {
+  background-color: #38c172;
+}
+
+.properties .card .badge.sale {
+  background-color: #ffed4a;
+}
+
+.properties .card .card-subtitle {
+  color: #888;
+  font-size: 0.7875rem;
+  font-family: "Roboto", sans-serif;
+  text-transform: capitalize;
+}
+
+.properties .card .card-title {
+  color: #222;
+  margin-top: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  font-weight: bold;
+  overflow: hidden;
+  font-size: 1.125rem;
+}
+
+.properties .card .card-title.price {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #555;
+}
+
+.properties .card .footer {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7875rem;
+}
+
 .multi-select {
   display: flex;
   flex-wrap: wrap;
@@ -16575,6 +16634,15 @@ readers do not read off random characters that represent icons */
 
 body {
   min-height: 1000px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Oxygen", sans-serif;
 }
 
 .btn {

@@ -1,6 +1,8 @@
 <template>
-    <div class="properties">
-        <propertycard v-for="card in cards" v-bind:card="card" v-bind:key="card.id"></propertycard>
+    <div class="container">
+        <div class="row properties">
+            <propertycard v-for="card in cards" v-bind:card="card" v-bind:key="card.PropertyID"></propertycard>
+        </div>
     </div>
 </template>
 
@@ -10,14 +12,12 @@
     export default {
         data() {
             return {
+                cards: this.$root.cards || [],
                 loading: false
             }
         },
-        props: {
-            cards: Array
-        },
         mounted() {
-            
+            console.log(this.cards)
         },
         components: {
             'propertycard': PropertyCard

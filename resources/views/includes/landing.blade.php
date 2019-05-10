@@ -93,7 +93,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <slider label="Price Range" inclusive="true" name="price_range" min=0 max=1000000 
+                                            <slider label="Price Range" inclusive="true" name="price_range" min=0 max=1000000 currency="true"
                                             step=1 maximums="10000, 1000000, 10000000, 10000000, 1000000000" prefix="&#8369;"></slider>
                                         </div>
 

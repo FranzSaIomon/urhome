@@ -1824,17 +1824,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      cards: this.$root.cards || [],
       loading: false
     };
   },
-  props: {
-    cards: Array
+  mounted: function mounted() {
+    console.log(this.cards);
   },
-  mounted: function mounted() {},
   components: {
     'propertycard': _PropertyCard__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
@@ -1851,14 +1853,42 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _mixins_CurrencyMixin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mixins/CurrencyMixin */ "./resources/js/components/mixins/CurrencyMixin.js");
 //
 //
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["card"],
+  mixins: [_mixins_CurrencyMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
   mounted: function mounted() {
     console.log('MOunted');
   }
@@ -1925,11 +1955,13 @@ __webpack_require__.r(__webpack_exports__);
       minimums: this.$attrs['minimums'],
       inclusive: this.$attrs['inclusive'] || 'false',
       prefix: this.$attrs['prefix'],
-      suffix: this.$attrs['suffix']
+      suffix: this.$attrs['suffix'],
+      currency: this.$attrs['currency'] || 'false'
     };
   },
   mounted: function mounted() {
     this.inclusive = this.inclusive === 'true';
+    this.currency = this.currency === 'true';
     /* In case no initial start and end range is given assume minmax is default */
 
     this.start = this.start || this.min;
@@ -19659,14 +19691,19 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "properties" },
-    _vm._l(_vm.cards, function(card) {
-      return _c("propertycard", { key: card.id, attrs: { card: card } })
-    }),
-    1
-  )
+  return _c("div", { staticClass: "container" }, [
+    _c(
+      "div",
+      { staticClass: "row properties" },
+      _vm._l(_vm.cards, function(card) {
+        return _c("propertycard", {
+          key: card.PropertyID,
+          attrs: { card: card }
+        })
+      }),
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -19690,7 +19727,72 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    " + _vm._s(_vm.card.id) + "\n")])
+  return _c("div", { staticClass: "col-md-4" }, [
+    _c(
+      "a",
+      {
+        staticClass: "card",
+        attrs: { href: "/properties/view/" + _vm.card.PropertyID }
+      },
+      [
+        _vm.card.ListingType.ListingType === "rent"
+          ? _c("div", { staticClass: "badge rent" }, [_vm._v("For Rent")])
+          : _c("div", { staticClass: "badge sale" }, [_vm._v("For Sale")]),
+        _vm._v(" "),
+        _c("img", {
+          staticClass: "card-img-top",
+          attrs: { src: _vm.card.PropertyDocument.ImageAttachment1, alt: "" }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c("h6", { staticClass: "card-subtitle" }, [
+            _vm._v(
+              _vm._s(_vm.card.PropertyType.PropertyType) +
+                " | " +
+                _vm._s(_vm.card.City)
+            )
+          ]),
+          _vm._v(" "),
+          _c("h4", { staticClass: "card-title" }, [
+            _vm._v(_vm._s(_vm.card.Name))
+          ]),
+          _vm._v(" "),
+          _c("h5", { staticClass: "card-title price" }, [
+            _vm._v("₱ " + _vm._s(_vm.commaDisplayValue(_vm.card.Price)))
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "footer" }, [
+            _c("span", { staticClass: "text-muted" }, [
+              _c("i", { staticClass: "fas fa-bed" }),
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.card.NumberOfBedrooms) +
+                  " Bed/s\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "text-muted" }, [
+              _c("i", { staticClass: "fas fa-bath" }),
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.card.NumberOfBathrooms) +
+                  " Baths/s\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "text-muted" }, [
+              _c("i", { staticClass: "fas fa-home" }),
+              _vm._v(
+                "\n                    " +
+                  _vm._s(_vm.card.FloorArea) +
+                  " sqm.\n                "
+              )
+            ])
+          ])
+        ])
+      ]
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -19809,9 +19911,15 @@ var render = function() {
         _vm._v(" "),
         _vm.start < _vm.min
           ? _c("span", [
-              _vm._v(" " + _vm._s(_vm.commaDisplayValue(_vm.min)) + " ")
+              _vm._v(
+                " " +
+                  _vm._s(_vm.commaDisplayValue(_vm.min, this.currency)) +
+                  " "
+              )
             ])
-          : _c("span", [_vm._v(_vm._s(_vm.commaDisplayValue(_vm.start)))]),
+          : _c("span", [
+              _vm._v(_vm._s(_vm.commaDisplayValue(_vm.start, this.currency)))
+            ]),
         _vm._v(" "),
         _vm.suffix ? _c("i", [_vm._v(_vm._s(_vm.suffix))]) : _vm._e()
       ]),
@@ -19820,12 +19928,24 @@ var render = function() {
         _vm.prefix ? _c("b", [_vm._v(_vm._s(_vm.prefix))]) : _vm._e(),
         _vm._v(" "),
         _vm.end == _vm.max && !_vm.inclusive
-          ? _c("span", [_vm._v(_vm._s(_vm.commaDisplayValue(_vm.end)) + "+")])
+          ? _c("span", [
+              _vm._v(
+                _vm._s(_vm.commaDisplayValue(_vm.end, this.currency)) + "+"
+              )
+            ])
           : _vm.end > _vm.max && !_vm.inclusive
-          ? _c("span", [_vm._v(_vm._s(_vm.commaDisplayValue(_vm.max)) + "+")])
+          ? _c("span", [
+              _vm._v(
+                _vm._s(_vm.commaDisplayValue(_vm.max, this.currency)) + "+"
+              )
+            ])
           : _vm.end > _vm.max && _vm.inclusive
-          ? _c("span", [_vm._v(_vm._s(_vm.commaDisplayValue(_vm.max)))])
-          : _c("span", [_vm._v(_vm._s(_vm.commaDisplayValue(_vm.end)))]),
+          ? _c("span", [
+              _vm._v(_vm._s(_vm.commaDisplayValue(_vm.max, this.currency)))
+            ])
+          : _c("span", [
+              _vm._v(_vm._s(_vm.commaDisplayValue(_vm.end, this.currency)))
+            ]),
         _vm._v(" "),
         _vm.suffix ? _c("i", [_vm._v(_vm._s(_vm.suffix))]) : _vm._e()
       ])
@@ -32008,12 +32128,49 @@ $(document).ready(function () {
     el: "#properties_cards",
     data: {
       cards: [{
-        id: 1
-      }, {
-        id: 2
-      }]
+        PropertyID: 1,
+        Name: "2 Bedroom Condominium",
+        City: "Pasig",
+        PropertyType: {
+          PropertyType: "condominium"
+        },
+        Price: 1234567.00,
+        NumberOfBedrooms: 2,
+        NumberOfBathrooms: 3,
+        FloorArea: 190,
+        ListingType: {
+          ListingType: "rent"
+        },
+        PropertyDocument: {
+          ImageAttachment1: "https://via.placeholder.com/300",
+          ImageAttachment2: "https://via.placeholder.com/300"
+        }
+      }],
+      count: 0
     },
-    methods: {}
+    methods: {
+      add: function add() {
+        this.cards.push({
+          PropertyID: 1,
+          Name: "2 Bedroom Condominium",
+          City: "Pasig",
+          PropertyType: {
+            PropertyType: "condominium"
+          },
+          Price: 1234567.00,
+          NumberOfBedrooms: 2,
+          NumberOfBathrooms: 3,
+          FloorArea: 190,
+          ListingType: {
+            ListingType: "rent"
+          },
+          PropertyDocument: {
+            ImageAttachment1: "https://via.placeholder.com/300",
+            ImageAttachment2: "https://via.placeholder.com/300"
+          }
+        });
+      }
+    }
   });
 });
 
@@ -32355,11 +32512,8 @@ __webpack_require__.r(__webpack_exports__);
       if (val < 1000) return val;else if (val < 1000000) return val / 1000 + "K";else if (val < 1000000000) return val / 1000000 + "M";else return val / 1000000000 + "B";
     },
     commaDisplayValue: function commaDisplayValue(val) {
-      return val && val > 999 ? (val + '').split('').reduceRight(function (p, c, i, a) {
-        var rIndex = a.length - i;
-        if (rIndex % 3 == 0 && rIndex != 0 && rIndex != a.length) p = ',' + c + p;else p = c + '' + p;
-        return p;
-      }, "") : val;
+      var hasDeci = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+      return val.toFixed(hasDeci ? 2 : 0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
     }
   }
 });

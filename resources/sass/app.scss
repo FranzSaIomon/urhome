@@ -30,6 +30,10 @@ body {
     min-height: 1000px;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-family-header;
+}
+
 .btn {
     transition: color 100ms ease-in-out, background-color 100ms ease-in-out, border-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }
