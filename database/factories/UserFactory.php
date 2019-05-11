@@ -17,6 +17,7 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(User::class, function (Faker $faker) {
+
     return [
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
@@ -25,7 +26,7 @@ $factory->define(User::class, function (Faker $faker) {
 
         'FirstName' => $faker->firstName(),
         'LastName' => $faker->lastName(),
-        'ContactNo' => $faker->mobileNumber(),
+        'ContactNo' => $faker->regexify("^(09|\+639)\d{9}$"),
         'BirthDate' => $faker->date($format = 'Y-m-d', $max = 'now'),
         'LotNo' => $faker->randomNumber(4),
         'Street' => $faker->streetName(),
@@ -33,6 +34,6 @@ $factory->define(User::class, function (Faker $faker) {
         'Country' => $faker->country(),
         'Status' => rand(0, 1),
         'ProfileImage' => 'https://via.placeholder.com/150',
-        'UserType' => rand(0, 2) // foreign key
+        'UserType' => rand(1, 3) // foreign key
     ];
 });

@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Property::class, function (Faker $faker) {
     return [
         "Name" => $faker->sentence(),
-        "Description" => $faker->sentences(),
+        "Description" => $faker->sentences(4, true),
         "Developer" => $faker->company(),
         'LotNo' => $faker->randomNumber(4),
         'Street' => $faker->streetName(),
@@ -22,9 +22,9 @@ $factory->define(Property::class, function (Faker $faker) {
         "NumberOfBathrooms" => rand(0, 20),
         "CapacityOfGarage" => rand(0, 20),
         "Verified" => rand(0, 1),
-        "UserID" => rand(0, 20),
-        "ListingTypeID" => rand(0, 20),
-        "StatusID" => rand(0, 1),
-        "PropertyTypeID" => rand(0, 20)
+        "UserID" => rand(1, 10),
+        "ListingTypeID" => rand(1, 2),
+        "StatusID" => rand(1, 4),
+        "PropertyTypeID" => rand(1, 5)
     ];
 });

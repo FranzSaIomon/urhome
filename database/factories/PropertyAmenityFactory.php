@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(PropertyAmenity::class, function (Faker $faker) {
     return [
-        'PropertyID' => rand(0, 100),
-        'AmenityID' => rand(0, 10)
+        'PropertyID' => rand(1, 100),
+        'AmenityID' => rand(1, 10)
     ];
 });
