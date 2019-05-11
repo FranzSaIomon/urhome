@@ -82,4 +82,8 @@ class PropertiesController extends Controller
     {
         //
     }
+
+    public function view(Request $request, Property $property) {
+        return view('properties.view')->with(['property' => $property, 'title' => $property->Name, 'nolanding' => 'nolanding']);
+    }
 }

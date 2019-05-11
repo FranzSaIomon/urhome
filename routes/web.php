@@ -16,4 +16,11 @@ Route::get('/', "PageController@index");
 Route::get('about', 'PageController@about');
 Route::get('contact', 'PageController@contact');
 
+
+Route::get('properties', 'PageController@search');
 Route::get('properties/search', 'PageController@search');
+Route::get('properties/view/{property}', 'PropertiesController@view');
+
+// Auth Routes
+Auth::routes(["verify" => true]);   
+Route::get('/logout', 'PageController@logout');
