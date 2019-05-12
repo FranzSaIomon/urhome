@@ -36,7 +36,6 @@
         props: ["card"],
         mixins: [CurrencyMixin],
         mounted() {
-            console.log('MOunted');
         }
     }
 </script>

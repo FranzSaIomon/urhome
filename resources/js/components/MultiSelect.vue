@@ -6,36 +6,35 @@
                 {{option.name}}
             </button>
         </div>
-        <input type="hidden" :name="name" :value="selected" ref="value">    
+        <input type="hidden" :name="name" v-model="values[name]" ref="value">    
     </div>
 </template>
 
 <script>
+    import InputMixin from './mixins/InputMixin';
+    
     export default {
-        props: {
-            options: {
-                type: Array
-            }
-        },
+        mixins: [InputMixin],
         mounted() {
-
+            
         },
         data() {
             return {
                 name: this.$attrs['name'],
                 label: this.$attrs['label'],
-                selected: []
             }
         },
         methods: {
             updateSelected(e) {
                 let target = $(e.target);
-
+                if (!this.values[this.name])
+                    this.values[this.name] = []
+                    
                 if (target.hasClass('active')) {
-                    this.selected = this.selected.filter(v => v != target.attr('data-value'))
+                    this.values[this.name] = this.values[this.name].filter(v => v != target.attr('data-value'))
                     target.removeClass('active')
                 } else {
-                    this.selected.push(target.attr('data-value'))
+                    this.values[this.name].push(target.attr('data-value'))
                     target.addClass('active')
                 }
 

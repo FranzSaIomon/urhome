@@ -13,6 +13,9 @@
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/_breakpoints';
 
+// Flag Icon
+@import 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.min.css';
+
 // Fontawesome
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/regular';
@@ -22,23 +25,12 @@
 @import 'page/home';
 
 // Component CSS
+@import 'components/navigation';
 @import 'components/slider';
 @import 'components/property';
 @import 'components/multiselect';
-
-@mixin darken {
-    background-color: $nav-bg;
-    border-bottom: 1px solid $nav-bg-accent;
-
-    a.navbar-brand {
-        font-size: 1.5rem;
-
-        img {
-            height: 2rem;
-            width: 2rem;
-        }
-    }
-}
+@import 'components/inputgroup';
+@import 'components/togglebuttons';
 
 body {
     min-height: 1000px;
@@ -70,10 +62,20 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #5c646b;
 }
 
+@include media-breakpoint-down(md) {
+    .btn-block {
+        margin-top: 10px;
+        margin-bottom: 0;
+        &:not(:first-child) {
+            margin: 10px 0;
+        }
+    }
+}
+
 *:hover,
 *:active,
 *:focus {
-    box-shadow: none !important;
+    box-shadow: none;
 }
 
 .fas,
@@ -99,113 +101,5 @@ h1, h2, h3, h4, h5, h6 {
 
     input {
         padding-left: calc( 16px + 0.9rem) !important;
-    }
-}
-
-.navbar-collapse {
-    justify-content: space-between;
-}
-
-.navbar {
-    transition: background-color 250ms 100ms, border-bottom 250ms 100ms;
-    border-bottom: 1px solid transparent;
-
-    a.navbar-brand {
-        * {
-            transition: all 250ms ease-in;
-        }
-
-        font-family: 'Oxygen';
-        font-size: 2rem;
-
-        img {
-            height: 3rem;
-            width: 3rem;
-            margin: 0 10px;
-        }
-    }
-    
-    a.nav-link {
-        transition: color 200ms ease-in-out;
-    }
-
-    #navbarCollapse {
-        margin: 0 15px 0 25px;
-
-        ul {
-            &:first-child {
-                flex: 6 1;
-            }
-
-            &:nth-child(2) {
-                flex: 1 0;
-            }
-        }
-    }
-
-    &.moved{
-        @include darken;
-    }
-
-    .dropdown-menu {
-        background-color: $nav-bg-accent;
-        border-bottom: 1px solid $nav-bg-accent;
-
-        .dropdown-item {
-            color: rgba(255, 255, 255, 0.7);
-            opacity: 0.5;
-            transition: color 250ms ease-in-out;
-
-            &:hover {
-                color: rgba(255, 255, 255, 0.9);
-                background-color: inherit;
-
-            }
-        }
-    }
-
-    @include media-breakpoint-down(md) {
-        @include darken;
-        
-        #navbarCollapse {
-            margin: 0;
-
-            li {
-                margin-top: 5px;
-
-                .dropdown-toggle {
-                    position: relative;
-
-                    &::after {
-                        position: absolute;
-                        top: 50%;
-                        right: 10px;
-                        transform: translateY(-50%);
-                        border-top: 0.5em solid;
-                        border-right: 0.5em solid transparent;
-                        border-left: 0.5em solid transparent;
-                    }
-                }
-            }
-        }
-
-        .navbar-toggler {
-            color: #ffffff;
-            border-color: #ffffff;
-
-            .navbar-toggler-icon {
-                background: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e")
-            }
-            
-            &:hover,
-            &:active {
-                background-color: #fff;
-                color: $nav-bg;
-
-                .navbar-toggler-icon {
-                    background: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(32, 32, 32, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e")
-                }
-            }
-        }
     }
 }

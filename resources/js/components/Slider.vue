@@ -27,15 +27,16 @@
                 <i v-if="suffix">{{suffix}}</i>
             </div>
         </div>
-        <input type="hidden" :name="name" ref="value" :value="[start, end]">
+        <input type="hidden" :name="name" ref="value" v-model="values[name]">
     </div>
 </template>
 
 <script>
     import CurrencyMixin from './mixins/CurrencyMixin';
+    import InputMixin from './mixins/InputMixin';
     
     export default {
-        mixins: [CurrencyMixin],
+        mixins: [CurrencyMixin, InputMixin],
         data() {
             return {
                 min: parseInt(this.$attrs['min']) || 0,
@@ -52,6 +53,9 @@
                 suffix: this.$attrs['suffix'],
                 currency: this.$attrs['currency'] || 'false'
             }
+        },
+        created(){
+            this.values[this.name] = [this.start || this.min, this.end || this.max]
         },
         mounted() {
             this.inclusive = (this.inclusive === 'true')
@@ -99,6 +103,9 @@
             function adjust(values, handle, unencoded, tap, positions) {
                 this.start = parseInt(values[0])
                 this.end = parseInt(values[1])
+
+                this.values[this.name][0] = this.start
+                this.values[this.name][1] = this.end
             }
         },
         methods: {

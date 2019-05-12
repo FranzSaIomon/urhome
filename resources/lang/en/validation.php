@@ -13,8 +13,11 @@ return [
     |
     */
 
+
+    'recaptcha' => 'Are you a robot?!?!',
     'accepted' => 'The :attribute must be accepted.',
     'active_url' => 'The :attribute is not a valid URL.',
+    'adult' => 'You must be at least 18 before continuing.',
     'after' => 'The :attribute must be a date after :date.',
     'after_or_equal' => 'The :attribute must be a date after or equal to :date.',
     'alpha' => 'The :attribute may only contain letters.',
@@ -58,7 +61,7 @@ return [
     'image' => 'The :attribute must be an image.',
     'in' => 'The selected :attribute is invalid.',
     'in_array' => 'The :attribute field does not exist in :other.',
-    'integer' => 'The :attribute must be an integer.',
+    'integer' => 'The :attribute must be a number.',
     'ip' => 'The :attribute must be a valid IP address.',
     'ipv4' => 'The :attribute must be a valid IPv4 address.',
     'ipv6' => 'The :attribute must be a valid IPv6 address.',
@@ -89,6 +92,7 @@ return [
         'string' => 'The :attribute must be at least :min characters.',
         'array' => 'The :attribute must have at least :min items.',
     ],
+    'mobile' => 'This field must be a valid mobile number',
     'not_in' => 'The selected :attribute is invalid.',
     'not_regex' => 'The :attribute format is invalid.',
     'numeric' => 'The :attribute must be a number.',

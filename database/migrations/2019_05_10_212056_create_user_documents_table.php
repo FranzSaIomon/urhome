@@ -15,10 +15,10 @@ class CreateUserDocumentsTable extends Migration
     {
         Schema::create('user_documents', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string("ImageAttachment1");
-            $table->string("ImageAttachment2");
-            $table->string("FileAttachment1");
-            $table->string("FileAttachment2");
+            $table->string("ImageAttachment1")->nullable();
+            $table->string("ImageAttachment2")->nullable();
+            $table->string("FileAttachment1")->nullable();
+            $table->string("FileAttachment2")->nullable();
             $table->bigInteger("UserID")->unsigned();
             $table->timestamps();
         });

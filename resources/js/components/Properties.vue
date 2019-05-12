@@ -17,7 +17,6 @@
             }
         },
         mounted() {
-            console.log(this.cards)
         },
         components: {
             'propertycard': PropertyCard

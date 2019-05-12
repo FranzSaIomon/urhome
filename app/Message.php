@@ -10,6 +10,15 @@ class Message extends Model
         "Message","TimeSent","TimeReceived","Receiver","Sender"
     ];
     
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'TimeSent' => 'datetime',
+        'TimeReceived' => 'datetime'
+    ];
     // Relationships
     public function user() {return $this->belongsToOne('App\User');}
 }

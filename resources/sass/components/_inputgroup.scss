@@ -1,0 +1,17 @@
+label {
+    font-weight: bold;
+}
+
+.country-select {
+    display: flex;
+    align-items: center;
+    span:not(.flag-icon) {
+        height: 28px;
+        width: 28px;
+        border: 1px solid #e2e2e2;
+    }
+
+    select {
+        margin-left: 10px;
+    }
+}

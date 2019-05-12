@@ -28,9 +28,9 @@ class CreateUsersTable extends Migration
             $table->string("Street", 100);
             $table->string("City", 100);
             $table->string("Country", 100);
-            $table->string('Status');
-            $table->string('ProfileImage');
-            $table->bigInteger('UserType')->unsigned(); // user type foreign key
+            $table->string('Status')->default('No significant status');
+            $table->string('ProfileImage')->default('https://via.placeholder.com/30');
+            $table->bigInteger('UserType')->unsigned()->default(1); // user type foreign key
 
             $table->rememberToken();
             $table->timestamps();
