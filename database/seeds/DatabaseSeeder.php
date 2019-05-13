@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PropertySeeder::class);
         $this->call(PropertyAmenitySeeder::class);
         $this->call(UserDocumentSeeder::class);
+        $this->call(PropertyDocumentSeeder::class);
 
         Model::reguard();
     }

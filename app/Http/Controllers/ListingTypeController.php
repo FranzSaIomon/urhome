@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Property;
+use App\ListingType;
 use Illuminate\Http\Request;
 
-class PropertiesController extends Controller
+class ListingTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class PropertiesController extends Controller
      */
     public function index()
     {
-        //
+        return ListingType::all();
     }
 
     /**
@@ -41,10 +41,10 @@ class PropertiesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Property  $property
+     * @param  \App\ListingType  $listingType
      * @return \Illuminate\Http\Response
      */
-    public function show(Property $property)
+    public function show(ListingType $listingType)
     {
         //
     }
@@ -52,10 +52,10 @@ class PropertiesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Property  $property
+     * @param  \App\ListingType  $listingType
      * @return \Illuminate\Http\Response
      */
-    public function edit(Property $property)
+    public function edit(ListingType $listingType)
     {
         //
     }
@@ -64,10 +64,10 @@ class PropertiesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Property  $property
+     * @param  \App\ListingType  $listingType
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Property $property)
+    public function update(Request $request, ListingType $listingType)
     {
         //
     }
@@ -75,15 +75,11 @@ class PropertiesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Property  $property
+     * @param  \App\ListingType  $listingType
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Property $property)
+    public function destroy(ListingType $listingType)
     {
         //
-    }
-
-    public function view(Request $request, Property $property) {
-        return view('properties.view')->with(['property' => $property, 'title' => $property->Name, 'nolanding' => 'nolanding']);
     }
 }

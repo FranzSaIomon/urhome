@@ -11,5 +11,5 @@ class PropertyType extends Model
     ];
     
     // Relationships
-    public function property() {return $this->belongsToMany('App\Property');}
+    public function property() {return $this->hasMany('App\Property', 'id', 'PropertyID');}
 }

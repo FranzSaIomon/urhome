@@ -16509,6 +16509,14 @@ readers do not read off random characters that represent icons */
   margin: 10px;
 }
 
+.content > .container-fluid {
+  padding: 3em;
+}
+
+.content > .container-fluid .filter {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+}
+
 .navbar-collapse {
   justify-content: space-between;
 }
@@ -16806,6 +16814,7 @@ label {
 }
 
 .toggle-buttons button {
+  text-transform: capitalize;
   padding: 5px 25px;
   margin: 0 10px;
   border: 1px solid #3490dc;

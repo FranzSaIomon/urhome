@@ -27,7 +27,7 @@
                 <i v-if="suffix">{{suffix}}</i>
             </div>
         </div>
-        <input type="hidden" :name="name" ref="value" v-model="values[name]">
+        <input type="hidden" :name="name" ref="value" v-model="values[name]" :required="required ? true : false">
     </div>
 </template>
 
@@ -51,7 +51,8 @@
                 inclusive: this.$attrs['inclusive'] || 'false',
                 prefix: this.$attrs['prefix'],
                 suffix: this.$attrs['suffix'],
-                currency: this.$attrs['currency'] || 'false'
+                currency: this.$attrs['currency'] || 'false',
+                required: this.$attrs['required'] != undefined
             }
         },
         created(){
@@ -114,6 +115,9 @@
                 /* Update input in case current values are out of bounds */
                 this.start = (this.min > this.start) ? this.min : this.start;
                 this.end = (this.max < this.end) ? this.max : this.end;
+
+                this.values[this.name][0] = this.start
+                this.values[this.name][1] = this.end
 
                 this.$refs['slider'].noUiSlider.updateOptions({
                     range: {

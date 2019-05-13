@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserDocumentsTable extends Migration
+class CreatePropertyDocumentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateUserDocumentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_documents', function (Blueprint $table) {
+        Schema::create('property_documents', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger("PropertyID")->unsigned();
             $table->json("Images")->nullable();
             $table->json("Files")->nullable();
-            $table->bigInteger("UserID")->unsigned();
             $table->timestamps();
         });
 
-        Schema::table('user_documents', function (Blueprint $table) {
-            $table->foreign("UserID")->references('id')->on('users');
+        Schema::table('property_documents', function (Blueprint $table) {
+            $table->foreign("PropertyID")->references('id')->on('properties');
         });
     }
 
@@ -33,6 +33,6 @@ class CreateUserDocumentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_documents');
+        Schema::dropIfExists('property_documents');
     }
 }

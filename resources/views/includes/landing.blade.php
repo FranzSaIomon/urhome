@@ -26,17 +26,15 @@
                 <div class="row">
                     <div class="col-md-3 form-group">
                         <select name="type" class="custom-select custom-select-sm">
-                            <option value="1">Townhouse</option>
-                            <option value="4">Condominium</option>
-                            <option value="6">House</option>
-                            <option value="13">Service Apartment</option>
-                            <option value="14">Condotel</option>
+                            @foreach (App\PropertyType::all() as $item)
+                                <option value="{{ $item->id }}">{{$item->PropertyType}}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-7">
                         <div class="form-group iconed">
                             <i class="fas fa-search"></i>
-                            <input type="text" name="q" id="q" placeholder="Search for property, developer, or location..." class="form-control form-control-sm">
+                            <input type="text" name="query" id="q" placeholder="Search for property, developer, or location..." class="form-control form-control-sm">
                         </div>
                     </div>
                     <div class="col-md-2">

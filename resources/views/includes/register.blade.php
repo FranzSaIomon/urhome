@@ -37,7 +37,7 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <toggle-button label="Account Type" :errors="errors" :values="values" type="joined" :toggles="toggles" name="UserType" id="userType" required></toggle-button>
+                                        <toggle-button ref="purpose" :default-value=1 label="Account Type" :errors="errors" :values="values" type="joined" :toggles="toggles" name="UserType" id="userType" required></toggle-button>
                                     </div>
                                 </div>
                             </div>

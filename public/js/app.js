@@ -2163,9 +2163,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    cards: {
+      type: Array,
+      "default": function _default() {
+        return [];
+      }
+    }
+  },
   data: function data() {
     return {
-      cards: this.$root.cards || [],
       loading: false
     };
   },
@@ -2187,6 +2194,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_CurrencyMixin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mixins/CurrencyMixin */ "./resources/js/components/mixins/CurrencyMixin.js");
+//
 //
 //
 //
@@ -2289,7 +2297,8 @@ __webpack_require__.r(__webpack_exports__);
       inclusive: this.$attrs['inclusive'] || 'false',
       prefix: this.$attrs['prefix'],
       suffix: this.$attrs['suffix'],
-      currency: this.$attrs['currency'] || 'false'
+      currency: this.$attrs['currency'] || 'false',
+      required: this.$attrs['required'] != undefined
     };
   },
   created: function created() {
@@ -2336,6 +2345,8 @@ __webpack_require__.r(__webpack_exports__);
       /* Update input in case current values are out of bounds */
       this.start = this.min > this.start ? this.min : this.start;
       this.end = this.max < this.end ? this.max : this.end;
+      this.values[this.name][0] = this.start;
+      this.values[this.name][1] = this.end;
       this.$refs['slider'].noUiSlider.updateOptions({
         range: {
           min: this.min,
@@ -2368,16 +2379,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mixins: [_mixins_InputMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
   props: {
-    toggles: {}
+    toggles: {},
+    'default-value': [String, Number],
+    'default-name': String
   },
   data: function data() {
     return {
-      actives: [1],
-      selectedName: "Client",
+      actives: [],
+      selectedName: "",
       multiple: this.$attrs['multiple'] != undefined,
       required: this.$attrs['required'] != undefined,
       name: this.$attrs['name'] || 'ToggleButton',
@@ -2386,11 +2400,25 @@ __webpack_require__.r(__webpack_exports__);
       label: this.$attrs['label'] || ''
     };
   },
-  mounted: function mounted() {},
+  created: function created() {
+    if (this.defaultValue) {
+      this.actives = [this.defaultValue];
+
+      for (var i = 0; i < this.toggles.length; i++) {
+        if (this.toggles[i].value == this.defaultValue) {
+          this.selectedName = this.toggles[i].name;
+          break;
+        } else if (i == this.toggles.length - 1) {
+          this.selectedName = this.defaultName || 'Default';
+        }
+      }
+
+      if (this.toggles.length == 0) this.selectedName = this.defaultName || 'Default';
+    }
+  },
   methods: {
     toggleValue: function toggleValue(toggle) {
       var value = toggle.value;
-      this.selectedName = toggle.name;
       if (!this.values[this.name]) this.values[this.name] = [];
       var valIndex = this.values[this.name].indexOf(value);
 
@@ -2398,21 +2426,38 @@ __webpack_require__.r(__webpack_exports__);
         if (this.multiple) {
           this.actives.push(value);
           this.values[this.name].push(value);
-        } else this.actives = this.values[this.name] = [value];
-      } else {
-        var btn = $('div[name=' + this.name + '] button[value=' + value + ']');
-        if (btn.next().length == 0) btn = btn.prev();else btn = btn.next();
+        } else {
+          this.actives = this.values[this.name] = [value];
+        }
 
+        this.selectedName = "";
+
+        for (var i = 0; i < this.actives.length; i++) {
+          for (var j = 0; j < this.toggles.length; j++) {
+            if (this.toggles[j].value == this.actives[i]) this.selectedName = this.toggles[j].name + (i < this.actives.length - 1 ? ', ' : '');
+          }
+        }
+      } else {
         if (this.required) {
+          var btn = $('div[name=' + this.name + '] button[value=' + value + ']');
+          if (btn.next().length == 0) btn = btn.prev();else btn = btn.next();
+
           if (this.multiple && this.values[this.name].length == 1 || !this.multiple && this.required) {
             // must have at least one value
             this.values[this.name] = [parseInt(btn.attr('value'))];
             this.actives = [parseInt(btn.attr('value'))];
           }
-        } else if (this.multiple) {
-          this.actives.splice(valIndex, 1);
-          this.values[this.name].splice(valIndex, 1);
-        } else this.actives = this.values[this.name] = [];
+        } else {
+          if (this.multiple) {
+            this.actives.splice(valIndex, 1);
+            this.values[this.name].splice(valIndex, 1);
+          } else this.actives = this.values[this.name] = [];
+
+          if (this.actives.length == 0) {
+            this.actives = this.values[this.name] = [this.defaultValue];
+            this.selectedName = this.defaultName || 'Default';
+          }
+        }
       }
     }
   }
@@ -20430,22 +20475,27 @@ var render = function() {
       "a",
       {
         staticClass: "card",
-        attrs: { href: "/properties/view/" + _vm.card.PropertyID }
+        attrs: { href: "/properties/view/" + _vm.card.id }
       },
       [
-        _vm.card.ListingType.ListingType === "rent"
+        _vm.card.listing_type.ListingType === "rent"
           ? _c("div", { staticClass: "badge rent" }, [_vm._v("For Rent")])
           : _c("div", { staticClass: "badge sale" }, [_vm._v("For Sale")]),
         _vm._v(" "),
-        _c("img", {
-          staticClass: "card-img-top",
-          attrs: { src: _vm.card.PropertyDocument.ImageAttachment1, alt: "" }
-        }),
+        _vm.card.property_document && _vm.card.property_document.Image
+          ? _c("img", {
+              staticClass: "card-img-top",
+              attrs: { src: _vm.card.property_document.Image[0], alt: "" }
+            })
+          : _c("img", {
+              staticClass: "card-img-top",
+              attrs: { src: "https://via.placeholder.com/300", alt: "" }
+            }),
         _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
           _c("h6", { staticClass: "card-subtitle" }, [
             _vm._v(
-              _vm._s(_vm.card.PropertyType.PropertyType) +
+              _vm._s(_vm.card.property_type.PropertyType) +
                 " | " +
                 _vm._s(_vm.card.City)
             )
@@ -20659,7 +20709,11 @@ var render = function() {
         }
       ],
       ref: "value",
-      attrs: { type: "hidden", name: _vm.name },
+      attrs: {
+        type: "hidden",
+        name: _vm.name,
+        required: _vm.required ? true : false
+      },
       domProps: { value: _vm.values[_vm.name] },
       on: {
         input: function($event) {
@@ -20699,7 +20753,7 @@ var render = function() {
     {
       class:
         "toggle-buttons " +
-        (_vm.type.toLowerCase() == "joined" ? "joined" : ""),
+        (_vm.type && _vm.type.toLowerCase() == "joined" ? "joined" : ""),
       attrs: { name: _vm.name, id: _vm.id }
     },
     [
@@ -20735,7 +20789,12 @@ var render = function() {
           staticStyle: { "text-align": "center" }
         },
         [_vm._v("You have selected: " + _vm._s(_vm.selectedName))]
-      )
+      ),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: _vm.name },
+        domProps: { value: _vm.actives }
+      })
     ]
   )
 }
@@ -32908,33 +32967,38 @@ Vue.component('properties', __webpack_require__(/*! ./components/Properties.vue 
 Vue.component('multi-select', __webpack_require__(/*! ./components/MultiSelect.vue */ "./resources/js/components/MultiSelect.vue")["default"]);
 Vue.component('input-group', __webpack_require__(/*! ./components/InputGroup.vue */ "./resources/js/components/InputGroup.vue")["default"]);
 Vue.component('toggle-button', __webpack_require__(/*! ./components/ToggleButton.vue */ "./resources/js/components/ToggleButton.vue")["default"]);
+
+$.urlParam = function (name) {
+  var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+
+  if (results == null) {
+    return null;
+  } else {
+    return results[1] || 0;
+  }
+};
+
 $(document).ready(function () {
   var filter = new Vue({
     el: "#vue-filter",
     mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
+    created: function created() {
+      var _this = this;
+
+      $.ajax({
+        method: "GET",
+        url: '/api/property/types'
+      }).always(function (e) {
+        $.each(e, function (i, o) {
+          _this.options.push({
+            name: o.PropertyType,
+            value: o.id
+          });
+        });
+      });
+    },
     data: {
-      options: [{
-        name: 'Townhouse',
-        value: 1
-      }, {
-        name: 'Condominium',
-        value: 2
-      }, {
-        name: 'House',
-        value: 3
-      }, {
-        name: 'Lot',
-        value: 4
-      }, {
-        name: 'Service Apartment',
-        value: 5
-      }, {
-        name: 'Condotel',
-        value: 6
-      }, {
-        name: 'Retail',
-        value: 7
-      }],
+      options: [],
       toggles: [{
         name: 'For Rent',
         value: 1
@@ -32944,6 +33008,15 @@ $(document).ready(function () {
       }],
       values: {},
       errors: {}
+    },
+    methods: {
+      search: function search(e) {
+        if ($("#vue-filter").is('[local]')) {
+          console.log(1);
+        } else {
+          $("#vue-filter").submit();
+        }
+      }
     }
   });
   var login = new Vue({
@@ -32951,14 +33024,14 @@ $(document).ready(function () {
     data: {
       errors: {},
       values: {
-        'email': 'emerald.gerhold@example.com',
+        'email': 'hubert.gutmann@example.net',
         'password': 'password'
       }
     },
     mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
     methods: {
       login: function login() {
-        var _this = this;
+        var _this2 = this;
 
         // Remember: https://vuejs.org/v2/guide/list.html#Caveats
         var securities = this.getSecurities();
@@ -32975,11 +33048,11 @@ $(document).ready(function () {
           },
           error: function error(e) {
             $.each(e.responseJSON.errors, function (key, val) {
-              return Vue.set(_this.errors, key, val);
+              return Vue.set(_this2.errors, key, val);
             });
 
             if (e.responseJSON.errors["g-recaptcha-response"]) {
-              var captcha_elem = $(_this.$el).find('.g-recaptcha');
+              var captcha_elem = $(_this2.$el).find('.g-recaptcha');
               captcha_elem.find('> div').css("border", '1px solid #e3342f');
               captcha_elem.find('+.invalid-feedback').css('display', 'block').text(e.responseJSON.errors['g-recaptcha-response']);
             }
@@ -33020,7 +33093,7 @@ $(document).ready(function () {
     },
     methods: {
       register: function register() {
-        var _this2 = this;
+        var _this3 = this;
 
         var securities = this.getSecurities();
         Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
@@ -33036,15 +33109,99 @@ $(document).ready(function () {
           },
           error: function error(e) {
             $.each(e.responseJSON.errors, function (key, val) {
-              return Vue.set(_this2.errors, key, val);
+              return Vue.set(_this3.errors, key, val);
             });
           }
         }).always(function (e) {
           $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden');
-          _this2.values.UserType = [_this2.values.UserType];
+          _this3.values.UserType = [_this3.values.UserType];
         });
       }
     }
+  });
+  var properties = new Vue({
+    el: "#properties_cards",
+    data: {
+      cards: [],
+      pages: 0,
+      page: 1
+    },
+    methods: {
+      changePage: function changePage(page) {
+        page = parseInt(page) || 1;
+        Vue.set(vue.$data, 'page', page);
+        vue.search();
+      }
+    }
+  });
+  var vue = new Vue({
+    el: "#vue-simple-search",
+    mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
+    data: {
+      toggles: [],
+      options: [],
+      values: {},
+      errors: {},
+      page: 1
+    },
+    created: function created() {
+      var _this4 = this;
+
+      $.ajax({
+        method: "GET",
+        url: '/api/property/types'
+      }).always(function (e) {
+        _this4.options.push({
+          name: "All Types",
+          value: undefined
+        });
+
+        $.each(e, function (i, o) {
+          _this4.options.push({
+            name: o.PropertyType,
+            value: o.id
+          });
+        });
+      });
+      $.ajax({
+        method: "GET",
+        url: '/api/listing/types'
+      }).always(function (e) {
+        $.each(e, function (i, o) {
+          _this4.toggles.push({
+            name: "For " + o.ListingType,
+            value: o.id
+          });
+        });
+      });
+    },
+    methods: {
+      search: function search(e) {
+        var _this5 = this;
+
+        this.values.page = this.page;
+
+        if (this.page > 0 && (this.page <= properties.$data.pages || properties.$data.pages == 0)) {
+          $.ajax({
+            url: "/api/property/paginate",
+            method: "GET",
+            data: this.values,
+            success: function success(e) {
+              Vue.set(properties.$data, 'cards', e.data);
+              properties.$data.pages = e.last_page;
+              if (e.current_page <= e.last_page) properties.$data.page = _this5.page;else properties.$data.page = e.last_page;
+            },
+            error: function error(e) {
+              console.dir(e);
+            }
+          });
+        }
+      }
+    }
+  });
+  vue.search();
+  $(".captcha-refresh").click(function () {
+    return grecaptcha.reset();
   });
 });
 

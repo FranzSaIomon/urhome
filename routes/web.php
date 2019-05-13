@@ -19,7 +19,7 @@ Route::get('contact', 'PageController@contact');
 
 Route::get('properties', 'PageController@search');
 Route::get('properties/search', 'PageController@search');
-Route::get('properties/view/{property}', 'PropertiesController@view');
+Route::get('properties/view/{property}', 'PropertyController@view');
 
 // Auth Routes
 Auth::routes(["verify" => true]);   

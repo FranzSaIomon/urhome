@@ -10,9 +10,14 @@
     import PropertyCard from './PropertyCard'
 
     export default {
+        props: {
+            cards: {
+                type: Array,
+                default: () => {return [];}
+            }
+        },
         data() {
             return {
-                cards: this.$root.cards || [],
                 loading: false
             }
         },

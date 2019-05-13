@@ -40,7 +40,7 @@
                     @if(Auth::check())
                         <a href="/logout" class="dropdown-item">Log Out</a>
                     @else
-                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#loginModal">Log In</a>
+                        <a href="#" class="dropdown-item captcha-refresh" data-toggle="modal" data-target="#loginModal">Log In</a>
                         <a href="#" class="dropdown-item" data-toggle="modal" data-target="#registerModal">Register</a>
                     @endif
                 </div>

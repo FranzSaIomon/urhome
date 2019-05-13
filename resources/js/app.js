@@ -15,20 +15,36 @@ Vue.component('multi-select', require('./components/MultiSelect.vue').default);
 Vue.component('input-group', require('./components/InputGroup.vue').default);
 Vue.component('toggle-button', require('./components/ToggleButton.vue').default);
 
+$.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
+
 $(document).ready(() => {
     const filter = new Vue({
         el: "#vue-filter",
         mixins: [FormMixin],
+        created() {
+            $.ajax({
+                method: "GET",
+                url: '/api/property/types',
+            }).always((e) => {
+                $.each(e, (i, o) => {
+                    this.options.push({
+                        name: o.PropertyType,
+                        value: o.id
+                    })
+                    
+                })
+            })
+        }, 
         data: {
-            options: [
-                {name: 'Townhouse', value: 1},
-                {name: 'Condominium', value: 2},
-                {name: 'House', value: 3},
-                {name: 'Lot', value: 4},
-                {name: 'Service Apartment', value: 5},
-                {name: 'Condotel', value: 6},
-                {name: 'Retail', value: 7},
-            ],
+            options: [],
             toggles: [
                 {
                     name: 'For Rent',
@@ -40,6 +56,15 @@ $(document).ready(() => {
             ],
             values: {},
             errors: {},
+        },
+        methods: {
+            search(e) {
+                if ($("#vue-filter").is('[local]')) {
+                    console.log(1)
+                } else {
+                    $("#vue-filter").submit()
+                }
+            }
         }
     });
 
@@ -48,7 +73,7 @@ $(document).ready(() => {
         data: {
             errors: {},
             values: {
-                'email': 'emerald.gerhold@example.com',
+                'email': 'hubert.gutmann@example.net',
                 'password': 'password'
             }
         },
@@ -142,4 +167,90 @@ $(document).ready(() => {
             }
         }
     })
+
+    const properties = new Vue({
+        el: "#properties_cards",
+        data: {
+            cards: [],
+            pages: 0,
+            page: 1,
+        },
+        methods: {
+            changePage(page) {
+                page = parseInt(page) || 1
+                Vue.set(vue.$data, 'page', page)
+                vue.search()
+            }
+        }
+    })
+
+    const vue = new Vue({
+        el: "#vue-simple-search",
+        mixins: [FormMixin],
+        data: {
+            toggles: [],
+            options: [],
+            values: {},
+            errors: {},
+            page: 1,
+        },
+        created() {
+            $.ajax({
+                method: "GET",
+                url: '/api/property/types',
+            }).always((e) => {
+                this.options.push({
+                    name: "All Types",
+                    value: undefined
+                })
+
+                $.each(e, (i, o) => {
+                    this.options.push({
+                        name: o.PropertyType,
+                        value: o.id
+                    })
+                })
+            })
+
+            $.ajax({
+                method: "GET",
+                url: '/api/listing/types',
+            }).always((e) => {
+                $.each(e, (i, o) => {
+                    this.toggles.push({
+                        name: "For " + o.ListingType,
+                        value: o.id
+                    })
+                })
+            })
+        },
+        methods:{
+            search(e) {
+                this.values.page = this.page
+
+                if (this.page > 0 && (this.page <= properties.$data.pages || properties.$data.pages == 0)) {
+                    $.ajax({
+                        url: "/api/property/paginate",
+                        method: "GET",
+                        data: this.values,
+                        success: (e) => {
+                            Vue.set(properties.$data, 'cards', e.data)
+                            properties.$data.pages = e.last_page;
+    
+                            if(e.current_page <= e.last_page)
+                                properties.$data.page = this.page
+                            else
+                                properties.$data.page = e.last_page
+                        },
+                        error: (e) => {
+                            console.dir(e)
+                        }
+                    })
+                }
+            }
+        }
+    })
+    
+    vue.search();
+    $(".captcha-refresh").click(() => grecaptcha.reset())
 })
