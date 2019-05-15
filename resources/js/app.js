@@ -75,42 +75,80 @@ $(document).ready(() => {
             values: {
                 'email': 'hubert.gutmann@example.net',
                 'password': 'password'
-            }
+            },
+            loginForm: true,
+            formChanged: false,
+            success: undefined,
         },
         mixins: [FormMixin],
+        updated() {
+            if (this.formChanged && this.loginForm) {
+                this.formChanged = false
+
+                grecaptcha.render($('.g-recaptcha')[0], {
+                    sitekey: this.sitekey
+                })
+            }
+        },
         methods: {
             login() {
                 // Remember: https://vuejs.org/v2/guide/list.html#Caveats
+                if (this.loginForm) {
+                    let securities = this.getSecurities()
+                    Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0])
+                    Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1])
+
+                    this.errors = {}
+                    this.success = undefined
+                    $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden')
+                    $.ajax({
+                        url: '/login',
+                        method: "POST",
+                        data: this.values,
+                        success: (e) => {
+                            this.success = "<b>Success!</b> You've successfully logged in, please wait to be redirected..."
+                            location.reload()
+                        },
+                        error: (e) => {
+                            $.each(e.responseJSON.errors, (key, val) => Vue.set(this.errors, key, val))
+                            if (e.responseJSON.errors["g-recaptcha-response"]) {
+                                let captcha_elem = $(this.$el).find('.g-recaptcha');
+
+                                captcha_elem.find('> div')
+                                    .css("border", '1px solid #e3342f')
+                                
+                                captcha_elem.find('+.invalid-feedback')
+                                    .css('display', 'block')
+                                    .text(e.responseJSON.errors['g-recaptcha-response'])
+                            }
+                        }
+                    }).always((e) => {
+                        $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden')
+                        grecaptcha.reset()
+                    })
+                }
+            },
+            reset() {
                 let securities = this.getSecurities()
                 Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0])
-                Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1])
 
-                $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden')
                 $.ajax({
-                    url: '/login',
+                    url: '/password/email',
                     method: "POST",
                     data: this.values,
                     success: (e) => {
-                        $("#vue-login .alert-success").removeAttr('hidden')
-                        location.reload()
+                        this.success = e.status
                     },
                     error: (e) => {
                         $.each(e.responseJSON.errors, (key, val) => Vue.set(this.errors, key, val))
-                        if (e.responseJSON.errors["g-recaptcha-response"]) {
-                            let captcha_elem = $(this.$el).find('.g-recaptcha');
-
-                            captcha_elem.find('> div')
-                                .css("border", '1px solid #e3342f')
-                            
-                            captcha_elem.find('+.invalid-feedback')
-                                .css('display', 'block')
-                                .text(e.responseJSON.errors['g-recaptcha-response'])
-                        }
                     }
-                }).always((e) => {
-                    $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden')
-                    grecaptcha.reset()
                 })
+            },
+            changeForm() {
+                this.loginForm = !this.loginForm
+                this.formChanged = true
+                this.success = undefined
+                this.errors = {} 
             }
         }
     })
@@ -120,6 +158,7 @@ $(document).ready(() => {
         mixins: [FormMixin],
         data: {
             errors: {},
+            success: undefined,
             values: {
                 FirstName: "Miguel",
                 LastName: "Quiambao",
@@ -148,22 +187,27 @@ $(document).ready(() => {
                 Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0])
                 Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1])
                 this.values.UserType = this.values.UserType[0]
+
+                this.errors = {}
+                this.success = undefined
                 
                 $("#vue-register button[type=submit] .spinner-border").removeAttr('hidden')
+                $("#vue-register button[type=submit]").attr("disabled", "disabled")
                 $.ajax({
                     url: '/register',
                     method: 'POST',
                     data: this.values,
                     success: (e) => {
-                        console.log(e)
-                        $("#vue-register .alert-success").removeAttr('hidden')
+                        this.success = "<b>Success!</b> You've successfully registered, please wait to be redirected..."
+                        location.reload()
                     },
                     error: (e) => {
-                        console.error(e)
+                        console.log(e)
                         $.each(e.responseJSON.errors, (key, val) => Vue.set(this.errors, key, val))
                     }
                 }).always((e) => {
                     $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden')
+                    $("#vue-register button[type=submit]").removeAttr("disabled")
                     this.values.UserType = [this.values.UserType]
                 })
             }
@@ -254,5 +298,18 @@ $(document).ready(() => {
     })
     
     vue.search();
-    $(".captcha-refresh").click(() => grecaptcha.reset())
+
+    let captchaLoaded = false
+    $(".captcha-refresh").click(
+        () => {
+            if (!captchaLoaded) {
+                grecaptcha.render($('.g-recaptcha')[0], {
+                    sitekey: $('.g-recaptcha').attr('data-sitekey')
+                })
+
+                captchaLoaded = true
+            } else
+                grecaptcha.reset()
+        }
+    )   
 })

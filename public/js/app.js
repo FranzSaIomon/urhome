@@ -33026,41 +33026,81 @@ $(document).ready(function () {
       values: {
         'email': 'hubert.gutmann@example.net',
         'password': 'password'
-      }
+      },
+      loginForm: true,
+      formChanged: false,
+      success: undefined
     },
     mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
+    updated: function updated() {
+      if (this.formChanged && this.loginForm) {
+        this.formChanged = false;
+        grecaptcha.render($('.g-recaptcha')[0], {
+          sitekey: this.sitekey
+        });
+      }
+    },
     methods: {
       login: function login() {
         var _this2 = this;
 
         // Remember: https://vuejs.org/v2/guide/list.html#Caveats
+        if (this.loginForm) {
+          var securities = this.getSecurities();
+          Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
+          Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
+          this.errors = {};
+          this.success = undefined;
+          $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden');
+          $.ajax({
+            url: '/login',
+            method: "POST",
+            data: this.values,
+            success: function success(e) {
+              _this2.success = "<b>Success!</b> You've successfully logged in, please wait to be redirected...";
+              location.reload();
+            },
+            error: function error(e) {
+              $.each(e.responseJSON.errors, function (key, val) {
+                return Vue.set(_this2.errors, key, val);
+              });
+
+              if (e.responseJSON.errors["g-recaptcha-response"]) {
+                var captcha_elem = $(_this2.$el).find('.g-recaptcha');
+                captcha_elem.find('> div').css("border", '1px solid #e3342f');
+                captcha_elem.find('+.invalid-feedback').css('display', 'block').text(e.responseJSON.errors['g-recaptcha-response']);
+              }
+            }
+          }).always(function (e) {
+            $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden');
+            grecaptcha.reset();
+          });
+        }
+      },
+      reset: function reset() {
+        var _this3 = this;
+
         var securities = this.getSecurities();
         Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
-        Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
-        $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden');
         $.ajax({
-          url: '/login',
+          url: '/password/email',
           method: "POST",
           data: this.values,
           success: function success(e) {
-            $("#vue-login .alert-success").removeAttr('hidden');
-            location.reload();
+            _this3.success = e.status;
           },
           error: function error(e) {
             $.each(e.responseJSON.errors, function (key, val) {
-              return Vue.set(_this2.errors, key, val);
+              return Vue.set(_this3.errors, key, val);
             });
-
-            if (e.responseJSON.errors["g-recaptcha-response"]) {
-              var captcha_elem = $(_this2.$el).find('.g-recaptcha');
-              captcha_elem.find('> div').css("border", '1px solid #e3342f');
-              captcha_elem.find('+.invalid-feedback').css('display', 'block').text(e.responseJSON.errors['g-recaptcha-response']);
-            }
           }
-        }).always(function (e) {
-          $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden');
-          grecaptcha.reset();
         });
+      },
+      changeForm: function changeForm() {
+        this.loginForm = !this.loginForm;
+        this.formChanged = true;
+        this.success = undefined;
+        this.errors = {};
       }
     }
   });
@@ -33069,6 +33109,7 @@ $(document).ready(function () {
     mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
     data: {
       errors: {},
+      success: undefined,
       values: {
         FirstName: "Miguel",
         LastName: "Quiambao",
@@ -33093,30 +33134,34 @@ $(document).ready(function () {
     },
     methods: {
       register: function register() {
-        var _this3 = this;
+        var _this4 = this;
 
         var securities = this.getSecurities();
         Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
         Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
         this.values.UserType = this.values.UserType[0];
+        this.errors = {};
+        this.success = undefined;
         $("#vue-register button[type=submit] .spinner-border").removeAttr('hidden');
+        $("#vue-register button[type=submit]").attr("disabled", "disabled");
         $.ajax({
           url: '/register',
           method: 'POST',
           data: this.values,
           success: function success(e) {
-            console.log(e);
-            $("#vue-register .alert-success").removeAttr('hidden');
+            _this4.success = "<b>Success!</b> You've successfully registered, please wait to be redirected...";
+            location.reload();
           },
           error: function error(e) {
-            console.error(e);
+            console.log(e);
             $.each(e.responseJSON.errors, function (key, val) {
-              return Vue.set(_this3.errors, key, val);
+              return Vue.set(_this4.errors, key, val);
             });
           }
         }).always(function (e) {
           $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden');
-          _this3.values.UserType = [_this3.values.UserType];
+          $("#vue-register button[type=submit]").removeAttr("disabled");
+          _this4.values.UserType = [_this4.values.UserType];
         });
       }
     }
@@ -33147,19 +33192,19 @@ $(document).ready(function () {
       page: 1
     },
     created: function created() {
-      var _this4 = this;
+      var _this5 = this;
 
       $.ajax({
         method: "GET",
         url: '/api/property/types'
       }).always(function (e) {
-        _this4.options.push({
+        _this5.options.push({
           name: "All Types",
           value: undefined
         });
 
         $.each(e, function (i, o) {
-          _this4.options.push({
+          _this5.options.push({
             name: o.PropertyType,
             value: o.id
           });
@@ -33170,7 +33215,7 @@ $(document).ready(function () {
         url: '/api/listing/types'
       }).always(function (e) {
         $.each(e, function (i, o) {
-          _this4.toggles.push({
+          _this5.toggles.push({
             name: "For " + o.ListingType,
             value: o.id
           });
@@ -33179,7 +33224,7 @@ $(document).ready(function () {
     },
     methods: {
       search: function search(e) {
-        var _this5 = this;
+        var _this6 = this;
 
         this.values.page = this.page;
 
@@ -33191,7 +33236,7 @@ $(document).ready(function () {
             success: function success(e) {
               Vue.set(properties.$data, 'cards', e.data);
               properties.$data.pages = e.last_page;
-              if (e.current_page <= e.last_page) properties.$data.page = _this5.page;else properties.$data.page = e.last_page;
+              if (e.current_page <= e.last_page) properties.$data.page = _this6.page;else properties.$data.page = e.last_page;
             },
             error: function error(e) {
               console.dir(e);
@@ -33202,8 +33247,14 @@ $(document).ready(function () {
     }
   });
   vue.search();
+  var captchaLoaded = false;
   $(".captcha-refresh").click(function () {
-    return grecaptcha.reset();
+    if (!captchaLoaded) {
+      grecaptcha.render($('.g-recaptcha')[0], {
+        sitekey: $('.g-recaptcha').attr('data-sitekey')
+      });
+      captchaLoaded = true;
+    } else grecaptcha.reset();
   });
 });
 
@@ -33701,10 +33752,16 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    sitekey: {
+      type: String,
+      "default": "6LfOcKIUAAAAAF-EhW6-UjKgi_y3IUdRErtqcT5N"
+    }
+  },
   methods: {
     getSecurities: function getSecurities() {
       return {
-        _token: $(this.$el).children("[name=_token]").val(),
+        _token: $(this.$el).find("[name=_token]").val(),
         'g-recaptcha-response': $(this.$el).find("[name=g-recaptcha-response]").val()
       };
     }
@@ -33756,8 +33813,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\wamp64\www\urhome\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\wamp64\www\urhome\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /media/miguel/3AC28CC1C28C82BD/wamp64/www/urhome/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /media/miguel/3AC28CC1C28C82BD/wamp64/www/urhome/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
