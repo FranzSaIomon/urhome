@@ -16,7 +16,14 @@
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
     <link rel="shortcut icon" href="{{ asset('img/icons/favicon.ico') }}" type="image/x-icon">
 
-    {!! htmlScriptTagJsApi() !!}
+    <script>
+        var onloadCallback = () =>{
+            
+        }
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
+    </script>
+
 </head>
 <body class="{{ isset($nolanding) ? $nolanding : '' }}">
     @include('includes.navigation')
