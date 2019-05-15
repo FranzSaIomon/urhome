@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,7 +26,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        
+        Schema::defaultStringLength(191);
+        
         Validator::extend('mobile', function($attribute, $value, $parameters, $validator) {
             $value = preg_replace('/\s+/', '', $value);
             $output = [];

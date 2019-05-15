@@ -47,6 +47,21 @@
             </li>
         </ul>
     </div>
+
+    @if(Session::has('verified'))
+        @php
+            $alert = "<b>Success!</b> Your email has been verified.";
+        @endphp
+    @endif
+
+    @if(isset($alert))
+        <div id="popup_alert" class="alert alert-sm alert-success alert-dismissible fade show">
+            <span>{!! $alert !!}</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
 </nav>
 
 <script>

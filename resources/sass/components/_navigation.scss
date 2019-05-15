@@ -12,6 +12,14 @@
     }
 }
 
+#popup_alert {
+    position: absolute;
+    top: 125%;
+    left: 50%;
+    min-width: 80%;
+    transform: translateX(-50%);
+}
+
 .navbar-collapse {
     justify-content: space-between;
 }

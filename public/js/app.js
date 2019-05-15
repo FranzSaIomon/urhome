@@ -33105,9 +33105,11 @@ $(document).ready(function () {
           method: 'POST',
           data: this.values,
           success: function success(e) {
+            console.log(e);
             $("#vue-register .alert-success").removeAttr('hidden');
           },
           error: function error(e) {
+            console.error(e);
             $.each(e.responseJSON.errors, function (key, val) {
               return Vue.set(_this3.errors, key, val);
             });
@@ -33754,8 +33756,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/html/urhome/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/html/urhome/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\wamp64\www\urhome\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\wamp64\www\urhome\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -155,9 +155,11 @@ $(document).ready(() => {
                     method: 'POST',
                     data: this.values,
                     success: (e) => {
+                        console.log(e)
                         $("#vue-register .alert-success").removeAttr('hidden')
                     },
                     error: (e) => {
+                        console.error(e)
                         $.each(e.responseJSON.errors, (key, val) => Vue.set(this.errors, key, val))
                     }
                 }).always((e) => {

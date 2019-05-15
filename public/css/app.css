@@ -16517,6 +16517,15 @@ readers do not read off random characters that represent icons */
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
 }
 
+#popup_alert {
+  position: absolute;
+  top: 125%;
+  left: 50%;
+  min-width: 80%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+
 .navbar-collapse {
   justify-content: space-between;
 }
