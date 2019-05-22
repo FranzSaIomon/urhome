@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('includes.filter', ["local" => "local"])
-
     <div class="container-fluid">
         <div class="row ">
             <div class="col-md-3">
@@ -10,14 +8,15 @@
                     <input-group :errors="errors" :values="values" name="query" label="Search"></input-group>
                     <input-group :errors="errors" :values="values" type="select" :options="options" name="type" label="Property Type"></input-group>
                     <toggle-button type="joined" ref="purpose" :toggles="toggles" name="purpose" :default-name="'For Rent or Sale'" :default-value="'all'" :errors="errors" :values="values"></toggle-button>
-                    <div class="text-center mt-1 d-none d-md-block d-lg-none"><a href="#" data-toggle="modal" data-target="#filterModal">Advanced Search</a></div>
                     <br/>
                     <button type="submit" class="btn btn-block btn-primary">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
                         Search
                     </button>
-                    <br/>
-                    <div class="d-none d-lg-block">
+                    <div class="text-center my-3">
+                        <a type="button" data-toggle="collapse" data-target="#search_details"><i class="fas fa-angle-double-down"></i> <span class="ml-1">Search Details</span></a>
+                    </div>
+                    <div id="search_details" class="collapse">
                         <input-group :values="values" :errors="errors" name="location" label="Location" placeholder="Location..." id="location"></input-group>
 
                         <div class="form-group">

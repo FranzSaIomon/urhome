@@ -23,4 +23,7 @@ Route::get('properties/view/{property}', 'PropertyController@view');
 
 // Auth Routes
 Auth::routes(["verify" => true]);   
-Route::get('/logout', 'PageController@logout');
+Route::get('login', 'PageController@invalid')->name("login");
+Route::get('register', 'PageController@invalid');
+Route::get('password/reset', 'PageController@invalid');
+Route::get('logout', 'PageController@logout');

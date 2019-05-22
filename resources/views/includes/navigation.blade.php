@@ -54,6 +54,12 @@
         @endphp
     @endif
 
+    @if(Session::has('status'))
+        @php
+            $alert = Session::get('status');
+        @endphp
+    @endif
+
     @if(isset($alert))
         <div id="popup_alert" class="alert alert-sm alert-success alert-dismissible fade show">
             <span>{!! $alert !!}</span>
