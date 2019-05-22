@@ -15,6 +15,7 @@ class PropertyController extends Controller
 
     public function index(Request $request)
     {
+        // return $this->get($request);
         return $this->get($request)->get();
     }
 
@@ -27,7 +28,7 @@ class PropertyController extends Controller
             'FloorArea'
         ];
 
-        $or_cols = ["query", 'location'];
+        $or_cols = ["query", 'location', 'type'];
 
         $purposes = [1, 2];
 
@@ -45,7 +46,9 @@ class PropertyController extends Controller
                         array_push($conditions, [$k, '<=', intval($v[1])]);
                     }
                 } else if (in_array($k, $or_cols, false)) {
-                    $v = explode(' ', preg_replace('/\s+/', ' ', trim($v)));
+                    if (strcasecmp($k, "query") == 0 || strcasecmp($k, "location") == 0)
+                        $v = explode(' ', preg_replace('/\s+/', ' ', trim($v)));
+                        
                     $or_condition = [];
 
                     if (strcasecmp($k, "query") == 0) {
@@ -56,13 +59,14 @@ class PropertyController extends Controller
                             array_push($or_condition, ["city", 'LIKE', '%' . $term . '%']);
                             array_push($or_condition, ["street", 'LIKE', '%' . $term . '%']);
                         }
+                    } else if (strcasecmp($k, "type") == 0) {
+                        foreach($v as $type)
+                            array_push($or_condition, ["PropertyTypeID", "=", $type]);
                     }
                         
                     array_push($or_conditions, $or_condition);
                 } else if (strcasecmp($k, "purpose") == 0 && in_array($v[0], $purposes)) {
                     array_push($conditions, ['ListingTypeID', '=', $v[0]]);
-                } else if (strcasecmp($k, "type") == 0 && isset($v)) {
-                    array_push($conditions, ['PropertyTypeID', '=', $v]);
                 }
             }
         }

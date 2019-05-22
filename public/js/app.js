@@ -2101,6 +2101,17 @@ var countries = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_InputMixin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mixins/InputMixin */ "./resources/js/components/mixins/InputMixin.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+//
+//
+//
 //
 //
 //
@@ -2126,17 +2137,21 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     updateSelected: function updateSelected(e) {
       var target = $(e.target);
-      if (!this.values[this.name]) this.values[this.name] = [];
+      if (!this.values[this.name]) Vue.set(this.values, this.name, []);
 
       if (target.hasClass('active')) {
-        this.values[this.name] = this.values[this.name].filter(function (v) {
+        Vue.set(this.values, this.name, this.values[this.name].filter(function (v) {
           return v != target.attr('data-value');
-        });
+        }));
         target.removeClass('active');
       } else {
-        this.values[this.name].push(target.attr('data-value'));
+        Vue.set(this.values, this.name, [target.attr('data-value')].concat(_toConsumableArray(this.values[this.name])));
         target.addClass('active');
       }
+    },
+    reset: function reset() {
+      this.values[this.name] = [];
+      $(this.$refs['multi-select']).find("button").removeClass('active');
     }
   }
 });
@@ -2352,6 +2367,11 @@ __webpack_require__.r(__webpack_exports__);
           min: this.min,
           max: this.max
         }
+      });
+    },
+    updateStart: function updateStart() {
+      this.$refs['slider'].noUiSlider.updateOptions({
+        start: [this.start || this.min, this.end || this.max]
       });
     }
   }
@@ -20363,18 +20383,39 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("label", [_vm._v(_vm._s(_vm.label))]),
+  return _c("div", { staticClass: "form-group" }, [
+    _c("div", { staticClass: "d-flex justify-content-between" }, [
+      _c("label", [_vm._v(_vm._s(_vm.label))]),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              $event.preventDefault()
+              return _vm.reset($event)
+            }
+          }
+        },
+        [_vm._v("Reset")]
+      )
+    ]),
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "multi-select" },
+      { ref: "multi-select", staticClass: "multi-select" },
       _vm._l(_vm.options, function(option) {
         return _c(
           "button",
           {
             key: option.value,
-            staticClass: "btn btn-outline-secondary btn-sm",
+            class:
+              "btn btn-outline-secondary btn-sm " +
+              (_vm.values[_vm.name] &&
+              _vm.values[_vm.name].indexOf("" + option.value) != -1
+                ? "active"
+                : ""),
             attrs: { "data-value": option.value },
             on: {
               click: function($event) {
@@ -20767,7 +20808,11 @@ var render = function() {
             "button",
             {
               key: toggle.value,
-              class: { active: _vm.actives.indexOf(toggle.value) != -1 },
+              class: {
+                active:
+                  _vm.values[_vm.name] &&
+                  _vm.values[_vm.name].indexOf(toggle.value) != -1
+              },
               attrs: { value: toggle.value },
               on: {
                 click: function($event) {
@@ -20792,8 +20837,24 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.values[_vm.name],
+            expression: "values[name]"
+          }
+        ],
         attrs: { type: "hidden", name: _vm.name },
-        domProps: { value: _vm.actives }
+        domProps: { value: _vm.values[_vm.name] },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.values, _vm.name, $event.target.value)
+          }
+        }
       })
     ]
   )
@@ -32974,7 +33035,7 @@ $.urlParam = function (name) {
   if (results == null) {
     return null;
   } else {
-    return results[1] || 0;
+    return results[1] || null;
   }
 };
 
@@ -33176,12 +33237,12 @@ $(document).ready(function () {
     methods: {
       changePage: function changePage(page) {
         page = parseInt(page) || 1;
-        Vue.set(vue.$data, 'page', page);
-        vue.search();
+        Vue.set(search.$data, 'page', page);
+        search.search(true);
       }
     }
   });
-  var vue = new Vue({
+  var search = new Vue({
     el: "#vue-simple-search",
     mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
     data: {
@@ -33198,11 +33259,6 @@ $(document).ready(function () {
         method: "GET",
         url: '/api/property/types'
       }).always(function (e) {
-        _this5.options.push({
-          name: "All Types",
-          value: undefined
-        });
-
         $.each(e, function (i, o) {
           _this5.options.push({
             name: o.PropertyType,
@@ -33222,21 +33278,54 @@ $(document).ready(function () {
         });
       });
     },
+    mounted: function mounted() {
+      var _this6 = this;
+
+      var range = ["NumberOfBedrooms", "NumberOfBathrooms", "Price", "LotArea", "FloorArea"];
+      var string = ["query", "location"];
+      $.each(range, function (i, v) {
+        if ($.urlParam(v)) {
+          var values = decodeURIComponent($.urlParam(v)).split(',');
+          _this6.values[v][0] = parseInt(values[0], 10);
+          _this6.values[v][1] = parseInt(values[1], 10);
+          _this6.$refs[v].start = _this6.values[v][0];
+          _this6.$refs[v].end = _this6.values[v][1];
+          if (_this6.$refs[v].maximums) _this6.$refs[v].max = _this6.$refs[v].maximums.find(function (el) {
+            return _this6.values[v][1] <= el;
+          });
+
+          _this6.$refs[v].updateLimits();
+
+          _this6.$refs[v].updateStart();
+        }
+      });
+      $.each(string, function (i, v) {
+        if ($.urlParam(v)) Vue.set(_this6.values, v, decodeURIComponent($.urlParam(v)));
+      });
+      if ($.urlParam('type')) Vue.set(this.values, 'type', decodeURIComponent($.urlParam('type')).split(","));
+      if ($.urlParam('purpose')) Vue.set(this.values, 'purpose', decodeURIComponent($.urlParam('purpose')));
+    },
     methods: {
-      search: function search(e) {
-        var _this6 = this;
+      search: function search(ignoreAdvanced) {
+        var _this7 = this;
 
         this.values.page = this.page;
+        var blacklist = ["NumberOfBedrooms", "NumberOfBathrooms", "Price", "LotArea", "FloorArea"];
+        var nonAdvanced = {};
+
+        for (var key in this.values) {
+          if (blacklist.indexOf(key) == -1) nonAdvanced[key] = this.values[key];
+        }
 
         if (this.page > 0 && (this.page <= properties.$data.pages || properties.$data.pages == 0)) {
           $.ajax({
             url: "/api/property/paginate",
             method: "GET",
-            data: this.values,
+            data: !ignoreAdvanced ? this.values : nonAdvanced,
             success: function success(e) {
               Vue.set(properties.$data, 'cards', e.data);
               properties.$data.pages = e.last_page;
-              if (e.current_page <= e.last_page) properties.$data.page = _this6.page;else properties.$data.page = e.last_page;
+              if (e.current_page <= e.last_page) properties.$data.page = _this7.page;else properties.$data.page = e.last_page;
             },
             error: function error(e) {
               console.dir(e);
@@ -33246,7 +33335,7 @@ $(document).ready(function () {
       }
     }
   });
-  vue.search();
+  search.search($.urlParam('ignoreAdvanced') ? true : false);
   var captchaLoaded = false;
   $(".captcha-refresh").click(function () {
     if (!captchaLoaded) {
@@ -33813,8 +33902,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /media/miguel/3AC28CC1C28C82BD/wamp64/www/urhome/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /media/miguel/3AC28CC1C28C82BD/wamp64/www/urhome/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\wamp64\www\urhome\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\wamp64\www\urhome\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

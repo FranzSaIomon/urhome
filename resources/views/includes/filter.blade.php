@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="api/property" id="vue-filter" @submit.prevent="search" {{$local ?? ''}}>
+            <form action="properties/search" id="vue-filter" @submit.prevent="search" {{$local ?? ''}}>
                 <div class="modal-body">
                         <div class="container">
                             <div class="row">
@@ -43,8 +43,9 @@
                                     <div class="form-group">
                                         <label for="purpose">Purpose</label>
                                         <div id="purpose">
-                                            <button type="button" class="btn btn-md btn-outline-primary" data-value="rent">For Rent</button>
-                                            <button type="button" class="btn btn-md btn-outline-primary" data-value="sale">For Sale</button>
+                                            @foreach (App\ListingType::all() as $item)
+                                                <button type="button" class="btn btn-md" data-value="{{ $item->id}}">For {{$item->ListingType}}</button>
+                                            @endforeach
                                             <input type="hidden" name="purpose" value="all">
                                         </div>
                                     </div>

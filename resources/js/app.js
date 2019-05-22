@@ -21,7 +21,7 @@ $.urlParam = function(name){
        return null;
     }
     else{
-       return results[1] || 0;
+       return results[1] || null;
     }
 }
 
@@ -224,13 +224,13 @@ $(document).ready(() => {
         methods: {
             changePage(page) {
                 page = parseInt(page) || 1
-                Vue.set(vue.$data, 'page', page)
-                vue.search()
+                Vue.set(search.$data, 'page', page)
+                search.search(true)
             }
         }
     })
 
-    const vue = new Vue({
+    const search = new Vue({
         el: "#vue-simple-search",
         mixins: [FormMixin],
         data: {
@@ -245,11 +245,6 @@ $(document).ready(() => {
                 method: "GET",
                 url: '/api/property/types',
             }).always((e) => {
-                this.options.push({
-                    name: "All Types",
-                    value: undefined
-                })
-
                 $.each(e, (i, o) => {
                     this.options.push({
                         name: o.PropertyType,
@@ -270,15 +265,63 @@ $(document).ready(() => {
                 })
             })
         },
-        methods:{
-            search(e) {
-                this.values.page = this.page
+        mounted() {  
+            let range = [
+                "NumberOfBedrooms", "NumberOfBathrooms", "Price",
+                "LotArea", "FloorArea"
+            ]
 
+            let string = ["query", "location"]
+
+            $.each(range, (i, v) => {
+                if ($.urlParam(v)) {
+                    let values = decodeURIComponent($.urlParam(v)).split(',')
+                    this.values[v][0] = parseInt(values[0], 10)
+                    this.values[v][1] = parseInt(values[1], 10)
+
+                    this.$refs[v].start = this.values[v][0]
+                    this.$refs[v].end = this.values[v][1]
+
+                    if (this.$refs[v].maximums)
+                        this.$refs[v].max = this.$refs[v].maximums.find((el) => {
+                            return this.values[v][1] <= el
+                        })
+                    
+                    this.$refs[v].updateLimits()
+                    this.$refs[v].updateStart()
+                }
+            })
+
+            $.each(string, (i, v) => {
+                if ($.urlParam(v))
+                    Vue.set(this.values, v, decodeURIComponent($.urlParam(v)))
+            })
+
+            if ($.urlParam('type')) 
+                Vue.set(this.values, 'type', decodeURIComponent($.urlParam('type')).split(","))
+            
+            if ($.urlParam('purpose'))
+                Vue.set(this.values, 'purpose', decodeURIComponent($.urlParam('purpose')))
+        },
+        methods:{
+            search(ignoreAdvanced) {
+                this.values.page = this.page
+                let blacklist = [
+                    "NumberOfBedrooms", "NumberOfBathrooms", "Price", 
+                    "LotArea", "FloorArea"
+                ]
+
+                let nonAdvanced = {}
+
+                for (let key in this.values)
+                    if (blacklist.indexOf(key) == -1)
+                        nonAdvanced[key] = this.values[key]
+                
                 if (this.page > 0 && (this.page <= properties.$data.pages || properties.$data.pages == 0)) {
                     $.ajax({
                         url: "/api/property/paginate",
                         method: "GET",
-                        data: this.values,
+                        data: !ignoreAdvanced ? this.values : nonAdvanced,
                         success: (e) => {
                             Vue.set(properties.$data, 'cards', e.data)
                             properties.$data.pages = e.last_page;
@@ -297,7 +340,7 @@ $(document).ready(() => {
         }
     })
     
-    vue.search();
+    search.search(($.urlParam('ignoreAdvanced')) ? true : false);
 
     let captchaLoaded = false
     $(".captcha-refresh").click(

@@ -1,5 +1,6 @@
 <div class="landing">
-    <div class="container">
+    <form action="properties/search" class="container">
+        <input type="hidden" name="ignoreAdvanced" value="ignoreAdvanced">
         <div class="row">
             <div class="col">
                 <br/>
@@ -14,18 +15,22 @@
                 </button>
         
                 <div class="btn-group md-auto" role="group" id="purpose" aria-label="Purpose">
-                    <button type="button" class="btn btn-md" data-value="ren(t">For Rent</button>
-                    <button type="button" class="btn btn-md" data-value="sale">For Sale</button>
+                    @foreach (App\ListingType::all() as $item)
+                        <button type="button" class="btn btn-md" data-value="{{ $item->id}}">For {{$item->ListingType}}</button>
+                    @endforeach
+
                     <input type="hidden" name="purpose" value="all">
                 </div>
 
             </div>
         </div>
         <div class="row">
-            <form action="" class="container">
+            <div class="container">
                 <div class="row">
                     <div class="col-md-3 form-group">
                         <select name="type" class="custom-select custom-select-sm">
+                            <option selected disabled>Select Property Type</option>
+                            <option>All Property Types</option>
                             @foreach (App\PropertyType::all() as $item)
                                 <option value="{{ $item->id }}">{{$item->PropertyType}}</option>
                             @endforeach
@@ -41,10 +46,10 @@
                         <input type="submit" value="Search" class="btn btn-block btn-sm btn-primary">
                     </div>
                 </div>
-            </form>
+            </div>
             <br/>
         </div>
-    </div>
+    </form>
 </div>
 
 @include('includes.filter')
@@ -63,7 +68,7 @@
                 $('[name=purpose]').val($(e.target).attr('data-value'))
                 $(e.target).addClass('selected')
             } else
-                $('[name=purpose]').val('all')
+                $('[name=purpose]').val('0')
 
         })
         

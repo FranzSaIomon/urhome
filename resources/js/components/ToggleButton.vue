@@ -2,10 +2,10 @@
     <div :name='name' :class="'toggle-buttons ' + ( (type && type.toLowerCase() == 'joined') ? 'joined' : '')" :id="id">
         <label v-if="label">{{label}}</label>
         <div class="buttons">
-            <button :value="toggle.value" :class="{'active': actives.indexOf(toggle.value) != -1}" v-for="toggle in toggles" :key="toggle.value" @click.prevent="toggleValue(toggle)">{{toggle.name}}</button>
+            <button :value="toggle.value" :class="{'active': values[name] && values[name].indexOf(toggle.value) != -1}" v-for="toggle in toggles" :key="toggle.value" @click.prevent="toggleValue(toggle)">{{toggle.name}}</button>
         </div> 
         <div class="text-muted small" style="text-align: center">You have selected: {{selectedName}}</div>
-        <input type="hidden" :name="name" :value="actives">
+        <input type="hidden" :name="name" v-model="values[name]">
     </div>
 </template>
 

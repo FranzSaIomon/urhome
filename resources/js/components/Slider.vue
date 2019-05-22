@@ -125,6 +125,11 @@
                         max: this.max
                     }
                 })
+            },
+            updateStart() {
+                this.$refs['slider'].noUiSlider.updateOptions({
+                    start: [this.start || this.min, this.end || this.max],
+                })
             }
         },
     }
