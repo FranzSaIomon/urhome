@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('includes.filter', ["local" => "local"])
-
     <div class="container-fluid">
         <div class="row ">
             <div class="col-md-3">
@@ -17,8 +15,10 @@
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
                         Search
                     </button>
-                    <br/>
-                    <div class="d-none d-lg-block">
+                    <div class="text-center my-3">
+                        <a type="button" data-toggle="collapse" data-target="#search_details"><i class="fas fa-angle-double-down"></i> <span class="ml-1">Search Details</span></a>
+                    </div>
+                    <div id="search_details" class="collapse">
                         <input-group :values="values" :errors="errors" name="location" label="Location" placeholder="Location..." id="location"></input-group>
 
                         <div class="form-group">

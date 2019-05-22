@@ -11,7 +11,7 @@
                 </button>
             </div>
 
-            <form method="POST" id="vue-register" action="{{ route('register') }}">
+            <form method="POST" id="vue-register">
                 @csrf
                 <div class="modal-body">
                     <div class="container">

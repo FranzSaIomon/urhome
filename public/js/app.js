@@ -33902,8 +33902,13 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+<<<<<<< HEAD
 __webpack_require__(/*! C:\wamp64\www\urhome\resources\js\app.js */"./resources/js/app.js");
 module.exports = __webpack_require__(/*! C:\wamp64\www\urhome\resources\sass\app.scss */"./resources/sass/app.scss");
+=======
+__webpack_require__(/*! /var/www/html/urhome/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/html/urhome/resources/sass/app.scss */"./resources/sass/app.scss");
+>>>>>>> 4f80157461c7b4de9f048363c5b0b914ae13749e
 
 
 /***/ })
