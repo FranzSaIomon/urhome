@@ -81,10 +81,10 @@
             $("#advanced_purpose button").removeClass("active")
 
             if (prev != $(e.target).attr('data-value')){
-                $('[name=advanced_purpose]').val($(e.target).attr('data-value'))
+                $('#advanced_purpose [name=purpose]').val($(e.target).attr('data-value'))
                 $(e.target).addClass('active')
             } else
-                $('[name=advanced_purpose]').val('all')
+                $('#advanced_purpose [name=purpose]').val('all')
 
         })
     })

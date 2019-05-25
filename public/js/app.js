@@ -2076,7 +2076,6 @@ var countries = {
       var flag = $(this.$refs['country-flag']);
 
       if (this.placeholder.length != 0) {
-        console.log(!this.values[this.name]);
         if (!this.values[this.name]) select.append("<option selected disabled>" + this.placeholder + "</option>");else select.append("<option disabled>" + this.placeholder + "</option>");
       } // $.each(countries, (k, v) => select.append('<option value="' + k + '">' + v + '</option>'))
 
@@ -20523,14 +20522,23 @@ var render = function() {
           ? _c("div", { staticClass: "badge rent" }, [_vm._v("For Rent")])
           : _c("div", { staticClass: "badge sale" }, [_vm._v("For Sale")]),
         _vm._v(" "),
-        _vm.card.property_document && _vm.card.property_document.Image
+        _vm.card.property_document &&
+        _vm.card.property_document.Images.length > 0
           ? _c("img", {
-              staticClass: "card-img-top",
-              attrs: { src: _vm.card.property_document.Image[0], alt: "" }
+              staticClass: "lazy text-center card-img-top",
+              staticStyle: { "min-height": "282.4px" },
+              attrs: {
+                "data-src": _vm.card.property_document.Images[0],
+                alt: _vm.card.Name + " by " + _vm.card.user.email
+              }
             })
           : _c("img", {
-              staticClass: "card-img-top",
-              attrs: { src: "https://via.placeholder.com/300", alt: "" }
+              staticClass: "lazy text-center card-img-top",
+              staticStyle: { "min-height": "282.4px" },
+              attrs: {
+                "data-src": "https://via.placeholder.com/282",
+                alt: _vm.card.Name + " by " + _vm.card.user.email
+              }
             }),
         _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
@@ -33012,11 +33020,8 @@ module.exports = function(module) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/mixins/FormMixin */ "./resources/js/components/mixins/FormMixin.js");
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+/* harmony import */ var _components_mixins_PropertyCardsMixin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/mixins/PropertyCardsMixin */ "./resources/js/components/mixins/PropertyCardsMixin.js");
+
 
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
@@ -33040,302 +33045,319 @@ $.urlParam = function (name) {
 };
 
 $(document).ready(function () {
-  var filter = new Vue({
-    el: "#vue-filter",
-    mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
-    created: function created() {
-      var _this = this;
+  if ($("#vue-filter").length) {
+    var filter = new Vue({
+      el: "#vue-filter",
+      mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
+      created: function created() {
+        var _this = this;
 
-      $.ajax({
-        method: "GET",
-        url: '/api/property/types'
-      }).always(function (e) {
-        $.each(e, function (i, o) {
-          _this.options.push({
-            name: o.PropertyType,
-            value: o.id
+        $.ajax({
+          method: "GET",
+          url: '/api/property/types'
+        }).always(function (e) {
+          $.each(e, function (i, o) {
+            _this.options.push({
+              name: o.PropertyType,
+              value: o.id
+            });
           });
         });
-      });
-    },
-    data: {
-      options: [],
-      toggles: [{
-        name: 'For Rent',
-        value: 1
-      }, {
-        name: 'For Sale',
-        value: 2
-      }],
-      values: {},
-      errors: {}
-    },
-    methods: {
-      search: function search(e) {
-        if ($("#vue-filter").is('[local]')) {
-          console.log(1);
-        } else {
-          $("#vue-filter").submit();
+      },
+      data: {
+        options: [],
+        toggles: [{
+          name: 'For Rent',
+          value: 1
+        }, {
+          name: 'For Sale',
+          value: 2
+        }],
+        values: {},
+        errors: {}
+      },
+      methods: {
+        search: function search(e) {
+          if ($("#vue-filter").is('[local]')) {
+            console.log(1);
+          } else {
+            $("#vue-filter").submit();
+          }
         }
       }
-    }
-  });
-  var login = new Vue({
-    el: "#vue-login",
-    data: {
-      errors: {},
-      values: {
-        'email': 'hubert.gutmann@example.net',
-        'password': 'password'
-      },
-      loginForm: true,
-      formChanged: false,
-      success: undefined
-    },
-    mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
-    updated: function updated() {
-      if (this.formChanged && this.loginForm) {
-        this.formChanged = false;
-        grecaptcha.render($('.g-recaptcha')[0], {
-          sitekey: this.sitekey
-        });
-      }
-    },
-    methods: {
-      login: function login() {
-        var _this2 = this;
+    });
+  }
 
-        // Remember: https://vuejs.org/v2/guide/list.html#Caveats
-        if (this.loginForm) {
+  if ($("#vue-login").length) {
+    var login = new Vue({
+      el: "#vue-login",
+      data: {
+        errors: {},
+        values: {
+          'email': 'hubert.gutmann@example.net',
+          'password': 'password'
+        },
+        loginForm: true,
+        formChanged: false,
+        success: undefined
+      },
+      mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
+      updated: function updated() {
+        if (this.formChanged && this.loginForm) {
+          this.formChanged = false;
+          grecaptcha.render($('.g-recaptcha')[0], {
+            sitekey: this.sitekey
+          });
+        }
+      },
+      methods: {
+        login: function login() {
+          var _this2 = this;
+
+          // Remember: https://vuejs.org/v2/guide/list.html#Caveats
+          if (this.loginForm) {
+            var securities = this.getSecurities();
+            Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
+            Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
+            this.errors = {};
+            this.success = undefined;
+            $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden');
+            $.ajax({
+              url: '/login',
+              method: "POST",
+              data: this.values,
+              success: function success(e) {
+                _this2.success = "<b>Success!</b> You've successfully logged in, please wait to be redirected...";
+                location.reload();
+              },
+              error: function error(e) {
+                $.each(e.responseJSON.errors, function (key, val) {
+                  return Vue.set(_this2.errors, key, val);
+                });
+
+                if (e.responseJSON.errors["g-recaptcha-response"]) {
+                  var captcha_elem = $(_this2.$el).find('.g-recaptcha');
+                  captcha_elem.find('> div').css("border", '1px solid #e3342f');
+                  captcha_elem.find('+.invalid-feedback').css('display', 'block').text(e.responseJSON.errors['g-recaptcha-response']);
+                }
+              }
+            }).always(function (e) {
+              $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden');
+              grecaptcha.reset();
+            });
+          }
+        },
+        reset: function reset() {
+          var _this3 = this;
+
           var securities = this.getSecurities();
           Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
-          Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
-          this.errors = {};
-          this.success = undefined;
-          $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden');
           $.ajax({
-            url: '/login',
+            url: '/password/email',
             method: "POST",
             data: this.values,
             success: function success(e) {
-              _this2.success = "<b>Success!</b> You've successfully logged in, please wait to be redirected...";
-              location.reload();
+              _this3.success = e.status;
             },
             error: function error(e) {
               $.each(e.responseJSON.errors, function (key, val) {
-                return Vue.set(_this2.errors, key, val);
+                return Vue.set(_this3.errors, key, val);
               });
+            }
+          });
+        },
+        changeForm: function changeForm() {
+          this.loginForm = !this.loginForm;
+          this.formChanged = true;
+          this.success = undefined;
+          this.errors = {};
+        }
+      }
+    });
+  }
 
-              if (e.responseJSON.errors["g-recaptcha-response"]) {
-                var captcha_elem = $(_this2.$el).find('.g-recaptcha');
-                captcha_elem.find('> div').css("border", '1px solid #e3342f');
-                captcha_elem.find('+.invalid-feedback').css('display', 'block').text(e.responseJSON.errors['g-recaptcha-response']);
-              }
+  if ($("#vue-register").length) {
+    var register = new Vue({
+      el: "#vue-register",
+      mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
+      data: {
+        errors: {},
+        success: undefined,
+        values: {
+          FirstName: "Miguel",
+          LastName: "Quiambao",
+          BirthDate: "1998-03-31",
+          ContactNo: "09178510533",
+          LotNo: 123,
+          Street: "N. Domingo",
+          City: "San Juan",
+          Country: "PH",
+          email: "miguelalfonsoquiambao@gmail.com",
+          password: "password",
+          password_confirmation: "password",
+          UserType: [1]
+        },
+        toggles: [{
+          name: 'Client',
+          value: 1
+        }, {
+          name: 'Broker',
+          value: 2
+        }]
+      },
+      methods: {
+        register: function register() {
+          var _this4 = this;
+
+          var securities = this.getSecurities();
+          Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
+          Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
+          this.values.UserType = this.values.UserType[0];
+          this.errors = {};
+          this.success = undefined;
+          $("#vue-register button[type=submit] .spinner-border").removeAttr('hidden');
+          $("#vue-register button[type=submit]").attr("disabled", "disabled");
+          $.ajax({
+            url: '/register',
+            method: 'POST',
+            data: this.values,
+            success: function success(e) {
+              _this4.success = "<b>Success!</b> You've successfully registered, please wait to be redirected...";
+              location.reload();
+            },
+            error: function error(e) {
+              console.log(e);
+              $.each(e.responseJSON.errors, function (key, val) {
+                return Vue.set(_this4.errors, key, val);
+              });
             }
           }).always(function (e) {
-            $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden');
-            grecaptcha.reset();
+            $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden');
+            $("#vue-register button[type=submit]").removeAttr("disabled");
+            _this4.values.UserType = [_this4.values.UserType];
           });
         }
-      },
-      reset: function reset() {
-        var _this3 = this;
-
-        var securities = this.getSecurities();
-        Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
-        $.ajax({
-          url: '/password/email',
-          method: "POST",
-          data: this.values,
-          success: function success(e) {
-            _this3.success = e.status;
-          },
-          error: function error(e) {
-            $.each(e.responseJSON.errors, function (key, val) {
-              return Vue.set(_this3.errors, key, val);
-            });
-          }
-        });
-      },
-      changeForm: function changeForm() {
-        this.loginForm = !this.loginForm;
-        this.formChanged = true;
-        this.success = undefined;
-        this.errors = {};
       }
-    }
-  });
-  var register = new Vue({
-    el: "#vue-register",
-    mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
-    data: {
-      errors: {},
-      success: undefined,
-      values: {
-        FirstName: "Miguel",
-        LastName: "Quiambao",
-        BirthDate: "1998-03-31",
-        ContactNo: "09178510533",
-        LotNo: 123,
-        Street: "N. Domingo",
-        City: "San Juan",
-        Country: "PH",
-        email: "miguelalfonsoquiambao@gmail.com",
-        password: "password",
-        password_confirmation: "password",
-        UserType: [1]
-      },
-      toggles: [{
-        name: 'Client',
-        value: 1
-      }, {
-        name: 'Broker',
-        value: 2
-      }]
-    },
-    methods: {
-      register: function register() {
-        var _this4 = this;
+    });
+  }
 
-        var securities = this.getSecurities();
-        Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
-        Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
-        this.values.UserType = this.values.UserType[0];
-        this.errors = {};
-        this.success = undefined;
-        $("#vue-register button[type=submit] .spinner-border").removeAttr('hidden');
-        $("#vue-register button[type=submit]").attr("disabled", "disabled");
+  if ($("#vue-simple-search").length && $("#properties_cards").length) {
+    var search = new Vue({
+      el: "#vue-simple-search",
+      mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
+      data: {
+        toggles: [],
+        options: [],
+        values: {},
+        errors: {},
+        page: 1,
+        shown: false,
+        ignoreAdvanced: $.urlParam('ignoreAdvanced') ? true : false,
+        lastPage: 1
+      },
+      created: function created() {
+        var _this5 = this;
+
         $.ajax({
-          url: '/register',
-          method: 'POST',
-          data: this.values,
-          success: function success(e) {
-            _this4.success = "<b>Success!</b> You've successfully registered, please wait to be redirected...";
-            location.reload();
-          },
-          error: function error(e) {
-            console.log(e);
-            $.each(e.responseJSON.errors, function (key, val) {
-              return Vue.set(_this4.errors, key, val);
-            });
-          }
+          method: "GET",
+          url: '/api/property/types'
         }).always(function (e) {
-          $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden');
-          $("#vue-register button[type=submit]").removeAttr("disabled");
-          _this4.values.UserType = [_this4.values.UserType];
-        });
-      }
-    }
-  });
-  var properties = new Vue({
-    el: "#properties_cards",
-    data: {
-      cards: [],
-      pages: 0,
-      page: 1
-    },
-    methods: {
-      changePage: function changePage(page) {
-        page = parseInt(page) || 1;
-        Vue.set(search.$data, 'page', page);
-        search.search(true);
-      }
-    }
-  });
-  var search = new Vue({
-    el: "#vue-simple-search",
-    mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
-    data: {
-      toggles: [],
-      options: [],
-      values: {},
-      errors: {},
-      page: 1
-    },
-    created: function created() {
-      var _this5 = this;
-
-      $.ajax({
-        method: "GET",
-        url: '/api/property/types'
-      }).always(function (e) {
-        $.each(e, function (i, o) {
-          _this5.options.push({
-            name: o.PropertyType,
-            value: o.id
+          $.each(e, function (i, o) {
+            _this5.options.push({
+              name: o.PropertyType,
+              value: o.id
+            });
           });
         });
-      });
-      $.ajax({
-        method: "GET",
-        url: '/api/listing/types'
-      }).always(function (e) {
-        $.each(e, function (i, o) {
-          _this5.toggles.push({
-            name: "For " + o.ListingType,
-            value: o.id
+        $.ajax({
+          method: "GET",
+          url: '/api/listing/types'
+        }).always(function (e) {
+          $.each(e, function (i, o) {
+            _this5.toggles.push({
+              name: "For " + o.ListingType,
+              value: o.id
+            });
           });
         });
-      });
-    },
-    mounted: function mounted() {
-      var _this6 = this;
+      },
+      mounted: function mounted() {
+        var _this6 = this;
 
-      var range = ["NumberOfBedrooms", "NumberOfBathrooms", "Price", "LotArea", "FloorArea"];
-      var string = ["query", "location"];
-      $.each(range, function (i, v) {
-        if ($.urlParam(v)) {
-          var values = decodeURIComponent($.urlParam(v)).split(',');
-          _this6.values[v][0] = parseInt(values[0], 10);
-          _this6.values[v][1] = parseInt(values[1], 10);
-          _this6.$refs[v].start = _this6.values[v][0];
-          _this6.$refs[v].end = _this6.values[v][1];
-          if (_this6.$refs[v].maximums) _this6.$refs[v].max = _this6.$refs[v].maximums.find(function (el) {
-            return _this6.values[v][1] <= el;
-          });
+        var range = ["NumberOfBedrooms", "NumberOfBathrooms", "Price", "LotArea", "FloorArea"];
+        var string = ["query", "location"];
+        $.each(range, function (i, v) {
+          if ($.urlParam(v)) {
+            var values = decodeURIComponent($.urlParam(v)).split(',');
+            _this6.values[v][0] = parseInt(values[0], 10);
+            _this6.values[v][1] = parseInt(values[1], 10);
+            _this6.$refs[v].start = _this6.values[v][0];
+            _this6.$refs[v].end = _this6.values[v][1];
+            if (_this6.$refs[v].maximums) _this6.$refs[v].max = _this6.$refs[v].maximums.find(function (el) {
+              return _this6.values[v][1] <= el;
+            });
 
-          _this6.$refs[v].updateLimits();
+            _this6.$refs[v].updateLimits();
 
-          _this6.$refs[v].updateStart();
-        }
-      });
-      $.each(string, function (i, v) {
-        if ($.urlParam(v)) Vue.set(_this6.values, v, decodeURIComponent($.urlParam(v)));
-      });
-      if ($.urlParam('type')) Vue.set(this.values, 'type', decodeURIComponent($.urlParam('type')).split(","));
-      if ($.urlParam('purpose')) Vue.set(this.values, 'purpose', decodeURIComponent($.urlParam('purpose')));
-    },
-    methods: {
-      search: function search(ignoreAdvanced) {
-        var _this7 = this;
+            _this6.$refs[v].updateStart();
+          }
+        });
+        $.each(string, function (i, v) {
+          if ($.urlParam(v)) Vue.set(_this6.values, v, decodeURIComponent($.urlParam(v)));
+        });
+        if ($.urlParam('type')) Vue.set(this.values, 'type', decodeURIComponent($.urlParam('type')).split(","));
+        if ($.urlParam('purpose')) Vue.set(this.values, 'purpose', decodeURIComponent($.urlParam('purpose')));
+      },
+      methods: {
+        search: function search(clear) {
+          var _this7 = this;
 
-        this.values.page = this.page;
-        var blacklist = ["NumberOfBedrooms", "NumberOfBathrooms", "Price", "LotArea", "FloorArea"];
-        var nonAdvanced = {};
+          this.values.page = clear ? 1 : this.page;
+          Vue.set(properties.$data, 'loading', true);
+          var blacklist = ["NumberOfBedrooms", "NumberOfBathrooms", "Price", "LotArea", "FloorArea"];
+          var nonAdvanced = {};
 
-        for (var key in this.values) {
-          if (blacklist.indexOf(key) == -1) nonAdvanced[key] = this.values[key];
-        }
+          for (var key in this.values) {
+            if (blacklist.indexOf(key) == -1) nonAdvanced[key] = this.values[key];
+          }
 
-        if (this.page > 0 && (this.page <= properties.$data.pages || properties.$data.pages == 0)) {
           $.ajax({
             url: "/api/property/paginate",
             method: "GET",
-            data: !ignoreAdvanced ? this.values : nonAdvanced,
+            data: !this.ignoreAdvanced ? this.values : nonAdvanced,
             success: function success(e) {
-              Vue.set(properties.$data, 'cards', e.data);
-              properties.$data.pages = e.last_page;
-              if (e.current_page <= e.last_page) properties.$data.page = _this7.page;else properties.$data.page = e.last_page;
+              if (clear) {
+                _this7.page = 0;
+                _this7.lastPage = 0;
+                Vue.set(properties.$data, 'cards', []);
+              }
+
+              Vue.set(properties.$data, 'resultCount', e.total);
+              $.each(e.data, function (i, o) {
+                return properties.cards.push(o);
+              });
+              _this7.lastPage = e.last_page;
+              _this7.page++;
             },
             error: function error(e) {
               console.dir(e);
             }
+          }).always(function () {
+            return Vue.set(properties.$data, 'loading', false);
           });
         }
       }
-    }
-  });
-  search.search($.urlParam('ignoreAdvanced') ? true : false);
+    });
+    var properties = new Vue({
+      el: "#properties_cards",
+      mixins: [_components_mixins_PropertyCardsMixin__WEBPACK_IMPORTED_MODULE_1__["default"]],
+      mounted: function mounted() {
+        this.searchable = search;
+      }
+    });
+    search.search();
+  }
+
   var captchaLoaded = false;
   $(".captcha-refresh").click(function () {
     if (!captchaLoaded) {
@@ -33884,6 +33906,45 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/mixins/PropertyCardsMixin.js":
+/*!**************************************************************!*\
+  !*** ./resources/js/components/mixins/PropertyCardsMixin.js ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: {
+    cards: [],
+    bottom: false,
+    searchable: null,
+    resultCount: 0,
+    loading: false
+  },
+  created: function created() {
+    var _this = this;
+
+    window.addEventListener('scroll', function () {
+      var scrollY = window.scrollY;
+      var visible = document.documentElement.clientHeight;
+      var pageHeight = document.documentElement.scrollHeight;
+      var bottomOfPage = visible + scrollY >= pageHeight;
+      _this.bottom = bottomOfPage || pageHeight < visible;
+    });
+  },
+  watch: {
+    bottom: function bottom(_bottom) {
+      if (_bottom && this.searchable) {
+        this.searchable.search();
+      }
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/sass/app.scss":
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
@@ -33902,13 +33963,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-<<<<<<< HEAD
-__webpack_require__(/*! C:\wamp64\www\urhome\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\wamp64\www\urhome\resources\sass\app.scss */"./resources/sass/app.scss");
-=======
 __webpack_require__(/*! /var/www/html/urhome/resources/js/app.js */"./resources/js/app.js");
 module.exports = __webpack_require__(/*! /var/www/html/urhome/resources/sass/app.scss */"./resources/sass/app.scss");
->>>>>>> 4f80157461c7b4de9f048363c5b0b914ae13749e
 
 
 /***/ })

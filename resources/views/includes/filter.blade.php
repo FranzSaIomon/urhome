@@ -42,9 +42,9 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="purpose">Purpose</label>
-                                        <div id="purpose">
+                                        <div id="advanced_purpose">
                                             @foreach (App\ListingType::all() as $item)
-                                                <button type="button" class="btn btn-md" data-value="{{ $item->id}}">For {{$item->ListingType}}</button>
+                                                <button type="button" class="btn btn-outline-primary btn-md" data-value="{{ $item->id}}">For {{$item->ListingType}}</button>
                                             @endforeach
                                             <input type="hidden" name="purpose" value="all">
                                         </div>

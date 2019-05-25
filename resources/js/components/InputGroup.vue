@@ -61,7 +61,6 @@
                 let flag = $(this.$refs['country-flag']);
                 
                 if (this.placeholder.length != 0) {
-                    console.log(!this.values[this.name])
                     if (!this.values[this.name])
                         select.append("<option selected disabled>" + this.placeholder + "</option>")
                     else

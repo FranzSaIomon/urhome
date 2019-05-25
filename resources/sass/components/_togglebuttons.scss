@@ -2,12 +2,18 @@
     .buttons {
         text-align: center;
     }
+
     button {
+        &:not(.joined) {
+            margin-top: 5px;
+        }
+        
         text-transform: capitalize;
         padding: 5px 25px;
         margin: 0 10px;
         border: 1px solid $blue;
         color: $blue;
+        background-color: #fff;
         border-radius: $border-radius;
 
         &:active{

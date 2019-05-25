@@ -4,9 +4,13 @@
             border: 1px solid $primary;
         }
 
+        .card-img-top {
+            vertical-align: middle;
+        }
+
         text-decoration: none;
         position: relative;
-        margin-top: 30px;
+        margin-bottom: 30px;
 
         .badge {
             position: absolute;

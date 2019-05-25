@@ -3,8 +3,8 @@
         <a :href="'/properties/view/' + card.id" class="card">
             <div v-if="card.listing_type.ListingType ==='rent'" class="badge rent">For Rent</div>
             <div v-else class="badge sale">For Sale</div>
-            <img :src="card.property_document.Image[0]" alt="" class="card-img-top" v-if="card.property_document && card.property_document.Image">
-            <img src="https://via.placeholder.com/300" alt="" class="card-img-top" v-else>
+            <img :data-src="card.property_document.Images[0]" :alt="card.Name + ' by ' + card.user.email" class="lazy text-center card-img-top" style="min-height: 282.4px" v-if="card.property_document && card.property_document.Images.length > 0">
+            <img data-src="https://via.placeholder.com/282" :alt="card.Name + ' by ' + card.user.email" class="lazy text-center card-img-top" style="min-height: 282.4px" v-else>
             <div class="card-body">
                 <h6 class="card-subtitle">{{ card.property_type.PropertyType }} | {{ card.City }}</h6>
                 <h4 class="card-title">{{ card.Name }}</h4>
