@@ -17,7 +17,7 @@ $factory->define(Property::class, function (Faker $faker) {
         "YearBuilt" => $faker->year(),
         "FloorArea" => rand(0, 100),
         "LotArea" => rand(0, 100),
-        "Price" => $faker->randomNumber(8),
+        "Price" => $faker->numberBetween(100, 100000000),
         "NumberOfBedrooms" => rand(0, 20),
         "NumberOfBathrooms" => rand(0, 20),
         "CapacityOfGarage" => rand(0, 20),

@@ -20523,12 +20523,12 @@ var render = function() {
           : _c("div", { staticClass: "badge sale" }, [_vm._v("For Sale")]),
         _vm._v(" "),
         _vm.card.property_document &&
-        _vm.card.property_document.Images.length > 0
+        _vm.card.property_document.Images["regular"].length > 0
           ? _c("img", {
               staticClass: "lazy text-center card-img-top",
               staticStyle: { "min-height": "282.4px" },
               attrs: {
-                "data-src": _vm.card.property_document.Images[0],
+                "data-src": _vm.card.property_document.Images["regular"][0],
                 alt: _vm.card.Name + " by " + _vm.card.user.email
               }
             })
@@ -33332,6 +33332,7 @@ $(document).ready(function () {
                 Vue.set(properties.$data, 'cards', []);
               }
 
+              console.log(_this7.values);
               Vue.set(properties.$data, 'resultCount', e.total);
               $.each(e.data, function (i, o) {
                 return properties.cards.push(o);
@@ -33963,8 +33964,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/html/urhome/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/html/urhome/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\wamp64\www\urhome\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\wamp64\www\urhome\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

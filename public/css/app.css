@@ -16517,6 +16517,10 @@ readers do not read off random characters that represent icons */
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
 }
 
+.photos {
+  background-color: #CCCCCC;
+}
+
 #popup_alert {
   position: absolute;
   top: 125%;

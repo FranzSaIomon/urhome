@@ -11,7 +11,7 @@ class PropertyDocument extends Model
     ];
 
     protected $casts = [
-        "Images" => "array",
+        "Images" => "json",
         "Files" => "array"
     ];
 

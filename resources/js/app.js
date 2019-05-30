@@ -321,6 +321,8 @@ $(document).ready(() => {
                                 Vue.set(properties.$data, 'cards', [])
                             }
 
+                            console.log(this.values)
+
                             Vue.set(properties.$data, 'resultCount', e.total)
                             
                             $.each(e.data, (i, o) => properties.cards.push(o))
