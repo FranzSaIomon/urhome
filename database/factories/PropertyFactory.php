@@ -24,7 +24,7 @@ $factory->define(Property::class, function (Faker $faker) {
         "Verified" => rand(0, 1),
         "UserID" => rand(1, 10),
         "ListingTypeID" => rand(1, 2),
-        "StatusID" => rand(1, 4),
+        "StatusID" => rand(1, 2),
         "PropertyTypeID" => rand(1, 5)
     ];
 });

@@ -11,6 +11,6 @@ class PropertyAmenity extends Model
     ];
     
     // Relationships
-    public function amenity() {return $this->hasMany("App\Amenity", 'id', 'AmenityID');}
+    public function amenity() {return $this->hasOne("App\Amenity", 'id', 'AmenityID');}
     public function property() {return $this->belongsTo('App\Property', 'PropertyID', 'id');}
 }

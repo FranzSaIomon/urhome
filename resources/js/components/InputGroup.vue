@@ -9,7 +9,7 @@
                 }"
                 v-if="type.toLowerCase() != 'select' && type.toLowerCase() != 'country'" v-model="values[name]"
                 :placeholder="placeholder" 
-                :required="required ? true : false"/>
+                :required="required ? true : false" value="value"/>
                 
         <select :name="name" :class="{
                     'custom-select': true,
@@ -18,7 +18,8 @@
                 }"
                 v-if="type.toLowerCase() =='select'" 
                 v-model="values[name]" :id="id" :required="required ? true : false">
-            <option v-for="option in options" :value="option.value" :key="option.name">{{option.name}}</option>
+            <option v-for="option in options" :value="option.value" :key="option.name" v-if="v == value">{{option.name}}</option>
+            <option v-for="option in options" :value="option.value" :key="option.name" v-else>{{option.name}}</option>
         </select>
 
         <div class="country-select" v-if="type.toLowerCase() =='country'">
@@ -30,7 +31,8 @@
                     'is-invalid': errors[name],
                 }"
                 :name="name" v-model="values[name]" :id="id" ref="country" :required="required ? true : false">
-                <option v-for="(k, v) in countries" :value="v" :key="k">{{k}}</option>
+                <option v-for="(k, v) in countries" :value="v" :key="k" selected v-if="v == value">{{k}}</option>
+                <option v-for="(k, v) in countries" :value="v" :key="k" v-else>{{k}}</option>
             </select>
         </div>
 
@@ -50,6 +52,7 @@
                 type: this.$attrs['type'] || 'text',
                 label: this.$attrs['label'] || '',
                 placeholder: this.$attrs['placeholder'] || '',
+                value: this.$attrs["value"],
                 required: this.$attrs['required'] != undefined,
                 id: '',
                 countries,

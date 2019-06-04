@@ -1,5 +1,6 @@
 <?php
 
+use App\Status;
 use Illuminate\Database\Seeder;
 
 class StatusSeeder extends Seeder
@@ -11,6 +12,13 @@ class StatusSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\Status', 4)->create();
+        $av = new Status;
+        $ar = new Status;
+
+        $av->Status = "Available";
+        $ar->Status = "Archived";
+        
+        $av->save();
+        $ar->save();
     }
 }

@@ -22,10 +22,6 @@
         var onloadCallback = () =>{}
     </script>
 
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js'></script>
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css'/>
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css'/>
-
     <script src="{{asset('js/app.js')}}" type="text/javascript"></script>
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
     <link rel="shortcut icon" href="{{ asset('img/icons/favicon.ico') }}" type="image/x-icon">
@@ -33,6 +29,7 @@
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
     </script>
 
+    @yield('header')
 </head>
 <body class="{{ isset($nolanding) ? $nolanding : '' }}" style="overflow-x: hidden !important">
     @include('includes.navigation')

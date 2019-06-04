@@ -1804,6 +1804,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 var countries = {
   "AD": "Andorra",
@@ -2065,6 +2067,7 @@ var countries = {
       type: this.$attrs['type'] || 'text',
       label: this.$attrs['label'] || '',
       placeholder: this.$attrs['placeholder'] || '',
+      value: this.$attrs["value"],
       required: this.$attrs['required'] != undefined,
       id: '',
       countries: countries
@@ -20139,11 +20142,12 @@ var render = function() {
               name: _vm.name,
               placeholder: _vm.placeholder,
               required: _vm.required ? true : false,
+              value: "value",
               type: "checkbox"
             },
             domProps: {
               checked: Array.isArray(_vm.values[_vm.name])
-                ? _vm._i(_vm.values[_vm.name], null) > -1
+                ? _vm._i(_vm.values[_vm.name], "value") > -1
                 : _vm.values[_vm.name]
             },
             on: {
@@ -20152,7 +20156,7 @@ var render = function() {
                   $$el = $event.target,
                   $$c = $$el.checked ? true : false
                 if (Array.isArray($$a)) {
-                  var $$v = null,
+                  var $$v = "value",
                     $$i = _vm._i($$a, $$v)
                   if ($$el.checked) {
                     $$i < 0 && _vm.$set(_vm.values, _vm.name, $$a.concat([$$v]))
@@ -20191,12 +20195,13 @@ var render = function() {
               name: _vm.name,
               placeholder: _vm.placeholder,
               required: _vm.required ? true : false,
+              value: "value",
               type: "radio"
             },
-            domProps: { checked: _vm._q(_vm.values[_vm.name], null) },
+            domProps: { checked: _vm._q(_vm.values[_vm.name], "value") },
             on: {
               change: function($event) {
-                return _vm.$set(_vm.values, _vm.name, null)
+                return _vm.$set(_vm.values, _vm.name, "value")
               }
             }
           })
@@ -20220,6 +20225,7 @@ var render = function() {
               name: _vm.name,
               placeholder: _vm.placeholder,
               required: _vm.required ? true : false,
+              value: "value",
               type: _vm.type
             },
             domProps: { value: _vm.values[_vm.name] },
@@ -20275,11 +20281,19 @@ var render = function() {
               }
             },
             _vm._l(_vm.options, function(option) {
-              return _c(
-                "option",
-                { key: option.name, domProps: { value: option.value } },
-                [_vm._v(_vm._s(option.name))]
-              )
+              return _vm.v == _vm.value
+                ? _c(
+                    "option",
+                    { key: option.name, domProps: { value: option.value } },
+                    [_vm._v(_vm._s(option.name))]
+                  )
+                : _vm._l(_vm.options, function(option) {
+                    return _c(
+                      "option",
+                      { key: option.name, domProps: { value: option.value } },
+                      [_vm._v(_vm._s(option.name))]
+                    )
+                  })
             }),
             0
           )
@@ -20336,9 +20350,21 @@ var render = function() {
                 }
               },
               _vm._l(_vm.countries, function(k, v) {
-                return _c("option", { key: k, domProps: { value: v } }, [
-                  _vm._v(_vm._s(k))
-                ])
+                return v == _vm.value
+                  ? _c(
+                      "option",
+                      {
+                        key: k,
+                        attrs: { selected: "" },
+                        domProps: { value: v }
+                      },
+                      [_vm._v(_vm._s(k))]
+                    )
+                  : _vm._l(_vm.countries, function(k, v) {
+                      return _c("option", { key: k, domProps: { value: v } }, [
+                        _vm._v(_vm._s(k))
+                      ])
+                    })
               }),
               0
             )
@@ -33078,9 +33104,7 @@ $(document).ready(function () {
       },
       methods: {
         search: function search(e) {
-          if ($("#vue-filter").is('[local]')) {
-            console.log(1);
-          } else {
+          if ($("#vue-filter").is('[local]')) {} else {
             $("#vue-filter").submit();
           }
         }
@@ -33094,7 +33118,7 @@ $(document).ready(function () {
       data: {
         errors: {},
         values: {
-          'email': 'hubert.gutmann@example.net',
+          'email': 'xpfannerstill@example.net',
           'password': 'password'
         },
         loginForm: true,
@@ -33122,6 +33146,7 @@ $(document).ready(function () {
             this.errors = {};
             this.success = undefined;
             $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden');
+            $("#vue-login button[type=submit]").attr('disabled', 'disabled');
             $.ajax({
               url: '/login',
               method: "POST",
@@ -33143,6 +33168,7 @@ $(document).ready(function () {
               }
             }).always(function (e) {
               $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden');
+              $("#vue-login button[type=submit]").removeAttr('disabled');
               grecaptcha.reset();
             });
           }
@@ -33357,6 +33383,37 @@ $(document).ready(function () {
       }
     });
     search.search();
+  }
+
+  if ($("#vue-property-update").length) {
+    var property_update = new Vue({
+      el: "#vue-property-update",
+      mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
+      data: {
+        errors: {},
+        values: {},
+        options: []
+      },
+      created: function created() {
+        var _this8 = this;
+
+        $.ajax({
+          url: "/api/amenity",
+          method: "GET",
+          success: function success(e) {
+            $.each(e, function (i, o) {
+              return _this8.options.push({
+                name: o.AmenityName,
+                value: o.id
+              });
+            });
+          }
+        });
+      },
+      methods: {
+        update: function update() {}
+      }
+    });
   }
 
   var captchaLoaded = false;

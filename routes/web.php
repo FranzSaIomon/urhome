@@ -16,10 +16,11 @@ Route::get('/', "PageController@index");
 Route::get('about', 'PageController@about');
 Route::get('contact', 'PageController@contact');
 
-
+// Properties
 Route::get('properties', 'PageController@search');
 Route::get('properties/search', 'PageController@search');
 Route::get('properties/view/{property}', 'PropertyController@view');
+Route::get('properties/toggleArchive/{property}', 'PropertyController@toggleArchive')->middleware("auth");
 
 // Auth Routes
 Auth::routes(["verify" => true]);   

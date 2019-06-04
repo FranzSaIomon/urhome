@@ -57,7 +57,6 @@ $(document).ready(() => {
             methods: {
                 search(e) {
                     if ($("#vue-filter").is('[local]')) {
-                        console.log(1)
                     } else {
                         $("#vue-filter").submit()
                     }
@@ -73,7 +72,7 @@ $(document).ready(() => {
             data: {
                 errors: {},
                 values: {
-                    'email': 'hubert.gutmann@example.net',
+                    'email': 'xpfannerstill@example.net',
                     'password': 'password'
                 },
                 loginForm: true,
@@ -101,6 +100,8 @@ $(document).ready(() => {
                         this.errors = {}
                         this.success = undefined
                         $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden')
+                        $("#vue-login button[type=submit]").attr('disabled', 'disabled')
+
                         $.ajax({
                             url: '/login',
                             method: "POST",
@@ -124,6 +125,7 @@ $(document).ready(() => {
                             }
                         }).always((e) => {
                             $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden')
+                            $("#vue-login button[type=submit]").removeAttr('disabled')
                             grecaptcha.reset()
                         })
                     }
@@ -346,6 +348,35 @@ $(document).ready(() => {
         })
         
         search.search()
+    }
+
+    if ($("#vue-property-update").length) {
+        const property_update = new Vue({
+            el: "#vue-property-update",
+            mixins: [FormMixin],
+            data: {
+                errors: {},
+                values: {},
+                options: []
+            },
+            created() {
+                $.ajax({
+                    url: "/api/amenity",
+                    method: "GET",
+                    success: (e) => {
+                        $.each(e, (i, o) => this.options.push({
+                            name: o.AmenityName,
+                            value: o.id
+                        }))
+                    }
+                })
+            },
+            methods: {
+                update() {
+
+                }
+            }
+        })
     }
 
     let captchaLoaded = false

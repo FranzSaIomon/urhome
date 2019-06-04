@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Property;
+use App\Status;
 use Illuminate\Http\Request;
-
 class PropertyController extends Controller
 {
     /**
@@ -87,6 +88,21 @@ class PropertyController extends Controller
     public function paginate(Request $request) {
         // return $this->get($request);
         return $this->get($request)->paginate(15);
+    }
+
+    public function toggleArchive(Request $request, Property $property) {
+        if (auth()->user()->id == $property->UserID) {
+            if ($property->StatusID == 1)
+                $property->StatusID = 2;
+            else
+                $property->StatusID = 1;
+
+            if ($property->save())
+                return response()->json(["message" => ["You've succesfully updated this property"]]);
+            else
+                return response()->json(["message" => ["Uh Oh! Something went wrong, try again later"]], 422);
+        } else
+            return response()->json(["message" => ["Oops! Looks like you don't own this property"]], 422);
     }
 
     /**

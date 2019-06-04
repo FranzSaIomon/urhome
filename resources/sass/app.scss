@@ -105,3 +105,17 @@ h1, h2, h3, h4, h5, h6 {
         padding-left: calc( 16px + 0.9rem) !important;
     }
 }
+
+@include media-breakpoint-only(xs) {
+    .btn-xs-block {
+      display: block;
+      width: 100%;
+    }
+}
+  
+@include media-breakpoint-only(sm) {
+    .btn-sm-block {
+        display: block;
+        width: 100%;
+    }
+}

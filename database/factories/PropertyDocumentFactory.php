@@ -5,7 +5,8 @@
 use App\PropertyDocument;
 use Faker\Generator as Faker;
 
-$factory->define(PropertyDocument::class, function (Faker $faker) {
+$factory->define(PropertyDocument::class, function (Faker $faker){
+    static $number = 1;
     return [
         "Images" => ["regular" => 
                         [$faker->imageUrl(300,300, 'cats'),
@@ -17,6 +18,6 @@ $factory->define(PropertyDocument::class, function (Faker $faker) {
                         ]
                     ],
         "Files" => ['http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.105.3184&rep=rep1&type=pdf'],
-        "PropertyID" => rand(1, 100)
+        "PropertyID" => $number++
     ];
 });

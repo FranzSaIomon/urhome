@@ -21,3 +21,5 @@ Route::get('/property', 'PropertyController@index');
 Route::get('/property/paginate', 'PropertyController@paginate');
 Route::get('/property/types', 'PropertyTypeController@index');
 Route::get('/listing/types', 'ListingTypeController@index');
+
+Route::get('/amenity', 'AmenityController@index');

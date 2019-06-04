@@ -16967,3 +16967,17 @@ h6 {
   padding-left: calc( 16px + 0.9rem) !important;
 }
 
+@media (max-width: 575.98px) {
+  .btn-xs-block {
+    display: block;
+    width: 100%;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .btn-sm-block {
+    display: block;
+    width: 100%;
+  }
+}
+
