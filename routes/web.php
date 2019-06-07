@@ -20,6 +20,7 @@ Route::get('contact', 'PageController@contact');
 Route::get('properties', 'PageController@search');
 Route::get('properties/search', 'PageController@search');
 Route::get('properties/view/{property}', 'PropertyController@view');
+Route::get('properties/update/{property}', 'PropertyController@update');
 Route::get('properties/toggleArchive/{property}', 'PropertyController@toggleArchive')->middleware("auth");
 
 // Auth Routes

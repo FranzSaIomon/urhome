@@ -88,7 +88,8 @@
                             </div>
                         </div>
                         <div class="row" v-if="success">
-                            <div class="col-md-12 alert alert-success" v-html="success">
+                            <div class="col-md-12">
+                                <div class="alert alert-success" v-html="success"></div>
                             </div>
                         </div>
                     </div>    

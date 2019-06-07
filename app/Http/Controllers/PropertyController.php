@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Property;
+use App\PropertyAmenity;
 use App\Status;
 use Illuminate\Http\Request;
 class PropertyController extends Controller
@@ -73,7 +74,7 @@ class PropertyController extends Controller
         }
 
         $sql = Property::with(['listing_type', 'status', 'user', 'property_amenity', 'property_document', 'property_type'])
-            ->where($conditions);
+            ->where($conditions)->where('StatusID', 1);
         
         $sql->where(function($q) use ($or_conditions) {
             foreach($or_conditions as $k)
@@ -157,7 +158,84 @@ class PropertyController extends Controller
      */
     public function update(Request $request, Property $property)
     {
-        //
+        $request->validate([
+            "Name" => "filled",
+            "Description" => "filled",
+            "Developer" => "filled",
+            "LotNo" => "filled",
+            "Street" => "filled",
+            "City" => "filled",
+            "Country" => "filled",
+            "YearBuilt" => "filled|integer",
+            "FloorArea" => "filled|numeric|min:0",
+            "LotArea" => "filled|numeric|min:0",
+            "Price" => "filled|numeric|min:0",
+            "NumberOfBedrooms" => "filled|integer|min:0",
+            "NumberOfBathrooms" => "filled|integer|min:0",
+            "CapacityOfGarage" => "filled|integer|min:0",
+            "PropertyTypeID" => "exists:property_types,id|integer",
+            "ListingTypeID" => "exists:listing_types,id|integer",
+            "Amenities.*" => "exists:amenities,id|integer"
+        ]);
+
+        $property->Name = $request->Name;
+        $property->Description = $request->Description;
+        $property->Developer = $request->Developer;
+        $property->LotNo = $request->LotNo;
+        $property->Street = $request->Street;
+        $property->City = $request->City;
+        $property->Country = $request->Country;
+        $property->YearBuilt = $request->YearBuilt;
+        $property->FloorArea = $request->FloorArea;
+        $property->LotArea = $request->LotArea;
+        $property->Price = $request->Price;
+        $property->NumberOfBedrooms = $request->NumberOfBedrooms;
+        $property->NumberOfBathrooms = $request->NumberOfBathrooms;
+        $property->CapacityOfGarage = $request->CapacityOfGarage;
+        $property->ListingTypeID = $request->ListingTypeID;
+        $property->PropertyTypeID = $request->PropertyTypeID;
+        
+        $removed = [];
+        $inserted = [];
+
+        if (isset($request->Amenities)) {
+            foreach($request->Amenities as $val) {
+                $found = false;
+                foreach($property->property_amenity as $prop_am) {
+                    if ($prop_am->AmenityID == $val)
+                        $found = true;
+                }
+    
+                if (!$found)
+                    array_push($inserted, $val);
+            }
+
+            $n = [];
+            foreach($inserted as $insertID) {
+                $insert = new PropertyAmenity;
+                $insert->PropertyID = $property->id;
+                $insert->AmenityID = $insertID;
+
+                $insert->save();
+                array_push($n, $insert);
+            }
+        }
+        
+        foreach ($property->property_amenity as $prop_am) {
+            if (!in_array($prop_am->AmenityID, (isset($request->Amenities) ? $request->Amenities : [])))
+            array_push($removed, $prop_am->AmenityID);
+        }
+
+        if (count($removed) > 0)
+            PropertyAmenity::where('PropertyID', $property->id)
+                ->where(function ($q) use ($removed) {
+                    foreach ($removed as $remID)
+                        $q->orwhere("AmenityID", $remID);
+                })
+                ->delete();
+
+        $property->save();
+        return $removed;
     }
 
     /**
@@ -172,6 +250,10 @@ class PropertyController extends Controller
     }
 
     public function view(Request $request, Property $property) {
+        if ($property->StatusID == 2)
+            if (!auth()->check() || (auth()->check() && auth()->user()->id != $property->UserID))
+                return redirect('/');
+
         return view('properties.view')->with(['property' => $property, 'title' => $property->Name, 'nolanding' => 'nolanding']);
     }
 }

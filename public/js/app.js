@@ -1806,6 +1806,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var countries = {
   "AD": "Andorra",
@@ -2069,7 +2081,7 @@ var countries = {
       placeholder: this.$attrs['placeholder'] || '',
       value: this.$attrs["value"],
       required: this.$attrs['required'] != undefined,
-      id: '',
+      id: this.$attrs['id'] || '',
       countries: countries
     };
   },
@@ -20117,127 +20129,8 @@ var render = function() {
     "div",
     { staticClass: "form-group" },
     [
-      _vm.label
+      _vm.label && _vm.type.toLowerCase() != "check"
         ? _c("label", { attrs: { for: _vm.id } }, [_vm._v(_vm._s(_vm.label))])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.type === "checkbox" &&
-      (_vm.type.toLowerCase() != "select" &&
-        _vm.type.toLowerCase() != "country")
-        ? _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.values[_vm.name],
-                expression: "values[name]"
-              }
-            ],
-            class: {
-              "form-control": true,
-              "form-control-sm": true,
-              "is-invalid": _vm.errors[_vm.name]
-            },
-            attrs: {
-              name: _vm.name,
-              placeholder: _vm.placeholder,
-              required: _vm.required ? true : false,
-              value: "value",
-              type: "checkbox"
-            },
-            domProps: {
-              checked: Array.isArray(_vm.values[_vm.name])
-                ? _vm._i(_vm.values[_vm.name], "value") > -1
-                : _vm.values[_vm.name]
-            },
-            on: {
-              change: function($event) {
-                var $$a = _vm.values[_vm.name],
-                  $$el = $event.target,
-                  $$c = $$el.checked ? true : false
-                if (Array.isArray($$a)) {
-                  var $$v = "value",
-                    $$i = _vm._i($$a, $$v)
-                  if ($$el.checked) {
-                    $$i < 0 && _vm.$set(_vm.values, _vm.name, $$a.concat([$$v]))
-                  } else {
-                    $$i > -1 &&
-                      _vm.$set(
-                        _vm.values,
-                        _vm.name,
-                        $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                      )
-                  }
-                } else {
-                  _vm.$set(_vm.values, _vm.name, $$c)
-                }
-              }
-            }
-          })
-        : _vm.type === "radio" &&
-          (_vm.type.toLowerCase() != "select" &&
-            _vm.type.toLowerCase() != "country")
-        ? _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.values[_vm.name],
-                expression: "values[name]"
-              }
-            ],
-            class: {
-              "form-control": true,
-              "form-control-sm": true,
-              "is-invalid": _vm.errors[_vm.name]
-            },
-            attrs: {
-              name: _vm.name,
-              placeholder: _vm.placeholder,
-              required: _vm.required ? true : false,
-              value: "value",
-              type: "radio"
-            },
-            domProps: { checked: _vm._q(_vm.values[_vm.name], "value") },
-            on: {
-              change: function($event) {
-                return _vm.$set(_vm.values, _vm.name, "value")
-              }
-            }
-          })
-        : _vm.type.toLowerCase() != "select" &&
-          _vm.type.toLowerCase() != "country"
-        ? _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.values[_vm.name],
-                expression: "values[name]"
-              }
-            ],
-            class: {
-              "form-control": true,
-              "form-control-sm": true,
-              "is-invalid": _vm.errors[_vm.name]
-            },
-            attrs: {
-              name: _vm.name,
-              placeholder: _vm.placeholder,
-              required: _vm.required ? true : false,
-              value: "value",
-              type: _vm.type
-            },
-            domProps: { value: _vm.values[_vm.name] },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.values, _vm.name, $event.target.value)
-              }
-            }
-          })
         : _vm._e(),
       _vm._v(" "),
       _vm.type.toLowerCase() == "select"
@@ -20281,25 +20174,15 @@ var render = function() {
               }
             },
             _vm._l(_vm.options, function(option) {
-              return _vm.v == _vm.value
-                ? _c(
-                    "option",
-                    { key: option.name, domProps: { value: option.value } },
-                    [_vm._v(_vm._s(option.name))]
-                  )
-                : _vm._l(_vm.options, function(option) {
-                    return _c(
-                      "option",
-                      { key: option.name, domProps: { value: option.value } },
-                      [_vm._v(_vm._s(option.name))]
-                    )
-                  })
+              return _c(
+                "option",
+                { key: option.name, domProps: { value: option.value } },
+                [_vm._v(_vm._s(option.name))]
+              )
             }),
             0
           )
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.type.toLowerCase() == "country"
+        : _vm.type.toLowerCase() == "country"
         ? _c("div", { staticClass: "country-select" }, [
             _vm.values[_vm.name]
               ? _c("span", {
@@ -20350,26 +20233,202 @@ var render = function() {
                 }
               },
               _vm._l(_vm.countries, function(k, v) {
-                return v == _vm.value
-                  ? _c(
-                      "option",
-                      {
-                        key: k,
-                        attrs: { selected: "" },
-                        domProps: { value: v }
-                      },
-                      [_vm._v(_vm._s(k))]
-                    )
-                  : _vm._l(_vm.countries, function(k, v) {
-                      return _c("option", { key: k, domProps: { value: v } }, [
-                        _vm._v(_vm._s(k))
-                      ])
-                    })
+                return _c("option", { key: k, domProps: { value: v } }, [
+                  _vm._v(_vm._s(k))
+                ])
               }),
               0
             )
           ])
-        : _vm._e(),
+        : _vm.type.toLowerCase() == "multitext"
+        ? _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.values[_vm.name],
+                expression: "values[name]"
+              }
+            ],
+            class: {
+              "form-control": true,
+              "form-control-sm": true,
+              "is-invalid": _vm.errors[_vm.name]
+            },
+            attrs: {
+              name: _vm.name,
+              id: _vm.id,
+              placeholder: _vm.placeholder,
+              required: _vm.required ? true : false
+            },
+            domProps: { value: _vm.values[_vm.name] },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.values, _vm.name, $event.target.value)
+              }
+            }
+          })
+        : _vm.type.toLowerCase() == "check"
+        ? _c("div", { staticClass: "form-check" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.values[_vm.name],
+                  expression: "values[name]"
+                }
+              ],
+              staticClass: "form-check-input",
+              attrs: { type: "checkbox", name: _vm.name, id: _vm.id },
+              domProps: {
+                checked: Array.isArray(_vm.values[_vm.name])
+                  ? _vm._i(_vm.values[_vm.name], null) > -1
+                  : _vm.values[_vm.name]
+              },
+              on: {
+                change: function($event) {
+                  var $$a = _vm.values[_vm.name],
+                    $$el = $event.target,
+                    $$c = $$el.checked ? true : false
+                  if (Array.isArray($$a)) {
+                    var $$v = null,
+                      $$i = _vm._i($$a, $$v)
+                    if ($$el.checked) {
+                      $$i < 0 &&
+                        _vm.$set(_vm.values, _vm.name, $$a.concat([$$v]))
+                    } else {
+                      $$i > -1 &&
+                        _vm.$set(
+                          _vm.values,
+                          _vm.name,
+                          $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                        )
+                    }
+                  } else {
+                    _vm.$set(_vm.values, _vm.name, $$c)
+                  }
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "label",
+              { staticClass: "form-check-label", attrs: { for: _vm.id } },
+              [_vm._v(_vm._s(_vm.label))]
+            )
+          ])
+        : _vm.type === "checkbox"
+        ? _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.values[_vm.name],
+                expression: "values[name]"
+              }
+            ],
+            class: {
+              "form-control": true,
+              "form-control-sm": true,
+              "is-invalid": _vm.errors[_vm.name]
+            },
+            attrs: {
+              name: _vm.name,
+              placeholder: _vm.placeholder,
+              required: _vm.required ? true : false,
+              type: "checkbox"
+            },
+            domProps: {
+              checked: Array.isArray(_vm.values[_vm.name])
+                ? _vm._i(_vm.values[_vm.name], null) > -1
+                : _vm.values[_vm.name]
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.values[_vm.name],
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = null,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && _vm.$set(_vm.values, _vm.name, $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      _vm.$set(
+                        _vm.values,
+                        _vm.name,
+                        $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                      )
+                  }
+                } else {
+                  _vm.$set(_vm.values, _vm.name, $$c)
+                }
+              }
+            }
+          })
+        : _vm.type === "radio"
+        ? _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.values[_vm.name],
+                expression: "values[name]"
+              }
+            ],
+            class: {
+              "form-control": true,
+              "form-control-sm": true,
+              "is-invalid": _vm.errors[_vm.name]
+            },
+            attrs: {
+              name: _vm.name,
+              placeholder: _vm.placeholder,
+              required: _vm.required ? true : false,
+              type: "radio"
+            },
+            domProps: { checked: _vm._q(_vm.values[_vm.name], null) },
+            on: {
+              change: function($event) {
+                return _vm.$set(_vm.values, _vm.name, null)
+              }
+            }
+          })
+        : _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.values[_vm.name],
+                expression: "values[name]"
+              }
+            ],
+            class: {
+              "form-control": true,
+              "form-control-sm": true,
+              "is-invalid": _vm.errors[_vm.name]
+            },
+            attrs: {
+              name: _vm.name,
+              placeholder: _vm.placeholder,
+              required: _vm.required ? true : false,
+              type: _vm.type
+            },
+            domProps: { value: _vm.values[_vm.name] },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.values, _vm.name, $event.target.value)
+              }
+            }
+          }),
       _vm._v(" "),
       _vm._l(_vm.errors[_vm.name], function(error) {
         return _c(
@@ -33118,7 +33177,7 @@ $(document).ready(function () {
       data: {
         errors: {},
         values: {
-          'email': 'xpfannerstill@example.net',
+          'email': 'aemard@example.com',
           'password': 'password'
         },
         loginForm: true,
@@ -33159,6 +33218,7 @@ $(document).ready(function () {
                 $.each(e.responseJSON.errors, function (key, val) {
                   return Vue.set(_this2.errors, key, val);
                 });
+                _this2.success = undefined;
 
                 if (e.responseJSON.errors["g-recaptcha-response"]) {
                   var captcha_elem = $(_this2.$el).find('.g-recaptcha');
@@ -33189,6 +33249,7 @@ $(document).ready(function () {
               $.each(e.responseJSON.errors, function (key, val) {
                 return Vue.set(_this3.errors, key, val);
               });
+              _this3.success = undefined;
             }
           });
         },
@@ -33252,10 +33313,10 @@ $(document).ready(function () {
               location.reload();
             },
             error: function error(e) {
-              console.log(e);
               $.each(e.responseJSON.errors, function (key, val) {
                 return Vue.set(_this4.errors, key, val);
               });
+              _this4.success = undefined;
             }
           }).always(function (e) {
             $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden');
@@ -33358,7 +33419,6 @@ $(document).ready(function () {
                 Vue.set(properties.$data, 'cards', []);
               }
 
-              console.log(_this7.values);
               Vue.set(properties.$data, 'resultCount', e.total);
               $.each(e.data, function (i, o) {
                 return properties.cards.push(o);
@@ -33392,7 +33452,12 @@ $(document).ready(function () {
       data: {
         errors: {},
         values: {},
-        options: []
+        defaults: {},
+        options: [],
+        property_types: [],
+        listing_types: [],
+        years: [],
+        success: undefined
       },
       created: function created() {
         var _this8 = this;
@@ -33409,9 +33474,91 @@ $(document).ready(function () {
             });
           }
         });
+        $.ajax({
+          url: "/api/property/types",
+          method: "GET",
+          success: function success(e) {
+            $.each(e, function (i, o) {
+              return _this8.property_types.push({
+                name: o.PropertyType,
+                value: o.id
+              });
+            });
+          }
+        });
+        $.ajax({
+          url: "/api/listing/types",
+          method: "GET",
+          success: function success(e) {
+            $.each(e, function (i, o) {
+              return _this8.listing_types.push({
+                name: "For " + o.ListingType,
+                value: o.id
+              });
+            });
+          }
+        });
+
+        for (var i = 1900; i <= new Date().getFullYear(); i++) {
+          this.years.push({
+            name: i,
+            value: i
+          });
+        }
+
+        if (defaultValues) {
+          Object.assign(this.values, defaultValues);
+          Object.assign(this.defaults, defaultValues);
+        }
+      },
+      mounted: function mounted() {
+        var _this9 = this;
+
+        $("#update").confirmation({
+          onConfirm: this.update
+        });
+        $("#updateProperty").on('hidden.bs.modal', function (e) {
+          Vue.set(_this9.$data, 'values', _this9.defaults);
+          _this9.success = undefined;
+          _this9.errors = {};
+        });
+        $("#updateProperty").on('show.bs.modal', function (e) {
+          $("[data-toggle=confirmation]").confirmation("hide");
+        });
       },
       methods: {
-        update: function update() {}
+        update: function update() {
+          var _this10 = this;
+
+          var securities = this.getSecurities();
+          Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
+          this.errors = {};
+          this.success = undefined;
+          $("#vue-property-update").find("*").removeClass("is-invalid");
+          $("button#update .spinner-border").removeAttr('hidden');
+          $("button#update").attr("disabled", "disabled");
+
+          if (propertyID) {
+            $.ajax({
+              url: "/properties/update/" + propertyID,
+              data: this.values,
+              success: function success(e) {
+                console.log(e);
+                _this10.success = "<b>Success!</b> You've successfully updated this property post. <a href='#' onclick='location.reload()'>Click here</a> to reload.";
+                Vue.set(_this10.$data, 'defaults', _this10.values);
+              },
+              error: function error(e) {
+                console.log(e);
+                $.each(e.responseJSON.errors, function (key, val) {
+                  return Vue.set(_this10.errors, key, val);
+                });
+              }
+            }).always(function (e) {
+              $("button#update .spinner-border").attr('hidden', 'hidden');
+              $("button#update").removeAttr("disabled");
+            });
+          }
+        }
       }
     });
   }
@@ -34021,8 +34168,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\wamp64\www\urhome\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\wamp64\www\urhome\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /var/www/html/urhome/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/html/urhome/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

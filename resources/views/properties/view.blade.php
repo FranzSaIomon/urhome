@@ -46,6 +46,8 @@
     </script>
 
     <script>
+        let propertyID = {{$property->id}}
+        
         let defaultValues = {
             Name: "{{$property->Name}}",
             Description: "{{$property->Description}}",
@@ -61,31 +63,146 @@
             NumberOfBedrooms: {{$property->NumberOfBedrooms}},
             NumberOfBathrooms: {{$property->NumberOfBathrooms}},
             CapacityOfGarage: {{$property->CapacityOfGarage}},
+            PropertyTypeID: {{$property->PropertyTypeID}},
+            ListingTypeID: {{$property->ListingTypeID}},
         }
 
         let selectedAmenities = '{{{$property->amenity}}}'
         selectedAmenities = JSON.parse(selectedAmenities.replace(/&quot;/g, "\""))
-        
+        let actualSelected = []
+
+        $.each(selectedAmenities, (i, o) => {
+            actualSelected.push(o.id + "")
+        })
+
+        defaultValues.Amenities = actualSelected
+
     </script>
+    
+    <form action="" id="vue-property-update">
     <div class="modal fade" id="updateProperty" tabindex="-1" role="dialog" aria-labelledby="updatePropertyLabel" aria-hidden="true">
-        <form action="" id="vue-property-update">
-            <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     </div>
                     <div class="modal-body container">
-                        <input-group :values="values" :errors="errors" name="Name" label="Property Name" placeholder="Property Name"></input-group>
-                        <multi-select :Values="values" :errors="errors" :options="options" name="Amenities" label="Amenities"></multi-select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input-group :values="values" :errors="errors" name="Name" label="Property Name" placeholder="Property Name"></input-group>
+                                    </div>    
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input-group :values="values" :errors="errors" name="Developer" label="Property Developer" placeholder="Property Developer"></input-group>
+                                    </div>    
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input-group type="multitext" :values="values" :errors="errors" name="Description" label="Description" placeholder="Post Description"></input-group>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Address</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input-group :errors="errors" :values="values" name="LotNo" id="lotNo" placeholder="Lot #"></input-group>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input-group :errors="errors" :values="values" name="Street" id="street" placeholder="Street"></input-group>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input-group type="text" :errors="errors" :values="values" name="City" type="city" id="city" placeholder="City" required></input-group>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input-group :errors="errors" :values="values" name="Country" type="country" id="country" placeholder="-- Country --" required></input-group>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input-group type="select" :options="property_types" :values="values" :errors="errors" name="PropertyTypeID" label="Property Type" id="property_type" placeholder="-- Select Property Type --" required></input-group>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input-group type="select" :options="listing_types" :values="values" :errors="errors" name="ListingTypeID" label="Listing Type" id="listing_type" placeholder="-- Select Listing Type --" required></input-group>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input-group type="text" :errors="errors" :values="values" label="Price (&#8369;)" name="Price" id="price" placeholder="Price" required></input-group>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input-group type="select" :options="years" :values="values" :errors="errors" name="YearBuilt" label="Year Built" placeholder="Year Built"></input-group>
+                                    </div>  
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input-group :values="values" :errors="errors" name="FloorArea" label="Floor Area (sqm.)" placeholder="Floor Area (in sqm.)"></input-group>
+                                    </div>  
+                                    <div class="col-md-6">
+                                        <input-group :values="values" :errors="errors" name="LotArea" label="Lot Area (sqm.)" placeholder="Lot Area (in sqm.)"></input-group>
+                                    </div>  
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input-group :values="values" :errors="errors" name="NumberOfBedrooms" label="# of Bedrooms" placeholder="# of Bedrooms"></input-group>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input-group :values="values" :errors="errors" name="NumberOfBathrooms" label="# of Bathrooms" placeholder="# of Bathrooms"></input-group>
+                                    </div>  
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input-group :values="values" :errors="errors" name="CapacityOfGarage" label="Garage Capacity" placeholder="# of Cars"></input-group>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <multi-select :Values="values" :errors="errors" :options="options" name="Amenities" label="Amenities"></multi-select>
+                            </div>
+                        </div>
+                        <div class="row" v-if="success">
+                            <div class="col-md-12">
+                                <div class="alert alert-success" v-html="success"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-footer justify-content-between">
-                    <a class="small text-muted" id="imglink"></a>
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                    <div class="modal-footer">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-5">
+                                    <button type="button" class="btn btn-sm btn-block btn-primary mr-3" data-toggle="confirmation" id="update" data-content="This will change your property post details.">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
+                                        Update Property Details
+                                    </button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-sm btn-block btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
+        </div>
     </div>
+    </form>
 
     <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -137,11 +254,11 @@
                 <img onclick="openImage(this)" class="owl-lazy d-block mx-auto" style="height: 350px !important; width: auto;" data-src="{{$property->property_document->Images['regular'][$i]}}" alt="">
             </div>
         @endfor
-
         @if ($count == 0)
             <div></div>
         @endif
     </div>
+    
     <div class="content container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -149,46 +266,62 @@
                     <script>
                         let archive = {{$property->Status->id}} == 1
                         function toggleArchive() {
-                            $("#archive").removeClass("btn-danger").removeClass("btn-success");
+                            $("#archive .spinner-border").removeAttr('hidden')
+                            $("#archive").attr("disabled", "disabled")
+                            let alertDiv = $('<div role="alert"></div>')
+                                    .addClass("alert alert-sm alert-success alert-dismissable fade show w-100 mt-2");
+                            let text = $("<span></span>")
 
                             $.ajax({
                                 url: "/properties/toggleArchive/{{$property->id}}",
                                 method: "GET",
                                 success: (e) => {
                                     if (archive) // from available to archived
-                                        $("#archive").attr("data-content", "This will allow your property to show up in searches").text("Unarchive Property").addClass("btn-success")
+                                        $("#archive").attr("data-content", "This will allow your property to show up in searches").text("Unarchive Property").removeClass("btn-danger").addClass("btn-success")
                                     else
-                                        $("#archive").attr("data-content", "This will prevent your property from showing up in searches").text("Archive Property").addClass("btn-danger")
+                                        $("#archive").attr("data-content", "This will prevent your property from showing up in searches").text("Archive Property").removeClass("btn-success").addClass("btn-danger")
                                     
                                     archive = !archive
+                                    $.each(e.message, (i, v) => text.text(v))
                                 },
                                 error: (e) => {
+                                    alertDiv.removeClass("alert-success").addClass("alert-danger");
+                                    text.text("An error occured while updating this property post, please try again...")
                                 }
                             }).always((e) => {
-                                let alertDiv = $('<div role="alert"></div>')
-                                    .addClass("alert alert-sm alert-success alert-dismissable fade show w-100 mt-2");
-                                let text = $("<span></span>")
                                 let close = $('<button></button>')
                                     .addClass("close")
                                     .attr("data-dismiss", "alert")
                                     .html("&times;")
-
-                                $.each(e.message, (i, v) => text.text(v))
 
                                 alertDiv
                                     .append(text)
                                     .append(close)
                                 
                                 $("#alertRow").empty().append(alertDiv)
+                                
+                                $("#archive .spinner-border").attr('hidden', 'hidden')
+                                $("#archive").removeAttr("disabled")
                             })
                         }
                     </script>
                     <button class="btn btn-sm btn-sm-block btn-xs-block mt-2 btn-primary" data-toggle="modal" data-target="#updateProperty">Edit Property Details</button>
                     @if ($property->Status->Status != "Available")
-                        <button class="btn btn-sm btn-sm-block btn-xs-block mt-2 btn-success" data-toggle="confirmation" id="archive" data-content="This will allow your property to show up in searches">Unarchive Property</button>
+                        <button class="btn btn-sm btn-sm-block btn-xs-block mt-2 btn-success" data-toggle="confirmation" id="archive" data-content="This will allow your property to show up in searches">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
+                            Unarchive Property
+                        </button>
                     @else
-                        <button class="btn btn-sm btn-sm-block btn-xs-block mt-2 btn-danger" data-toggle="confirmation" id="archive" data-content="This will prevent your property from showing up in searches">Archive Property</button>
+                        <button class="btn btn-sm btn-sm-block btn-xs-block mt-2 btn-danger" data-toggle="confirmation" id="archive" data-content="This will prevent your property from showing up in searches">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
+                            Archive Property
+                        </button>
                     @endif
+                    <script>
+                        $("#archive").confirmation({
+                            onConfirm: toggleArchive
+                        })
+                    </script>
                 @else
                     <button class="btn btn-sm btn-sm-block btn-xs-block mt-2 btn-primary">Message Seller</button>
                 @endif
@@ -203,6 +336,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 text-muted">
+                <h6><b>Price: &#8369; {{number_format($property->Price, 2)}}</b></h6>
                 <p>
                     {{$property->Description}}
                 </p>
@@ -354,36 +488,40 @@
                         <h5><b>Property Amenities</b></h5>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        @for ($i = 0; $i < count($property->property_amenity) / 2; $i++)
-                            <div class="row mt-2">
-                                <div class="col-md-12">
-                                    {{$property->property_amenity[$i]->amenity->AmenityName}}
+                @if (count($property->property_amenity) > 0)
+                    <div class="row">
+                        <div class="col-md-6">
+                            @for ($i = 0; $i <= count($property->property_amenity) / 2; $i++)
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        {{$property->property_amenity[$i]->amenity->AmenityName}}
+                                    </div>
                                 </div>
-                            </div>
-                        @endfor
-                    </div>
-
-                    <div class="col-md-6">
-                        @for ($i = count($property->property_amenity) / 2 + 1; $i < count($property->property_amenity); $i++)
-                            <div class="row mt-2">
-                                <div class="col-md-12">
-                                    {{$property->property_amenity[$i]->amenity->AmenityName}}
+                            @endfor
+                        </div>
+    
+                        <div class="col-md-6">
+                            @for ($i = count($property->property_amenity) / 2 + 1; $i < count($property->property_amenity); $i++)
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        {{$property->property_amenity[$i]->amenity->AmenityName}}
+                                    </div>
                                 </div>
-                            </div>
-                        @endfor
+                            @endfor
+                        </div>
                     </div>
-                </div>
+                @else
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h6><i class="text-muted">No Property amenities specified.</i></h6>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
 
     <script>
-        $("#archive").confirmation({
-            onConfirm: toggleArchive
-        })
-
         $('.photos').owlCarousel({
             loop:false,
             lazyLoad:true,

@@ -25,6 +25,12 @@
                                 <input-group :errors="errors" :values="values" name="password" type="password" id="password" label="Password" placeholder="Enter your password here..." required></input-group>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input-group type="check" :errors="errors" :values="values" name="remember" id="remember" label="Remember Me"></input-group>
+                            </div>
+                        </div>
                         
                         <div class="row">
                             <div class="col-md-12">
@@ -63,15 +69,15 @@
                                     <a href="#" @click.prevent="changeForm" v-if="loginForm">Forgot Your Password</a>
                                     <a href="#" @click.prevent="changeForm" v-else>Log in to your account</a>
                                 </div>
-                                <div class="col-md-3 px-2">
-                                    <button type="button" class="btn btn-block btn-secondary" data-dismiss="modal" @click.prevent="changeForm">Close</button>
-                                </div>
                                 <div class="col-md-4 px-2">
                                     <button type="submit" class="btn btn-block btn-primary" @click.prevent="loginForm ? login() : reset()">
                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
                                         <span v-if="loginForm">Log In</span>
                                         <span v-else>Reset Password</span>
                                     </button>
+                                </div>
+                                <div class="col-md-3 px-2">
+                                    <button type="button" class="btn btn-block btn-secondary" data-dismiss="modal" @click.prevent="changeForm">Close</button>
                                 </div>
                             </div>
                         </div>

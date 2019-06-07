@@ -16521,6 +16521,10 @@ readers do not read off random characters that represent icons */
   background-color: #CCCCCC;
 }
 
+.owl-stage-outer {
+  padding-top: 26px;
+}
+
 #popup_alert {
   position: absolute;
   top: 125%;
@@ -16882,7 +16886,7 @@ body {
 }
 
 body.nolanding {
-  margin-top: 70px;
+  margin-top: 65.22px;
 }
 
 body.nolanding #nav {
