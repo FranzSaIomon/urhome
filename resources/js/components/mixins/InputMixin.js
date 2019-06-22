@@ -6,6 +6,11 @@ export default {
             type: Array,
             required: false,
             default: () => {return [];}
+        },
+        countries: {
+            type: Object,
+            required: false,
+            default: () => {return {};}
         }
     },
 }

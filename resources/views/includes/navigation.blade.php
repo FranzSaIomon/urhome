@@ -38,6 +38,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="accountDropdown">
                     @if(Auth::check())
+                        <a href="/users" class="dropdown-item">Profile</a>
                         <a href="/logout" class="dropdown-item">Log Out</a>
                     @else
                         <a href="#" class="dropdown-item captcha-refresh" data-toggle="modal" data-target="#loginModal">Log In</a>

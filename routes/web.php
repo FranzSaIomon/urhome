@@ -23,6 +23,10 @@ Route::get('properties/view/{property}', 'PropertyController@view');
 Route::get('properties/update/{property}', 'PropertyController@update');
 Route::get('properties/toggleArchive/{property}', 'PropertyController@toggleArchive')->middleware("auth");
 
+// Users
+Route::get('users', 'UserController@index');
+Route::get('users/view/{user}', 'UserController@index');
+
 // Auth Routes
 Auth::routes(["verify" => true]);   
 Route::get('login', 'PageController@invalid')->name("login");

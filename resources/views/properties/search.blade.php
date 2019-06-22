@@ -5,7 +5,7 @@
     
     <div class="container-fluid">
         <div class="row ">
-            <div class="col-md-3 position-relative">
+            <div class="col-lg-3 position-relative">
                 <form class="p-4 bg-white rounded filter" action="" id="vue-simple-search" @submit.prevent="search(true)">
                     <input-group :errors="errors" :values="values" name="query" label="Search"></input-group>
                     <toggle-button ref="purpose" :toggles="toggles" name="purpose" :default-name="'For Rent or Sale'" :default-value="'all'" :errors="errors" :values="values"></toggle-button>
@@ -51,7 +51,7 @@
                     </div>
                 </form>
             </div>
-            <div class="col-md-9">
+            <div class="col-lg-9">
                 <div id="properties_cards" class="mt-2">
                     <div class="small text-muted mb-2 ml-3">Search Results Found: <b>@{{resultCount}} properties</b></div>
                     <Properties :cards="cards"></Properties>

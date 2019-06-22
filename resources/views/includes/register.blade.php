@@ -80,7 +80,7 @@
                                                 <input-group :errors="errors" :values="values" name="City" type="city" id="city" placeholder="City" required></input-group>
                                             </div>
                                             <div class="col-md-6">
-                                                <input-group :errors="errors" :values="values" name="Country" type="country" id="country" placeholder="-- Country --" required></input-group>
+                                                <input-group :errors="errors" :values="values" name="Country" :countries="countries" type="country" id="country" placeholder="-- Country --" required></input-group>
                                             </div>
                                         </div>  
                                     </div>

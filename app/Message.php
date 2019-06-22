@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
@@ -19,6 +20,13 @@ class Message extends Model
         'TimeSent' => 'datetime',
         'TimeReceived' => 'datetime'
     ];
+
+    protected $appends = [
+        'SelfMessage'
+    ];
+
     // Relationships
     public function user() {return $this->belongsToOne('App\User');}
+
+    public function selfMessage() { return $this->id == auth()->user()->id;}
 }

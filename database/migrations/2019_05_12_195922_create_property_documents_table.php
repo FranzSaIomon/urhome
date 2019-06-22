@@ -16,8 +16,8 @@ class CreatePropertyDocumentsTable extends Migration
         Schema::create('property_documents', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger("PropertyID")->unsigned();
-            $table->json("Images")->nullable();
-            $table->json("Files")->nullable();
+            $table->string("Images")->nullable();
+            $table->string("Files")->nullable();
             $table->timestamps();
         });
 
