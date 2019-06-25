@@ -32853,6 +32853,10 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/mixins/FormMixin */ "./resources/js/components/mixins/FormMixin.js");
 /* harmony import */ var _components_mixins_PropertyCardsMixin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/mixins/PropertyCardsMixin */ "./resources/js/components/mixins/PropertyCardsMixin.js");
+/* harmony import */ var _pages__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages */ "./resources/js/pages/index.js");
+
+
+/* Vue Objects */
 
 
 
@@ -33129,449 +33133,21 @@ $(document).ready(function () {
     "ZM": "Zambia",
     "ZW": "Zimbabwe"
   };
+  Object(_pages__WEBPACK_IMPORTED_MODULE_2__["filter"])(_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]); // call vue creation for filter segment
 
-  if ($("#vue-filter").length) {
-    var filter = new Vue({
-      el: "#vue-filter",
-      mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
-      created: function created() {
-        var _this = this;
+  Object(_pages__WEBPACK_IMPORTED_MODULE_2__["login"])(_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]); // call vue creation for login segment
 
-        $.ajax({
-          method: "GET",
-          url: '/api/property/types'
-        }).always(function (e) {
-          $.each(e, function (i, o) {
-            _this.options.push({
-              name: o.PropertyType,
-              value: o.id
-            });
-          });
-        });
-      },
-      data: {
-        options: [],
-        toggles: [{
-          name: 'For Rent',
-          value: 1
-        }, {
-          name: 'For Sale',
-          value: 2
-        }],
-        values: {},
-        errors: {}
-      },
-      methods: {
-        search: function search(e) {
-          if ($("#vue-filter").is('[local]')) {} else {
-            $("#vue-filter").submit();
-          }
-        }
-      }
-    });
-  }
+  Object(_pages__WEBPACK_IMPORTED_MODULE_2__["register"])(_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"], countries); // call vue creation for register segment
 
-  if ($("#vue-login").length) {
-    var login = new Vue({
-      el: "#vue-login",
-      data: {
-        errors: {},
-        countries: countries,
-        values: {
-          'email': 'aemard@example.com',
-          'password': 'password'
-        },
-        loginForm: true,
-        formChanged: false,
-        success: undefined
-      },
-      mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
-      updated: function updated() {
-        if (this.formChanged && this.loginForm) {
-          this.formChanged = false;
-          grecaptcha.render($('.g-recaptcha')[0], {
-            sitekey: this.sitekey
-          });
-        }
-      },
-      methods: {
-        login: function login() {
-          var _this2 = this;
+  Object(_pages__WEBPACK_IMPORTED_MODULE_2__["simple_search"])(_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"], _components_mixins_PropertyCardsMixin__WEBPACK_IMPORTED_MODULE_1__["default"]); // call vue creation for simple search segment
 
-          // Remember: https://vuejs.org/v2/guide/list.html#Caveats
-          if (this.loginForm) {
-            var securities = this.getSecurities();
-            Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
-            Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
-            this.errors = {};
-            this.success = undefined;
-            $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden');
-            $("#vue-login button[type=submit]").attr('disabled', 'disabled');
-            $.ajax({
-              url: '/login',
-              method: "POST",
-              data: this.values,
-              success: function success(e) {
-                _this2.success = "<b>Success!</b> You've successfully logged in, please wait to be redirected...";
-                location.reload();
-              },
-              error: function error(e) {
-                $.each(e.responseJSON.errors, function (key, val) {
-                  return Vue.set(_this2.errors, key, val);
-                });
-                _this2.success = undefined;
+  Object(_pages__WEBPACK_IMPORTED_MODULE_2__["property_update"])(_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]); // call vue creation for property update modal
 
-                if (e.responseJSON.errors["g-recaptcha-response"]) {
-                  var captcha_elem = $(_this2.$el).find('.g-recaptcha');
-                  captcha_elem.find('> div').css("border", '1px solid #e3342f');
-                  captcha_elem.find('+.invalid-feedback').css('display', 'block').text(e.responseJSON.errors['g-recaptcha-response']);
-                }
-              }
-            }).always(function (e) {
-              $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden');
-              $("#vue-login button[type=submit]").removeAttr('disabled');
-              grecaptcha.reset();
-            });
-          }
-        },
-        reset: function reset() {
-          var _this3 = this;
+  /* Bound the function profile_page to give it access to the generated user information in the page */
 
-          var securities = this.getSecurities();
-          Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
-          this.success = undefined;
-          $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden');
-          $("#vue-login button[type=submit]").attr('disabled', 'disabled');
-          $.ajax({
-            url: '/password/email',
-            method: "POST",
-            data: this.values,
-            success: function success(e) {
-              _this3.success = e.status;
-            },
-            error: function error(e) {
-              $.each(e.responseJSON.errors, function (key, val) {
-                return Vue.set(_this3.errors, key, val);
-              });
-              _this3.success = undefined;
-            }
-          }).always(function (e) {
-            $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden');
-            $("#vue-login button[type=submit]").removeAttr('disabled');
-          });
-        },
-        changeForm: function changeForm() {
-          this.loginForm = !this.loginForm;
-          this.formChanged = true;
-          this.success = undefined;
-          this.errors = {};
-        }
-      }
-    });
-  }
+  var bound_profile_page = _pages__WEBPACK_IMPORTED_MODULE_2__["profile_page"].bind(typeof userInfo !== 'undefined' ? userInfo : {}); // call vue creation for profile page
 
-  if ($("#vue-register").length) {
-    var register = new Vue({
-      el: "#vue-register",
-      mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
-      data: {
-        countries: countries,
-        errors: {},
-        success: null,
-        values: {
-          FirstName: "Miguel",
-          LastName: "Quiambao",
-          BirthDate: "1998-03-31",
-          ContactNo: "09178510533",
-          LotNo: 123,
-          Street: "N. Domingo",
-          City: "San Juan",
-          Country: "PH",
-          email: "miguelalfonsoquiambao@gmail.com",
-          password: "password",
-          password_confirmation: "password",
-          UserType: [1]
-        },
-        toggles: [{
-          name: 'Client',
-          value: 1
-        }, {
-          name: 'Broker',
-          value: 2
-        }]
-      },
-      methods: {
-        register: function register() {
-          var _this4 = this;
-
-          var securities = this.getSecurities();
-          Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
-          Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
-          this.values.UserType = this.values.UserType[0];
-          this.errors = {};
-          this.success = null;
-          $("#vue-register button[type=submit] .spinner-border").removeAttr('hidden');
-          $("#vue-register button[type=submit]").attr("disabled", "disabled");
-          $.ajax({
-            url: '/register',
-            method: 'POST',
-            data: this.values,
-            success: function success(e) {
-              _this4.success = "<b>Success!</b> You've successfully registered, please wait to be redirected...";
-              location.reload();
-            },
-            error: function error(e) {
-              $.each(e.responseJSON.errors, function (key, val) {
-                return Vue.set(_this4.errors, key, val);
-              });
-              _this4.success = null;
-            }
-          }).always(function (e) {
-            $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden');
-            $("#vue-register button[type=submit]").removeAttr("disabled");
-            _this4.values.UserType = [_this4.values.UserType];
-          });
-        }
-      }
-    });
-  }
-
-  if ($("#vue-simple-search").length && $("#properties_cards").length) {
-    var search = new Vue({
-      el: "#vue-simple-search",
-      mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
-      data: {
-        toggles: [],
-        options: [],
-        values: {},
-        errors: {},
-        page: 1,
-        shown: false,
-        ignoreAdvanced: $.urlParam('ignoreAdvanced') ? true : false,
-        lastPage: 1
-      },
-      created: function created() {
-        var _this5 = this;
-
-        $.ajax({
-          method: "GET",
-          url: '/api/property/types'
-        }).always(function (e) {
-          $.each(e, function (i, o) {
-            _this5.options.push({
-              name: o.PropertyType,
-              value: o.id
-            });
-          });
-        });
-        $.ajax({
-          method: "GET",
-          url: '/api/listing/types'
-        }).always(function (e) {
-          $.each(e, function (i, o) {
-            _this5.toggles.push({
-              name: "For " + o.ListingType,
-              value: o.id
-            });
-          });
-        });
-      },
-      mounted: function mounted() {
-        var _this6 = this;
-
-        var range = ["NumberOfBedrooms", "NumberOfBathrooms", "Price", "LotArea", "FloorArea"];
-        var string = ["query", "location"];
-        $.each(range, function (i, v) {
-          if ($.urlParam(v)) {
-            var values = decodeURIComponent($.urlParam(v)).split(',');
-            _this6.values[v][0] = parseInt(values[0], 10);
-            _this6.values[v][1] = parseInt(values[1], 10);
-            _this6.$refs[v].start = _this6.values[v][0];
-            _this6.$refs[v].end = _this6.values[v][1];
-            if (_this6.$refs[v].maximums) _this6.$refs[v].max = _this6.$refs[v].maximums.find(function (el) {
-              return _this6.values[v][1] <= el;
-            });
-
-            _this6.$refs[v].updateLimits();
-
-            _this6.$refs[v].updateStart();
-          }
-        });
-        $.each(string, function (i, v) {
-          if ($.urlParam(v)) Vue.set(_this6.values, v, decodeURIComponent($.urlParam(v)));
-        });
-        if ($.urlParam('type')) Vue.set(this.values, 'type', decodeURIComponent($.urlParam('type')).split(","));
-        if ($.urlParam('purpose')) Vue.set(this.values, 'purpose', decodeURIComponent($.urlParam('purpose')));
-      },
-      methods: {
-        search: function search(clear) {
-          var _this7 = this;
-
-          this.values.page = clear ? 1 : this.page;
-          Vue.set(properties.$data, 'loading', true);
-          var blacklist = ["NumberOfBedrooms", "NumberOfBathrooms", "Price", "LotArea", "FloorArea"];
-          var nonAdvanced = {};
-
-          for (var key in this.values) {
-            if (blacklist.indexOf(key) == -1) nonAdvanced[key] = this.values[key];
-          }
-
-          $.ajax({
-            url: "/api/property/paginate",
-            method: "GET",
-            data: !this.ignoreAdvanced ? this.values : nonAdvanced,
-            success: function success(e) {
-              if (clear) {
-                _this7.page = 0;
-                _this7.lastPage = 0;
-                Vue.set(properties.$data, 'cards', []);
-              }
-
-              Vue.set(properties.$data, 'resultCount', e.total);
-              $.each(e.data, function (i, o) {
-                return properties.cards.push(o);
-              });
-              _this7.lastPage = e.last_page;
-              _this7.page++;
-            },
-            error: function error(e) {
-              console.dir(e);
-            }
-          }).always(function () {
-            return Vue.set(properties.$data, 'loading', false);
-          });
-        }
-      }
-    });
-    var properties = new Vue({
-      el: "#properties_cards",
-      mixins: [_components_mixins_PropertyCardsMixin__WEBPACK_IMPORTED_MODULE_1__["default"]],
-      mounted: function mounted() {
-        this.searchable = search;
-      }
-    });
-    search.search();
-  }
-
-  if ($("#vue-property-update").length) {
-    var property_update = new Vue({
-      el: "#vue-property-update",
-      mixins: [_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
-      data: {
-        countries: countries,
-        errors: {},
-        values: {},
-        defaults: {},
-        options: [],
-        property_types: [],
-        listing_types: [],
-        years: [],
-        success: undefined
-      },
-      created: function created() {
-        var _this8 = this;
-
-        $.ajax({
-          url: "/api/amenity",
-          method: "GET",
-          success: function success(e) {
-            $.each(e, function (i, o) {
-              return _this8.options.push({
-                name: o.AmenityName,
-                value: o.id
-              });
-            });
-          }
-        });
-        $.ajax({
-          url: "/api/property/types",
-          method: "GET",
-          success: function success(e) {
-            $.each(e, function (i, o) {
-              return _this8.property_types.push({
-                name: o.PropertyType,
-                value: o.id
-              });
-            });
-          }
-        });
-        $.ajax({
-          url: "/api/listing/types",
-          method: "GET",
-          success: function success(e) {
-            $.each(e, function (i, o) {
-              return _this8.listing_types.push({
-                name: "For " + o.ListingType,
-                value: o.id
-              });
-            });
-          }
-        });
-
-        for (var i = 1900; i <= new Date().getFullYear(); i++) {
-          this.years.push({
-            name: i,
-            value: i
-          });
-        }
-
-        if (defaultValues) {
-          Object.assign(this.values, defaultValues);
-          Object.assign(this.defaults, defaultValues);
-        }
-      },
-      mounted: function mounted() {
-        var _this9 = this;
-
-        $("#update").confirmation({
-          onConfirm: this.update
-        });
-        $("#updateProperty").on('hidden.bs.modal', function (e) {
-          Vue.set(_this9.$data, 'values', _this9.defaults);
-          _this9.success = undefined;
-          _this9.errors = {};
-        });
-        $("#updateProperty").on('show.bs.modal', function (e) {
-          $("[data-toggle=confirmation]").confirmation("hide");
-        });
-      },
-      methods: {
-        update: function update() {
-          var _this10 = this;
-
-          var securities = this.getSecurities();
-          Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
-          this.errors = {};
-          this.success = undefined;
-          $("#vue-property-update").find("*").removeClass("is-invalid");
-          $("button#update .spinner-border").removeAttr('hidden');
-          $("button#update").attr("disabled", "disabled");
-
-          if (propertyID) {
-            $.ajax({
-              url: "/properties/update/" + propertyID,
-              data: this.values,
-              success: function success(e) {
-                console.log(e);
-                _this10.success = "<b>Success!</b> You've successfully updated this property post. <a href='#' onclick='location.reload()'>Click here</a> to reload.";
-                Vue.set(_this10.$data, 'defaults', _this10.values);
-              },
-              error: function error(e) {
-                console.log(e);
-                $.each(e.responseJSON.errors, function (key, val) {
-                  return Vue.set(_this10.errors, key, val);
-                });
-              }
-            }).always(function (e) {
-              $("button#update .spinner-border").attr('hidden', 'hidden');
-              $("button#update").removeAttr("disabled");
-            });
-          }
-        }
-      }
-    });
-  }
-
+  bound_profile_page(_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"], _components_mixins_PropertyCardsMixin__WEBPACK_IMPORTED_MODULE_1__["default"], countries);
   var captchaLoaded = false;
   $(".captcha-refresh").click(function () {
     if (!captchaLoaded) {
@@ -34158,11 +33734,659 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     bottom: function bottom(_bottom) {
       if (_bottom && this.searchable) {
-        this.searchable.search();
+        this.searchable();
       }
     }
   }
 });
+
+/***/ }),
+
+/***/ "./resources/js/pages/filter.js":
+/*!**************************************!*\
+  !*** ./resources/js/pages/filter.js ***!
+  \**************************************/
+/*! exports provided: filter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filter", function() { return filter; });
+function filter(FormMixin) {
+  if ($("#vue-filter").length) {
+    return new Vue({
+      el: "#vue-filter",
+      mixins: [FormMixin],
+      created: function created() {
+        var _this = this;
+
+        $.ajax({
+          method: "GET",
+          url: '/api/property/types'
+        }).always(function (e) {
+          $.each(e, function (i, o) {
+            _this.options.push({
+              name: o.PropertyType,
+              value: o.id
+            });
+          });
+        });
+      },
+      data: {
+        options: [],
+        toggles: [{
+          name: 'For Rent',
+          value: 1
+        }, {
+          name: 'For Sale',
+          value: 2
+        }],
+        values: {},
+        errors: {}
+      },
+      methods: {
+        search: function search(e) {
+          if ($("#vue-filter").is('[local]')) {} else {
+            $("#vue-filter").submit();
+          }
+        }
+      }
+    });
+  } else {
+    return null;
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/pages/index.js":
+/*!*************************************!*\
+  !*** ./resources/js/pages/index.js ***!
+  \*************************************/
+/*! exports provided: filter, login, register, property_update, simple_search, profile_page */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./filter */ "./resources/js/pages/filter.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "filter", function() { return _filter__WEBPACK_IMPORTED_MODULE_0__["filter"]; });
+
+/* harmony import */ var _login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./login */ "./resources/js/pages/login.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "login", function() { return _login__WEBPACK_IMPORTED_MODULE_1__["login"]; });
+
+/* harmony import */ var _register__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./register */ "./resources/js/pages/register.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "register", function() { return _register__WEBPACK_IMPORTED_MODULE_2__["register"]; });
+
+/* harmony import */ var _property_update__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./property_update */ "./resources/js/pages/property_update.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "property_update", function() { return _property_update__WEBPACK_IMPORTED_MODULE_3__["property_update"]; });
+
+/* harmony import */ var _simple_search__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./simple_search */ "./resources/js/pages/simple_search.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "simple_search", function() { return _simple_search__WEBPACK_IMPORTED_MODULE_4__["simple_search"]; });
+
+/* harmony import */ var _profile_page__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./profile_page */ "./resources/js/pages/profile_page.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "profile_page", function() { return _profile_page__WEBPACK_IMPORTED_MODULE_5__["profile_page"]; });
+
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/login.js":
+/*!*************************************!*\
+  !*** ./resources/js/pages/login.js ***!
+  \*************************************/
+/*! exports provided: login */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "login", function() { return login; });
+function login(FormMixin) {
+  if ($("#vue-login").length) {
+    return new Vue({
+      el: "#vue-login",
+      data: {
+        errors: {},
+        values: {
+          'email': 'aemard@example.com',
+          'password': 'password'
+        },
+        loginForm: true,
+        formChanged: false,
+        success: undefined
+      },
+      mixins: [FormMixin],
+      updated: function updated() {
+        if (this.formChanged && this.loginForm) {
+          this.formChanged = false;
+          grecaptcha.render($('.g-recaptcha')[0], {
+            sitekey: this.sitekey
+          });
+        }
+      },
+      methods: {
+        login: function login() {
+          var _this = this;
+
+          // Remember: https://vuejs.org/v2/guide/list.html#Caveats
+          if (this.loginForm) {
+            var securities = this.getSecurities();
+            Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
+            Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
+            this.errors = {};
+            this.success = undefined;
+            $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden');
+            $("#vue-login button[type=submit]").attr('disabled', 'disabled');
+            $.ajax({
+              url: '/login',
+              method: "POST",
+              data: this.values,
+              success: function success(e) {
+                _this.success = "<b>Success!</b> You've successfully logged in, please wait to be redirected...";
+                location.reload();
+              },
+              error: function error(e) {
+                $.each(e.responseJSON.errors, function (key, val) {
+                  return Vue.set(_this.errors, key, val);
+                });
+                _this.success = undefined;
+
+                if (e.responseJSON.errors["g-recaptcha-response"]) {
+                  var captcha_elem = $(_this.$el).find('.g-recaptcha');
+                  captcha_elem.find('> div').css("border", '1px solid #e3342f');
+                  captcha_elem.find('+.invalid-feedback').css('display', 'block').text(e.responseJSON.errors['g-recaptcha-response']);
+                }
+              }
+            }).always(function (e) {
+              $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden');
+              $("#vue-login button[type=submit]").removeAttr('disabled');
+              grecaptcha.reset();
+            });
+          }
+        },
+        reset: function reset() {
+          var _this2 = this;
+
+          var securities = this.getSecurities();
+          Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
+          this.success = undefined;
+          $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden');
+          $("#vue-login button[type=submit]").attr('disabled', 'disabled');
+          $.ajax({
+            url: '/password/email',
+            method: "POST",
+            data: this.values,
+            success: function success(e) {
+              _this2.success = e.status;
+            },
+            error: function error(e) {
+              $.each(e.responseJSON.errors, function (key, val) {
+                return Vue.set(_this2.errors, key, val);
+              });
+              _this2.success = undefined;
+            }
+          }).always(function (e) {
+            $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden');
+            $("#vue-login button[type=submit]").removeAttr('disabled');
+          });
+        },
+        changeForm: function changeForm() {
+          this.loginForm = !this.loginForm;
+          this.formChanged = true;
+          this.success = undefined;
+          this.errors = {};
+        }
+      }
+    });
+  } else {
+    return null;
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/pages/profile_page.js":
+/*!********************************************!*\
+  !*** ./resources/js/pages/profile_page.js ***!
+  \********************************************/
+/*! exports provided: profile_page */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "profile_page", function() { return profile_page; });
+function profile_page(FormMixin, PropertyCardsMixin, countries) {
+  if ($("#vue-profile-page").length) {
+    var userInfo = this;
+    return new Vue({
+      el: "#vue-profile-page",
+      mixins: [FormMixin, PropertyCardsMixin],
+      data: {
+        userInfo: userInfo,
+        current_page: 1,
+        current_segment: "profile"
+      },
+      created: function created() {
+        this.page().profile(this, this.userInfo);
+        this.searchable = this.load_properties;
+      },
+      methods: {
+        changeSegment: function changeSegment(type) {
+          if (this.current_segment !== type) {
+            this.current_segment = type;
+
+            if (type === 'profile') {
+              this.page().profile(this);
+            } else if (type === 'update') {
+              this.page().update();
+            }
+          }
+        },
+        page: function page() {
+          return {
+            profile: function profile(obj) {
+              if (obj.userInfo.UserType) {
+                obj.load_properties(true);
+              }
+            },
+            update: function update(obj) {},
+            c_password: function c_password() {},
+            c_email: function c_email() {}
+          };
+        },
+        load_properties: function load_properties(clear) {
+          var _this = this;
+
+          if (this.userInfo.id) {
+            if (clear) {
+              this.current_page = 1;
+              Vue.set(this.$data, 'cards', []);
+            }
+
+            this.loading = true;
+            $.ajax({
+              url: "/api/property/paginate",
+              data: {
+                page: this.current_page,
+                UserID: this.userInfo.id
+              },
+              success: function success(e) {
+                if (e.data && e.data.length) {
+                  Vue.set(_this.$data, 'resultCount', e.total);
+                  $.each(e.data, function (i, o) {
+                    return _this.cards.push(o);
+                  });
+                  _this.current_page++;
+                }
+              }
+            }).always(function (e) {
+              _this.loading = false;
+            });
+          }
+        }
+      }
+    });
+  } else {
+    return null;
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/pages/property_update.js":
+/*!***********************************************!*\
+  !*** ./resources/js/pages/property_update.js ***!
+  \***********************************************/
+/*! exports provided: property_update */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "property_update", function() { return property_update; });
+function property_update(FormMixin) {
+  if ($("#vue-property-update").length) {
+    var _property_update = new Vue({
+      el: "#vue-property-update",
+      mixins: [FormMixin],
+      data: {
+        countries: countries,
+        errors: {},
+        values: {},
+        defaults: {},
+        options: [],
+        property_types: [],
+        listing_types: [],
+        years: [],
+        success: undefined
+      },
+      created: function created() {
+        var _this = this;
+
+        $.ajax({
+          url: "/api/amenity",
+          method: "GET",
+          success: function success(e) {
+            $.each(e, function (i, o) {
+              return _this.options.push({
+                name: o.AmenityName,
+                value: o.id
+              });
+            });
+          }
+        });
+        $.ajax({
+          url: "/api/property/types",
+          method: "GET",
+          success: function success(e) {
+            $.each(e, function (i, o) {
+              return _this.property_types.push({
+                name: o.PropertyType,
+                value: o.id
+              });
+            });
+          }
+        });
+        $.ajax({
+          url: "/api/listing/types",
+          method: "GET",
+          success: function success(e) {
+            $.each(e, function (i, o) {
+              return _this.listing_types.push({
+                name: "For " + o.ListingType,
+                value: o.id
+              });
+            });
+          }
+        });
+
+        for (var i = 1900; i <= new Date().getFullYear(); i++) {
+          this.years.push({
+            name: i,
+            value: i
+          });
+        }
+
+        if (defaultValues) {
+          Object.assign(this.values, defaultValues);
+          Object.assign(this.defaults, defaultValues);
+        }
+      },
+      mounted: function mounted() {
+        var _this2 = this;
+
+        $("#update").confirmation({
+          onConfirm: this.update
+        });
+        $("#updateProperty").on('hidden.bs.modal', function (e) {
+          Vue.set(_this2.$data, 'values', _this2.defaults);
+          _this2.success = undefined;
+          _this2.errors = {};
+        });
+        $("#updateProperty").on('show.bs.modal', function (e) {
+          $("[data-toggle=confirmation]").confirmation("hide");
+        });
+      },
+      methods: {
+        update: function update() {
+          var _this3 = this;
+
+          var securities = this.getSecurities();
+          Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
+          this.errors = {};
+          this.success = undefined;
+          $("#vue-property-update").find("*").removeClass("is-invalid");
+          $("button#update .spinner-border").removeAttr('hidden');
+          $("button#update").attr("disabled", "disabled");
+
+          if (propertyID) {
+            $.ajax({
+              url: "/properties/update/" + propertyID,
+              data: this.values,
+              success: function success(e) {
+                console.log(e);
+                _this3.success = "<b>Success!</b> You've successfully updated this property post. <a href='#' onclick='location.reload()'>Click here</a> to reload.";
+                Vue.set(_this3.$data, 'defaults', _this3.values);
+              },
+              error: function error(e) {
+                console.log(e);
+                $.each(e.responseJSON.errors, function (key, val) {
+                  return Vue.set(_this3.errors, key, val);
+                });
+              }
+            }).always(function (e) {
+              $("button#update .spinner-border").attr('hidden', 'hidden');
+              $("button#update").removeAttr("disabled");
+            });
+          }
+        }
+      }
+    });
+  } else {
+    return null;
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/pages/register.js":
+/*!****************************************!*\
+  !*** ./resources/js/pages/register.js ***!
+  \****************************************/
+/*! exports provided: register */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "register", function() { return register; });
+function register(FormMixin, countries) {
+  if ($("#vue-register").length) {
+    var _register = new Vue({
+      el: "#vue-register",
+      mixins: [FormMixin],
+      data: {
+        countries: countries,
+        errors: {},
+        success: null,
+        values: {
+          FirstName: "Miguel",
+          LastName: "Quiambao",
+          BirthDate: "1998-03-31",
+          ContactNo: "09178510533",
+          LotNo: 123,
+          Street: "N. Domingo",
+          City: "San Juan",
+          Country: "PH",
+          email: "miguelalfonsoquiambao@gmail.com",
+          password: "password",
+          password_confirmation: "password",
+          UserType: [1]
+        },
+        toggles: [{
+          name: 'Client',
+          value: 1
+        }, {
+          name: 'Broker',
+          value: 2
+        }]
+      },
+      methods: {
+        register: function register() {
+          var _this = this;
+
+          var securities = this.getSecurities();
+          Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
+          Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
+          this.values.UserType = this.values.UserType[0];
+          this.errors = {};
+          this.success = null;
+          $("#vue-register button[type=submit] .spinner-border").removeAttr('hidden');
+          $("#vue-register button[type=submit]").attr("disabled", "disabled");
+          $.ajax({
+            url: '/register',
+            method: 'POST',
+            data: this.values,
+            success: function success(e) {
+              _this.success = "<b>Success!</b> You've successfully registered, please wait to be redirected...";
+              location.reload();
+            },
+            error: function error(e) {
+              $.each(e.responseJSON.errors, function (key, val) {
+                return Vue.set(_this.errors, key, val);
+              });
+              _this.success = null;
+            }
+          }).always(function (e) {
+            $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden');
+            $("#vue-register button[type=submit]").removeAttr("disabled");
+            _this.values.UserType = [_this.values.UserType];
+          });
+        }
+      }
+    });
+  } else {
+    return null;
+  }
+}
+
+/***/ }),
+
+/***/ "./resources/js/pages/simple_search.js":
+/*!*********************************************!*\
+  !*** ./resources/js/pages/simple_search.js ***!
+  \*********************************************/
+/*! exports provided: simple_search */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "simple_search", function() { return simple_search; });
+function simple_search(FormMixin, PropertyCardsMixin) {
+  if ($("#vue-simple-search").length && $("#properties_cards").length) {
+    var search = new Vue({
+      el: "#vue-simple-search",
+      mixins: [FormMixin],
+      data: {
+        toggles: [],
+        options: [],
+        values: {},
+        errors: {},
+        page: 1,
+        shown: false,
+        ignoreAdvanced: $.urlParam('ignoreAdvanced') ? true : false,
+        lastPage: 1
+      },
+      created: function created() {
+        var _this = this;
+
+        $.ajax({
+          method: "GET",
+          url: '/api/property/types'
+        }).always(function (e) {
+          $.each(e, function (i, o) {
+            _this.options.push({
+              name: o.PropertyType,
+              value: o.id
+            });
+          });
+        });
+        $.ajax({
+          method: "GET",
+          url: '/api/listing/types'
+        }).always(function (e) {
+          $.each(e, function (i, o) {
+            _this.toggles.push({
+              name: "For " + o.ListingType,
+              value: o.id
+            });
+          });
+        });
+      },
+      mounted: function mounted() {
+        var _this2 = this;
+
+        var range = ["NumberOfBedrooms", "NumberOfBathrooms", "Price", "LotArea", "FloorArea"];
+        var string = ["query", "location"];
+        $.each(range, function (i, v) {
+          if ($.urlParam(v)) {
+            var values = decodeURIComponent($.urlParam(v)).split(',');
+            _this2.values[v][0] = parseInt(values[0], 10);
+            _this2.values[v][1] = parseInt(values[1], 10);
+            _this2.$refs[v].start = _this2.values[v][0];
+            _this2.$refs[v].end = _this2.values[v][1];
+            if (_this2.$refs[v].maximums) _this2.$refs[v].max = _this2.$refs[v].maximums.find(function (el) {
+              return _this2.values[v][1] <= el;
+            });
+
+            _this2.$refs[v].updateLimits();
+
+            _this2.$refs[v].updateStart();
+          }
+        });
+        $.each(string, function (i, v) {
+          if ($.urlParam(v)) Vue.set(_this2.values, v, decodeURIComponent($.urlParam(v)));
+        });
+        if ($.urlParam('type')) Vue.set(this.values, 'type', decodeURIComponent($.urlParam('type')).split(","));
+        if ($.urlParam('purpose')) Vue.set(this.values, 'purpose', decodeURIComponent($.urlParam('purpose')));
+      },
+      methods: {
+        search: function search(clear) {
+          var _this3 = this;
+
+          if (clear) {
+            this.page = 1;
+            Vue.set(properties.$data, 'cards', []);
+          }
+
+          Vue.set(properties.$data, 'loading', true);
+          var blacklist = ["NumberOfBedrooms", "NumberOfBathrooms", "Price", "LotArea", "FloorArea"];
+          var nonAdvanced = {};
+
+          for (var key in this.values) {
+            if (blacklist.indexOf(key) == -1) nonAdvanced[key] = this.values[key];
+          }
+
+          this.values["page"] = this.page;
+          nonAdvanced["page"] = this.page;
+          $.ajax({
+            url: "/api/property/paginate",
+            method: "GET",
+            data: !this.ignoreAdvanced ? this.values : nonAdvanced,
+            success: function success(e) {
+              if (e.data && e.data.length) {
+                console.log(_this3.values);
+                Vue.set(properties.$data, 'resultCount', e.total);
+                $.each(e.data, function (i, o) {
+                  return properties.cards.push(o);
+                });
+                _this3.page++;
+              }
+            },
+            error: function error(e) {
+              console.dir(e);
+            }
+          }).always(function () {
+            return Vue.set(properties.$data, 'loading', false);
+          });
+        }
+      }
+    });
+    var properties = new Vue({
+      el: "#properties_cards",
+      mixins: [PropertyCardsMixin],
+      mounted: function mounted() {
+        this.searchable = search.search;
+      }
+    });
+    search.search();
+  } else {
+    return null;
+  }
+}
 
 /***/ }),
 
@@ -34184,8 +34408,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/html/urhome/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/html/urhome/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\wamp64\www\urhome\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\wamp64\www\urhome\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

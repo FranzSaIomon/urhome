@@ -18,7 +18,7 @@ export default {
     watch: {
         bottom(bottom) {
             if (bottom && this.searchable) {
-                this.searchable.search()
+                this.searchable()
             }
         }
     }

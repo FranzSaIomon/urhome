@@ -45,164 +45,166 @@
         }
     </script>
 
-    <script>
-        let propertyID = {{$property->id}}
-        
-        let defaultValues = {
-            Name: "{{$property->Name}}",
-            Description: "{{$property->Description}}",
-            Developer: "{{$property->Developer}}",
-            LotNo: "{{$property->LotNo}}",
-            Street: "{{$property->Street}}",
-            City: "{{$property->City}}",
-            Country: "{{$property->Country}}",
-            YearBuilt: {{$property->YearBuilt}},
-            FloorArea: {{$property->FloorArea}},
-            LotArea: {{$property->LotArea}},
-            Price: {{$property->Price}},
-            NumberOfBedrooms: {{$property->NumberOfBedrooms}},
-            NumberOfBathrooms: {{$property->NumberOfBathrooms}},
-            CapacityOfGarage: {{$property->CapacityOfGarage}},
-            PropertyTypeID: {{$property->PropertyTypeID}},
-            ListingTypeID: {{$property->ListingTypeID}},
-        }
+    @if (Auth::check() && Auth::user()->id == $property->user->id)
+        <script>
+            let propertyID = {{$property->id}}
+            
+            let defaultValues = {
+                Name: "{{$property->Name}}",
+                Description: "{{$property->Description}}",
+                Developer: "{{$property->Developer}}",
+                LotNo: "{{$property->LotNo}}",
+                Street: "{{$property->Street}}",
+                City: "{{$property->City}}",
+                Country: "{{$property->Country}}",
+                YearBuilt: {{$property->YearBuilt}},
+                FloorArea: {{$property->FloorArea}},
+                LotArea: {{$property->LotArea}},
+                Price: {{$property->Price}},
+                NumberOfBedrooms: {{$property->NumberOfBedrooms}},
+                NumberOfBathrooms: {{$property->NumberOfBathrooms}},
+                CapacityOfGarage: {{$property->CapacityOfGarage}},
+                PropertyTypeID: {{$property->PropertyTypeID}},
+                ListingTypeID: {{$property->ListingTypeID}},
+            }
 
-        let selectedAmenities = '{{{$property->amenity}}}'
-        selectedAmenities = JSON.parse(selectedAmenities.replace(/&quot;/g, "\""))
-        let actualSelected = []
+            let selectedAmenities = '{{{$property->amenity}}}'
+            selectedAmenities = JSON.parse(selectedAmenities.replace(/&quot;/g, "\""))
+            let actualSelected = []
 
-        $.each(selectedAmenities, (i, o) => {
-            actualSelected.push(o.id + "")
-        })
+            $.each(selectedAmenities, (i, o) => {
+                actualSelected.push(o.id + "")
+            })
 
-        defaultValues.Amenities = actualSelected
+            defaultValues.Amenities = actualSelected
 
-    </script>
-    
-    <form action="" id="vue-property-update">
-    <div class="modal fade" id="updateProperty" tabindex="-1" role="dialog" aria-labelledby="updatePropertyLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    </div>
-                    <div class="modal-body container">
-                        <div class="row">
-                            <div class="col-md-6">
+        </script>
+            
+        <form action="" id="vue-property-update">
+            <div class="modal fade" id="updateProperty" tabindex="-1" role="dialog" aria-labelledby="updatePropertyLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            </div>
+                            <div class="modal-body container">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <input-group :values="values" :errors="errors" name="Name" label="Property Name" placeholder="Property Name"></input-group>
-                                    </div>    
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input-group :values="values" :errors="errors" name="Developer" label="Property Developer" placeholder="Property Developer"></input-group>
-                                    </div>    
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input-group type="multitext" :values="values" :errors="errors" name="Description" label="Description" placeholder="Post Description"></input-group>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>Address</label>
+                                                <input-group :values="values" :errors="errors" name="Name" label="Property Name" placeholder="Property Name"></input-group>
+                                            </div>    
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input-group :values="values" :errors="errors" name="Developer" label="Property Developer" placeholder="Property Developer"></input-group>
+                                            </div>    
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input-group type="multitext" :values="values" :errors="errors" name="Description" label="Description" placeholder="Post Description"></input-group>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Address</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input-group :errors="errors" :values="values" name="LotNo" id="lotNo" placeholder="Lot #"></input-group>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input-group :errors="errors" :values="values" name="Street" id="street" placeholder="Street"></input-group>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input-group type="text" :errors="errors" :values="values" name="City" type="city" id="city" placeholder="City" required></input-group>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input-group :errors="errors" :values="values" name="Country" type="country" id="country" placeholder="-- Country --" required></input-group>
+                                                    </div>
+                                                </div>  
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input-group type="select" :options="property_types" :values="values" :errors="errors" name="PropertyTypeID" label="Property Type" id="property_type" placeholder="-- Select Property Type --" required></input-group>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input-group type="select" :options="listing_types" :values="values" :errors="errors" name="ListingTypeID" label="Listing Type" id="listing_type" placeholder="-- Select Listing Type --" required></input-group>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input-group :errors="errors" :values="values" name="LotNo" id="lotNo" placeholder="Lot #"></input-group>
+                                                <input-group type="text" :errors="errors" :values="values" label="Price (&#8369;)" name="Price" id="price" placeholder="Price" required></input-group>
                                             </div>
                                             <div class="col-md-6">
-                                                <input-group :errors="errors" :values="values" name="Street" id="street" placeholder="Street"></input-group>
-                                            </div>
+                                                <input-group type="select" :options="years" :values="values" :errors="errors" name="YearBuilt" label="Year Built" placeholder="Year Built"></input-group>
+                                            </div>  
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input-group type="text" :errors="errors" :values="values" name="City" type="city" id="city" placeholder="City" required></input-group>
+                                                <input-group :values="values" :errors="errors" name="FloorArea" label="Floor Area (sqm.)" placeholder="Floor Area (in sqm.)"></input-group>
+                                            </div>  
+                                            <div class="col-md-6">
+                                                <input-group :values="values" :errors="errors" name="LotArea" label="Lot Area (sqm.)" placeholder="Lot Area (in sqm.)"></input-group>
+                                            </div>  
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input-group :values="values" :errors="errors" name="NumberOfBedrooms" label="# of Bedrooms" placeholder="# of Bedrooms"></input-group>
                                             </div>
                                             <div class="col-md-6">
-                                                <input-group :errors="errors" :values="values" name="Country" type="country" id="country" placeholder="-- Country --" required></input-group>
+                                                <input-group :values="values" :errors="errors" name="NumberOfBathrooms" label="# of Bathrooms" placeholder="# of Bathrooms"></input-group>
+                                            </div>  
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input-group :values="values" :errors="errors" name="CapacityOfGarage" label="Garage Capacity" placeholder="# of Cars"></input-group>
                                             </div>
-                                        </div>  
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input-group type="select" :options="property_types" :values="values" :errors="errors" name="PropertyTypeID" label="Property Type" id="property_type" placeholder="-- Select Property Type --" required></input-group>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <input-group type="select" :options="listing_types" :values="values" :errors="errors" name="ListingTypeID" label="Listing Type" id="listing_type" placeholder="-- Select Listing Type --" required></input-group>
+                                        <multi-select :Values="values" :errors="errors" :options="options" name="Amenities" label="Amenities"></multi-select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input-group type="text" :errors="errors" :values="values" label="Price (&#8369;)" name="Price" id="price" placeholder="Price" required></input-group>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input-group type="select" :options="years" :values="values" :errors="errors" name="YearBuilt" label="Year Built" placeholder="Year Built"></input-group>
-                                    </div>  
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input-group :values="values" :errors="errors" name="FloorArea" label="Floor Area (sqm.)" placeholder="Floor Area (in sqm.)"></input-group>
-                                    </div>  
-                                    <div class="col-md-6">
-                                        <input-group :values="values" :errors="errors" name="LotArea" label="Lot Area (sqm.)" placeholder="Lot Area (in sqm.)"></input-group>
-                                    </div>  
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <input-group :values="values" :errors="errors" name="NumberOfBedrooms" label="# of Bedrooms" placeholder="# of Bedrooms"></input-group>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input-group :values="values" :errors="errors" name="NumberOfBathrooms" label="# of Bathrooms" placeholder="# of Bathrooms"></input-group>
-                                    </div>  
-                                </div>
-                                <div class="row">
+                                <div class="row" v-if="success">
                                     <div class="col-md-12">
-                                        <input-group :values="values" :errors="errors" name="CapacityOfGarage" label="Garage Capacity" placeholder="# of Cars"></input-group>
+                                        <div class="alert alert-success" v-html="success"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-5">
+                                            <button type="button" class="btn btn-sm btn-block btn-primary mr-3" data-toggle="confirmation" id="update" data-content="This will change your property post details.">
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
+                                                Update Property Details
+                                            </button>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button type="button" class="btn btn-sm btn-block btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <multi-select :Values="values" :errors="errors" :options="options" name="Amenities" label="Amenities"></multi-select>
-                            </div>
-                        </div>
-                        <div class="row" v-if="success">
-                            <div class="col-md-12">
-                                <div class="alert alert-success" v-html="success"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-4"></div>
-                                <div class="col-md-5">
-                                    <button type="button" class="btn btn-sm btn-block btn-primary mr-3" data-toggle="confirmation" id="update" data-content="This will change your property post details.">
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
-                                        Update Property Details
-                                    </button>
-                                </div>
-                                <div class="col-md-3">
-                                    <button type="button" class="btn btn-sm btn-block btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-        </div>
-    </div>
-    </form>
+            </div>
+        </form>
+    @endif
 
     <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">

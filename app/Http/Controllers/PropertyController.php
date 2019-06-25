@@ -32,6 +32,8 @@ class PropertyController extends Controller
 
         $or_cols = ["query", 'location', 'type'];
 
+        $mandatory_cols = ["UserID"];
+
         $purposes = [1, 2];
 
         $conditions = [];
@@ -39,7 +41,9 @@ class PropertyController extends Controller
         $or_conditions = [];
         foreach ($request->all() as $k => $v) {
             if (isset($v)) {
-                if (in_array($k, $range_cols, false)) {
+                if (in_array($k, $mandatory_cols, false)) {
+                    array_push($conditions, [$k, intval($v)]);
+                } else if (in_array($k, $range_cols, false)) {
                     if ((strcasecmp($k, "numberofbedrooms") == 0 && $v[1] >= 10) || 
                         (strcasecmp($k, "numberofbathrooms") == 0 && $v[1] >= 10)) {
                         array_push($conditions, [$k, '>=', intval($v[0])]);
