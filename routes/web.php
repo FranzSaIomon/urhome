@@ -25,6 +25,10 @@ Route::get('properties/toggleArchive/{property}', 'PropertyController@toggleArch
 
 // Users
 Route::get('users', 'UserController@index');
+Route::post('users/update/{user}', 'UserController@update');
+Route::post('users/update/email/{user}', 'UserController@update_email');
+Route::post('users/update/password/{user}', 'UserController@update_password');
+Route::post('users/email/resend/{user}', 'UserController@resend_verification');
 Route::get('users/view/{user}', 'UserController@index');
 
 // Auth Routes

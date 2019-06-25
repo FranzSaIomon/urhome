@@ -33967,13 +33967,27 @@ function profile_page(FormMixin, PropertyCardsMixin, countries) {
       el: "#vue-profile-page",
       mixins: [FormMixin, PropertyCardsMixin],
       data: {
+        changed_email: false,
         userInfo: userInfo,
+        success: undefined,
         current_page: 1,
-        current_segment: "profile"
+        current_segment: "profile",
+        countries: countries,
+        errors: {},
+        values: {
+          c_email: {},
+          c_profile: {},
+          c_password: {}
+        },
+        password: ""
       },
       created: function created() {
         this.page().profile(this, this.userInfo);
         this.searchable = this.load_properties;
+
+        if ($.urlParam("segment")) {
+          this.changeSegment($.urlParam("segment"));
+        }
       },
       methods: {
         changeSegment: function changeSegment(type) {
@@ -33983,7 +33997,7 @@ function profile_page(FormMixin, PropertyCardsMixin, countries) {
             if (type === 'profile') {
               this.page().profile(this);
             } else if (type === 'update') {
-              this.page().update();
+              this.page().update(this);
             }
           }
         },
@@ -33994,9 +34008,14 @@ function profile_page(FormMixin, PropertyCardsMixin, countries) {
                 obj.load_properties(true);
               }
             },
-            update: function update(obj) {},
-            c_password: function c_password() {},
-            c_email: function c_email() {}
+            update: function update(obj) {
+              var user_copy = Object.assign({}, obj.userInfo);
+              Vue.set(obj.values, "c_email", {
+                email: obj.userInfo.email
+              });
+              Vue.set(obj.values, "c_profile", user_copy);
+            },
+            change_password: function change_password() {}
           };
         },
         load_properties: function load_properties(clear) {
@@ -34028,6 +34047,127 @@ function profile_page(FormMixin, PropertyCardsMixin, countries) {
               _this.loading = false;
             });
           }
+        },
+        c_update: function c_update() {
+          var _this2 = this;
+
+          this.success = undefined;
+          this.errors = {};
+          var securities = this.getSecurities();
+          Vue.set(this.values.c_profile, Object.keys(securities)[0], Object.values(securities)[0]);
+          Vue.set(this.values.c_profile, Object.keys(securities)[1], Object.values(securities)[1]);
+          Vue.set(this.values.c_profile, "password", this.values.password);
+          $("#update_profile_btns button .spinner-border").removeAttr('hidden');
+          $("#update_profile_btns input, #update_profile_btns button").attr("disabled", "disabled");
+          $.ajax({
+            url: "/users/update/" + this.userInfo.id,
+            method: "POST",
+            data: this.values.c_profile,
+            success: function success(e) {
+              _this2.success = e.success;
+              var new_info = Object.assign({}, _this2.values.c_profile);
+              Vue.set(_this2, 'userInfo', new_info);
+            },
+            error: function error(e) {
+              $.each(e.responseJSON.errors, function (key, val) {
+                return Vue.set(_this2.errors, key, val);
+              });
+              _this2.success = undefined;
+            }
+          }).always(function (e) {
+            $("#update_profile_btns button .spinner-border").attr('hidden', 'hidden');
+            $("#update_profile_btns input, #update_profile_btns button").removeAttr("disabled");
+            _this2.values.password = "";
+          });
+        },
+        c_email: function c_email() {
+          var _this3 = this;
+
+          this.success = undefined;
+          this.errors = {};
+          var securities = this.getSecurities();
+          Vue.set(this.values.c_email, Object.keys(securities)[0], Object.values(securities)[0]);
+          Vue.set(this.values.c_email, Object.keys(securities)[1], Object.values(securities)[1]);
+          Vue.set(this.values.c_email, "password", this.values.password);
+          $("#update_email_btns button .spinner-border").removeAttr('hidden');
+          $("#update_email_btns input, #update_email_btns button").attr("disabled", "disabled");
+          $.ajax({
+            url: "/users/update/email/" + this.userInfo.id,
+            method: "POST",
+            data: this.values.c_email,
+            success: function success(e) {
+              _this3.success = e.success;
+              _this3.changed_email = true;
+              Vue.set(_this3.userInfo, 'email', _this3.c_email.email);
+            },
+            error: function error(e) {
+              $.each(e.responseJSON.errors, function (key, val) {
+                return Vue.set(_this3.errors, key, val);
+              });
+              _this3.success = undefined;
+            }
+          }).always(function (e) {
+            $("#update_email_btns button .spinner-border").attr('hidden', 'hidden');
+            $("#update_email_btns input, #update_email_btns button").removeAttr("disabled");
+            _this3.values.password = "";
+          });
+        },
+        c_password: function c_password() {
+          var _this4 = this;
+
+          this.success = undefined;
+          this.errors = {};
+          var securities = this.getSecurities();
+          Vue.set(this.values.c_password, Object.keys(securities)[0], Object.values(securities)[0]);
+          Vue.set(this.values.c_password, Object.keys(securities)[1], Object.values(securities)[1]);
+          $("#update_password_btns button .spinner-border").removeAttr('hidden');
+          $("#update_password_btns input, #update_password_btns button").attr("disabled", "disabled");
+          $.ajax({
+            url: "/users/update/password/" + this.userInfo.id,
+            method: "POST",
+            data: this.values.c_password,
+            success: function success(e) {
+              _this4.success = e.success;
+            },
+            error: function error(e) {
+              $.each(e.responseJSON.errors, function (key, val) {
+                return Vue.set(_this4.errors, key, val);
+              });
+              _this4.success = undefined;
+            }
+          }).always(function (e) {
+            $("#update_password_btns button .spinner-border").attr('hidden', 'hidden');
+            $("#update_password_btns input, #update_password_btns button").removeAttr("disabled");
+            _this4.values.c_password = {};
+          });
+        },
+        resend_verification: function resend_verification() {
+          var _this5 = this;
+
+          var securities = this.getSecurities();
+          $("#update_email_btns button .spinner-border").removeAttr('hidden');
+          $("#update_email_btns input, #update_email_btns button").attr("disabled", "disabled");
+          var data = {
+            _token: Object.values(securities)[0]
+          };
+          $.ajax({
+            url: "/users/email/resend/" + this.userInfo.id,
+            data: data,
+            method: "POST",
+            success: function success(e) {
+              _this5.success = e.success;
+            }
+          }).always(function (e) {
+            $("#update_email_btns button .spinner-border").attr('hidden', 'hidden');
+            $("#update_email_btns input, #update_email_btns button").removeAttr("disabled");
+          });
+        },
+        reset_email: function reset_email() {
+          Vue.set(this.values.c_email, "email", this.userInfo.email);
+        },
+        reset_profile: function reset_profile() {
+          var user_copy = Object.assign({}, this.userInfo);
+          Vue.set(this.values, "c_profile", user_copy);
         }
       }
     });
@@ -34408,8 +34548,8 @@ function simple_search(FormMixin, PropertyCardsMixin) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\wamp64\www\urhome\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\wamp64\www\urhome\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /var/www/html/urhome/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/html/urhome/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
