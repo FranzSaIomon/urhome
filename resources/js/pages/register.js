@@ -34,20 +34,20 @@ export function register(FormMixin, countries) {
                     let securities = this.getSecurities()
                     Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0])
                     Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1])
-                    this.values.UserType = this.values.UserType[0]
+                    
+                    let value_copy = Object.assign({}, this.values)
+                    value_copy.UserType = this.values.UserType[0]
 
                     this.errors = {}
                     this.success = null
-
                     $("#vue-register button[type=submit] .spinner-border").removeAttr('hidden')
                     $("#vue-register button[type=submit]").attr("disabled", "disabled")
                     $.ajax({
                         url: '/register',
                         method: 'POST',
-                        data: this.values,
+                        data: value_copy,
                         success: (e) => {
-                            this.success = "<b>Success!</b> You've successfully registered, please wait to be redirected..."
-                            location.reload()
+                            this.success = "<b>Success!</b> You've successfully registered, please check your email for the verification link"
                         },
                         error: (e) => {
                             $.each(e.responseJSON.errors, (key, val) => Vue.set(this.errors, key, val))
@@ -56,7 +56,6 @@ export function register(FormMixin, countries) {
                     }).always((e) => {
                         $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden')
                         $("#vue-register button[type=submit]").removeAttr("disabled")
-                        this.values.UserType = [this.values.UserType]
                     })
                 }
             }

@@ -18,6 +18,8 @@ Route::get('contact', 'PageController@contact');
 
 // Properties
 Route::get('properties', 'PageController@search');
+Route::get('properties/post', 'PropertyController@create');
+Route::post('properties/post', 'PropertyController@store');
 Route::get('properties/search', 'PageController@search');
 Route::get('properties/view/{property}', 'PropertyController@view');
 Route::get('properties/update/{property}', 'PropertyController@update');

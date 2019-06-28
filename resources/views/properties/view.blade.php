@@ -125,7 +125,7 @@
                                                         <input-group type="text" :errors="errors" :values="values" name="City" type="city" id="city" placeholder="City" required></input-group>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input-group :errors="errors" :values="values" name="Country" type="country" id="country" placeholder="-- Country --" required></input-group>
+                                                        <input-group :errors="errors" :values="values" name="Country" :countries="countries" type="country" id="country" placeholder="-- Country --" required></input-group>
                                                     </div>
                                                 </div>  
                                             </div>
@@ -419,20 +419,22 @@
                         <h5><b>Additional Information</b></h5>
                     </div>
                 </div>
-                <div class="row mt-2">
-                    <div class="col-md-6">
-                        <div class="text-muted">
-                            Files
+                @if(Auth::check() && Auth::user()->user_type->id == 3)
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <div class="text-muted">
+                                Files
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            @foreach ($property->property_document->Files as $item)
+                                <a href="{{$item}}">
+                                    item
+                                </a>
+                            @endforeach
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        @foreach ($property->property_document->Files as $item)
-                            <a href="{{$item}}">
-                                item
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
+                @endif
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <div class="text-muted">

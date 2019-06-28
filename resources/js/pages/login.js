@@ -5,7 +5,7 @@ export function login(FormMixin) {
             data: {
                 errors: {},
                 values: {
-                    'email': 'aemard@example.com',
+                    'email': 'miguelalfonsoquiambao@gmail.com',
                     'password': 'password'
                 },
                 loginForm: true,

@@ -9,8 +9,19 @@
                 }"
                 v-if="type.toLowerCase() =='select'" 
                 v-model="values[name]" :id="id" :required="required ? true : false">
+            <option v-if="placeholder" selected disabled>{{placeholder}}</option>
             <option v-for="option in options" :value="option.value" :key="option.name">{{option.name}}</option>
         </select>
+
+        <div class="custom-file"  v-else-if="type.toLowerCase() =='image'">
+            <input :name="name" :class="{
+                    'custom-file-input': true,
+                    'is-invalid': errors[name]
+                }"
+                :id="id" :required="required ? true : false" :multiple="multiple ? true : false"
+                type="file" accept="image/*">
+            <label :for="id" v-if="placeholder && type.toLowerCase() == 'image'" class="custom-file-label">{{placeholder}}</label>
+        </div>
 
         <div class="country-select" v-else-if="type.toLowerCase() =='country'">
             <span ref="country-flag" v-if="values[name]" :class="'flag-icon flag-icon-' + values[name].toLowerCase()"></span>
@@ -49,6 +60,7 @@
                 :required="required ? true : false"/>
 
         <span class="invalid-feedback" role="alert" v-for="error in errors[name]" :key="error">{{error}}</span>
+        <p class="ml-1 form-text text-muted small" v-html="help"></p>
     </div>
 </template>
 
@@ -63,9 +75,11 @@
                 type: this.$attrs['type'] || 'text',
                 label: this.$attrs['label'] || '',
                 placeholder: this.$attrs['placeholder'] || '',
+                help: this.$attrs['help'] || '',
                 value: this.$attrs["value"],
                 required: this.$attrs['required'] != undefined,
                 id: this.$attrs['id'] || '',
+                multiple: this.$attrs['multiple'] != undefined,
             }
         },
         mounted() {

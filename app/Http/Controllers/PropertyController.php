@@ -117,7 +117,7 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        //
+        return view('properties.add')->with(['title' => 'Posting New Property', 'nolanding' => 'nolanding']);
     }
 
     /**
@@ -128,7 +128,25 @@ class PropertyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "Name" => "filled",
+            "Description" => "filled",
+            "Developer" => "filled",
+            "LotNo" => "filled",
+            "Street" => "filled",
+            "City" => "filled",
+            "Country" => "filled",
+            "YearBuilt" => "filled|integer",
+            "FloorArea" => "filled|numeric|min:0",
+            "LotArea" => "filled|numeric|min:0",
+            "Price" => "filled|numeric|min:0",
+            "NumberOfBedrooms" => "filled|integer|min:0",
+            "NumberOfBathrooms" => "filled|integer|min:0",
+            "CapacityOfGarage" => "filled|integer|min:0",
+            "PropertyTypeID" => "exists:property_types,id|integer",
+            "ListingTypeID" => "exists:listing_types,id|integer",
+            "Amenities.*" => "exists:amenities,id|integer"
+        ]);
     }
 
     /**

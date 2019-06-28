@@ -2,7 +2,7 @@ import FormMixin from './components/mixins/FormMixin'
 import PropertyCardsMixin from './components/mixins/PropertyCardsMixin'
 
 /* Vue Objects */
-import { filter, login, property_update, register, simple_search, profile_page } from './pages'
+import { filter, login, property_update, register, simple_search, profile_page, listing_add } from './pages'
 
 require('./bootstrap')
 
@@ -32,7 +32,8 @@ $(document).ready(() => {
     login(FormMixin) // call vue creation for login segment
     register(FormMixin, countries) // call vue creation for register segment
     simple_search(FormMixin, PropertyCardsMixin) // call vue creation for simple search segment
-    property_update(FormMixin) // call vue creation for property update modal
+    property_update(FormMixin, countries) // call vue creation for property update modal
+    listing_add(FormMixin, countries) // call vue creation for property update modal
 
     /* Bound the function profile_page to give it access to the generated user information in the page */
     const bound_profile_page = profile_page.bind((typeof userInfo !== 'undefined') ? userInfo : {}) // call vue creation for profile page

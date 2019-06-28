@@ -50,6 +50,7 @@
                         </a>
                         <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'update') ? 'active' : '')" @click.prevent="changeSegment('update')">Update Account Details</a>
                         <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'c_password') ? 'active' : '')" @click.prevent="changeSegment('c_password')">Change Password</a>
+                        <a href="#" class="list-group-item list-group-item-action list-group-danger" @click.prevent="">Deactivate Account</a>
                     </div>
                 </div>
             </div>

@@ -1818,6 +1818,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mixins: [_mixins_InputMixin__WEBPACK_IMPORTED_MODULE_0__["default"]],
@@ -1827,9 +1839,11 @@ __webpack_require__.r(__webpack_exports__);
       type: this.$attrs['type'] || 'text',
       label: this.$attrs['label'] || '',
       placeholder: this.$attrs['placeholder'] || '',
+      help: this.$attrs['help'] || '',
       value: this.$attrs["value"],
       required: this.$attrs['required'] != undefined,
-      id: this.$attrs['id'] || ''
+      id: this.$attrs['id'] || '',
+      multiple: this.$attrs['multiple'] != undefined
     };
   },
   mounted: function mounted() {
@@ -19920,15 +19934,48 @@ var render = function() {
                 }
               }
             },
-            _vm._l(_vm.options, function(option) {
-              return _c(
-                "option",
-                { key: option.name, domProps: { value: option.value } },
-                [_vm._v(_vm._s(option.name))]
-              )
-            }),
-            0
+            [
+              _vm.placeholder
+                ? _c("option", { attrs: { selected: "", disabled: "" } }, [
+                    _vm._v(_vm._s(_vm.placeholder))
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.options, function(option) {
+                return _c(
+                  "option",
+                  { key: option.name, domProps: { value: option.value } },
+                  [_vm._v(_vm._s(option.name))]
+                )
+              })
+            ],
+            2
           )
+        : _vm.type.toLowerCase() == "image"
+        ? _c("div", { staticClass: "custom-file" }, [
+            _c("input", {
+              class: {
+                "custom-file-input": true,
+                "is-invalid": _vm.errors[_vm.name]
+              },
+              attrs: {
+                name: _vm.name,
+                id: _vm.id,
+                required: _vm.required ? true : false,
+                multiple: _vm.multiple ? true : false,
+                type: "file",
+                accept: "image/*"
+              }
+            }),
+            _vm._v(" "),
+            _vm.placeholder && _vm.type.toLowerCase() == "image"
+              ? _c(
+                  "label",
+                  { staticClass: "custom-file-label", attrs: { for: _vm.id } },
+                  [_vm._v(_vm._s(_vm.placeholder))]
+                )
+              : _vm._e()
+          ])
         : _vm.type.toLowerCase() == "country"
         ? _c("div", { staticClass: "country-select" }, [
             _vm.values[_vm.name]
@@ -20187,6 +20234,11 @@ var render = function() {
           },
           [_vm._v(_vm._s(error))]
         )
+      }),
+      _vm._v(" "),
+      _c("p", {
+        staticClass: "ml-1 form-text text-muted small",
+        domProps: { innerHTML: _vm._s(_vm.help) }
       })
     ],
     2
@@ -33141,7 +33193,9 @@ $(document).ready(function () {
 
   Object(_pages__WEBPACK_IMPORTED_MODULE_2__["simple_search"])(_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"], _components_mixins_PropertyCardsMixin__WEBPACK_IMPORTED_MODULE_1__["default"]); // call vue creation for simple search segment
 
-  Object(_pages__WEBPACK_IMPORTED_MODULE_2__["property_update"])(_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"]); // call vue creation for property update modal
+  Object(_pages__WEBPACK_IMPORTED_MODULE_2__["property_update"])(_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"], countries); // call vue creation for property update modal
+
+  Object(_pages__WEBPACK_IMPORTED_MODULE_2__["listing_add"])(_components_mixins_FormMixin__WEBPACK_IMPORTED_MODULE_0__["default"], countries); // call vue creation for property update modal
 
   /* Bound the function profile_page to give it access to the generated user information in the page */
 
@@ -33803,7 +33857,7 @@ function filter(FormMixin) {
 /*!*************************************!*\
   !*** ./resources/js/pages/index.js ***!
   \*************************************/
-/*! exports provided: filter, login, register, property_update, simple_search, profile_page */
+/*! exports provided: filter, login, register, property_update, simple_search, profile_page, listing_add */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33826,6 +33880,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _profile_page__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./profile_page */ "./resources/js/pages/profile_page.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "profile_page", function() { return _profile_page__WEBPACK_IMPORTED_MODULE_5__["profile_page"]; });
 
+/* harmony import */ var _listing_add__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./listing_add */ "./resources/js/pages/listing_add.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "listing_add", function() { return _listing_add__WEBPACK_IMPORTED_MODULE_6__["listing_add"]; });
 
 
 
@@ -33833,6 +33889,139 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/listing_add.js":
+/*!*******************************************!*\
+  !*** ./resources/js/pages/listing_add.js ***!
+  \*******************************************/
+/*! exports provided: listing_add */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listing_add", function() { return listing_add; });
+function listing_add(FormMixin, countries) {
+  if ($("#vue-listing-add").length) {
+    return new Vue({
+      el: '#vue-listing-add',
+      mixins: [FormMixin],
+      data: {
+        countries: countries,
+        errors: {},
+        values: {},
+        defaults: {},
+        options: [],
+        property_types: [],
+        listing_types: [],
+        years: [],
+        panoramas: [],
+        success: undefined
+      },
+      created: function created() {
+        var _this = this;
+
+        $.ajax({
+          url: "/api/amenity",
+          method: "GET",
+          success: function success(e) {
+            $.each(e, function (i, o) {
+              return _this.options.push({
+                name: o.AmenityName,
+                value: o.id
+              });
+            });
+          }
+        });
+        $.ajax({
+          url: "/api/property/types",
+          method: "GET",
+          success: function success(e) {
+            $.each(e, function (i, o) {
+              return _this.property_types.push({
+                name: o.PropertyType,
+                value: o.id
+              });
+            });
+          }
+        });
+        $.ajax({
+          url: "/api/listing/types",
+          method: "GET",
+          success: function success(e) {
+            $.each(e, function (i, o) {
+              return _this.listing_types.push({
+                name: "For " + o.ListingType,
+                value: o.id
+              });
+            });
+          }
+        });
+
+        for (var _i = 1900; _i <= new Date().getFullYear(); _i++) {
+          this.years.push({
+            name: _i,
+            value: _i
+          });
+        }
+      },
+      mounted: function mounted() {
+        var _this2 = this;
+
+        $("input[name=PropertyPanoramas]").change(function (e) {
+          _this2.add_panorama($("input[name=PropertyPanoramas]")[0].files);
+        });
+      },
+      methods: {
+        add_panorama: function add_panorama(files) {
+          var _this3 = this;
+
+          $.each(files, function (i, file) {
+            if (!_this3.lookup_photo(_this3.panoramas, file)) {
+              var panorama = {
+                name: "New Panorama",
+                file: file,
+                src: ""
+              };
+
+              _this3.get_preview(panorama);
+
+              _this3.panoramas.push(panorama);
+            }
+          });
+          console.log(this.panoramas);
+        },
+        remove_panorama: function remove_panorama(panorama) {
+          for (i = 0; i < this.panoramas; i++) {
+            if (this.panoramas[i] == panorama) delete this.panoramas[i];
+          }
+        },
+        lookup_photo: function lookup_photo(array, file) {
+          $.each(array, function (i, o) {
+            if (o.file === file) {
+              return true;
+            }
+          });
+          return false;
+        },
+        get_preview: function get_preview(panorama) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            panorama.src = e.target.result;
+          };
+
+          reader.readAsDataURL(panorama.file);
+        }
+      }
+    });
+  }
+
+  return null;
+}
 
 /***/ }),
 
@@ -33853,7 +34042,7 @@ function login(FormMixin) {
       data: {
         errors: {},
         values: {
-          'email': 'aemard@example.com',
+          'email': 'miguelalfonsoquiambao@gmail.com',
           'password': 'password'
         },
         loginForm: true,
@@ -34188,7 +34377,7 @@ function profile_page(FormMixin, PropertyCardsMixin, countries) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "property_update", function() { return property_update; });
-function property_update(FormMixin) {
+function property_update(FormMixin, countries) {
   if ($("#vue-property-update").length) {
     var _property_update = new Vue({
       el: "#vue-property-update",
@@ -34251,7 +34440,7 @@ function property_update(FormMixin) {
           });
         }
 
-        if (defaultValues) {
+        if (typeof defaultValues !== "undefined") {
           Object.assign(this.values, defaultValues);
           Object.assign(this.defaults, defaultValues);
         }
@@ -34361,7 +34550,8 @@ function register(FormMixin, countries) {
           var securities = this.getSecurities();
           Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
           Vue.set(this.values, Object.keys(securities)[1], Object.values(securities)[1]);
-          this.values.UserType = this.values.UserType[0];
+          var value_copy = Object.assign({}, this.values);
+          value_copy.UserType = this.values.UserType[0];
           this.errors = {};
           this.success = null;
           $("#vue-register button[type=submit] .spinner-border").removeAttr('hidden');
@@ -34369,10 +34559,9 @@ function register(FormMixin, countries) {
           $.ajax({
             url: '/register',
             method: 'POST',
-            data: this.values,
+            data: value_copy,
             success: function success(e) {
-              _this.success = "<b>Success!</b> You've successfully registered, please wait to be redirected...";
-              location.reload();
+              _this.success = "<b>Success!</b> You've successfully registered, please check your email for the verification link";
             },
             error: function error(e) {
               $.each(e.responseJSON.errors, function (key, val) {
@@ -34383,7 +34572,6 @@ function register(FormMixin, countries) {
           }).always(function (e) {
             $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden');
             $("#vue-register button[type=submit]").removeAttr("disabled");
-            _this.values.UserType = [_this.values.UserType];
           });
         }
       }

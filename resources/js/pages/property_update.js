@@ -1,4 +1,4 @@
-export function property_update(FormMixin) {
+export function property_update(FormMixin, countries) {
     if ($("#vue-property-update").length) {
         const property_update = new Vue({
             el: "#vue-property-update",
@@ -54,7 +54,7 @@ export function property_update(FormMixin) {
                         value: i,
                     })
 
-                if (defaultValues) {
+                if (typeof defaultValues !== "undefined") {
                     Object.assign(this.values, defaultValues)
                     Object.assign(this.defaults, defaultValues)
                 }

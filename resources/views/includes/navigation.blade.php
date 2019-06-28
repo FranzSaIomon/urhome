@@ -39,6 +39,15 @@
                 <div class="dropdown-menu" aria-labelledby="accountDropdown">
                     @if(Auth::check())
                         <a href="/users" class="dropdown-item">Profile</a>
+                        @if(Auth::user()->user_type->id == 2)
+                            @if (Auth::user()->Status == 1)
+                                <a href="/properties/post" class="dropdown-item">Post a Listing</a>
+                            @endif
+                            <a href="/reports" class="dropdown-item">Generate Reports</a>
+                        @endif
+                        @if(Auth::user()->user_type->id == 3)
+                            <a href="/reports" class="dropdown-item">Generate Reports</a>
+                        @endif
                         <a href="/logout" class="dropdown-item">Log Out</a>
                     @else
                         <a href="#" class="dropdown-item captcha-refresh" data-toggle="modal" data-target="#loginModal">Log In</a>
@@ -48,8 +57,8 @@
             </li>
         </ul>
     </div>
-
-    @if(Session::has('verified'))
+    
+    @if(Session::has('verified') || isset($verified))
         @php
             $alert = "<b>Success!</b> Your email has been verified.";
         @endphp
