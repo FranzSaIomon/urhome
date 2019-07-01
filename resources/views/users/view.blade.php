@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('header')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-confirmation2@4.1.0/dist/bootstrap-confirmation.min.js" integrity="sha256-HLaBCKTIBg6tnkp3ORya7b3Ttkf7/TXAuL/BdzahrO0=" crossorigin="anonymous"></script>
+@endsection
 @section('content')
     <script>
         var userInfo = '{{$user}}'
@@ -8,7 +11,7 @@
     
     <div class="container-fluid" id="vue-profile-page">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3 text-center">
                 <img src="{{$user->ProfileImage}}" class="img-thumbnail rounded-circle"/>
             </div>
             <div class="col-md">
@@ -50,7 +53,7 @@
                         </a>
                         <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'update') ? 'active' : '')" @click.prevent="changeSegment('update')">Update Account Details</a>
                         <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'c_password') ? 'active' : '')" @click.prevent="changeSegment('c_password')">Change Password</a>
-                        <a href="#" class="list-group-item list-group-item-action list-group-danger" @click.prevent="">Deactivate Account</a>
+                        <button href="#" class="list-group-item list-group-item-action list-group-item-danger" data-content="Clicking yes will deactivate your account and archive all your listings." data-toggle="confirmation" data-singleton="true" ref="deactivate">Deactivate Account</button>
                     </div>
                 </div>
             </div>

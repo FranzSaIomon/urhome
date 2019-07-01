@@ -21,17 +21,76 @@ class UserController extends Controller
             else
                 return redirect('/');
 
-        return view('users.view')->with(['user' => $user, 'nolanding' => 'nolanding']);
+        if ($user->Status != 0)
+            return view('users.view')->with(['user' => $user, 'nolanding' => 'nolanding']);
+        else
+            return redirect('/');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function is_deactivated(Request $request) {
+        $validated = $this->validate($request, [
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        $user = User::all()->where('email', $request['email'])->first();
+        
+        if (isset($user)) {
+            if (Hash::check($request['password'], $user->password)) {
+                if ($user->Status == 0) {
+                    return response()->json(["message" => "Your account has been deactivated. Please click <a href='users/reactivate/'>here</a> to reactivate your account"], 200);
+                } else {
+                    return response()->json([], 422);
+                }
+            } else {
+                return response()->json(['errors' => ['email' => ['These credentials do not match our records.']]], 422);
+            }
+        } else {
+            return response()->json(['errors' => ['email' => ['These credentials do not match our records.']]], 422);
+        }
+    }
+
+    public function show_reactivate(Request $request) {
+        if (!auth()->check()) {
+            return view('users.reactivate')->with(['title' => 'Reactivate Account', 'nolanding' => 'nolanding']);
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function reactivate(Request $request) {
+        $validated = $this->validate($request, [
+            'email' => 'required',
+            'password' => 'required|confirmed'
+        ]);
+
+        $user = User::all()->where('email', $request['email'])->first();
+        
+        if (isset($user)) {
+            if (Hash::check($request['password'], $user->password)) {
+                if ($user->Status == 0) {
+                    $user->Status = 1;
+                
+                    if ($user->user_type->id == 2) {
+                        $properties = $user->property;
+            
+                        for ($i = 0; $i < count($properties); $i++) {
+                            $properties[$i]->StatusID = 1;
+                            $properties[$i]->save();
+                        }
+                    }
+
+                    $user->save();
+                    return response()->json(['message' => 'Your account has been reactivated. You may now login again.']);
+                } else {
+                    return response()->json(['message' => 'Your account is already activated']);
+                }
+            } else {
+                return response()->json(['errors' => ['email' => ['These credentials do not match our records.']]], 422);
+            }
+        } else {
+            return response()->json(['errors' => ['email' => ['These credentials do not match our records.']]], 422);
+        }
     }
 
     /**
@@ -168,6 +227,18 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->Status = 0;
+
+        if ($user->user_type->id == 2) {
+            $properties = $user->property;
+
+            for ($i = 0; $i < count($properties); $i++) {
+                $properties[$i]->StatusID = 2;
+                $properties[$i]->save();
+            }
+        }
+
+        $user->save();
+        auth()->logout();
     }
 }

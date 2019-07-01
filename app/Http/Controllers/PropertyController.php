@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Property;
 use App\PropertyAmenity;
+use App\PropertyDocument;
 use App\Status;
 use Illuminate\Http\Request;
+use File;
+use Image;
 class PropertyController extends Controller
 {
     /**
@@ -147,6 +150,73 @@ class PropertyController extends Controller
             "ListingTypeID" => "exists:listing_types,id|integer",
             "Amenities.*" => "exists:amenities,id|integer"
         ]);
+
+        try {
+            $property = new Property();
+            $property->UserID = auth()->id();
+            $property->Name = $request['Name'];
+            $property->Description = $request['Description'];
+            $property->Developer = $request['Developer'];
+            $property->LotNo = $request['LotNo'];
+            $property->Street = $request['Street'];
+            $property->City = $request['City'];
+            $property->Country = $request['Country'];
+            $property->YearBuilt = $request['YearBuilt'];
+            $property->FloorArea = $request['FloorArea'];
+            $property->LotArea = $request['LotArea'];
+            $property->Price = $request['Price'];
+            $property->NumberOfBedrooms = $request['NumberOfBedrooms'];
+            $property->NumberOfBathrooms = $request['NumberOfBathrooms'];
+            $property->CapacityOfGarage = $request['CapacityOfGarage'];
+            $property->PropertyTypeID = $request['PropertyTypeID'];
+            $property->ListingTypeID = $request['ListingTypeID'];
+            $property->Verified = 0;
+            $property->StatusID = 1;
+
+            $property->save();
+            foreach(explode(",", preg_replace('/\s+/', '', $request['Amenities'])) as $amenity) {
+                $propertyAmenity = new PropertyAmenity();
+                $propertyAmenity->PropertyID = $property->id;
+                $propertyAmenity->AmenityID = intval($amenity);
+            }
+            
+            $propertyDocument = new PropertyDocument();
+            $images = array();
+            $files = array();
+
+            foreach ($request->file() as $key => $value) {
+                if (strpos($key, 'image') !== false) {
+                    $folder = public_path('img/' . auth()->id() . '/' . $property->id . '/');
+                    $imageName = time(). $key . '.' . $value->getClientOriginalExtension();
+
+                    if (!File::exists($folder)) {
+                        File::makeDirectory($folder, 0775, true, true);
+                    }
+
+                    $location = public_path('img/' . auth()->id() . '/' . $property->id . '/' . $imageName);
+                    Image::make($value)->save($location);
+                    array_push($images, '/img/' . auth()->id() . '/' . $property->id . '/' . $imageName);
+                } else {
+                    $folder = public_path('files/' . auth()->id() . '/' . $property->id . '/');
+                    $fileName = time(). $key . '.' . $value->getClientOriginalExtension();
+
+                    if (!File::exists($folder)) {
+                        File::makeDirectory($folder, 0775, true, true);
+                    }
+                    $value->move(public_path('files/' . auth()->id() . '/' . $property->id . '/'), $fileName);
+                    array_push($files,'/files/' . auth()->id() . '/' . $property->id . '/' . $fileName);
+                }
+            }
+
+            $propertyDocument->Images = ["regular" => $images, "3d" => []];
+            $propertyDocument->Files = $files;
+            $propertyDocument->PropertyID = $property->id;
+            $propertyDocument->save();
+            return response()->json(["message" => "You've successfully posted a listing."]);
+        } catch(Exception $e) {
+            return response()->json(["message" => "Something went wrong while posting your property. Please try again later."],422);
+        }
+
     }
 
     /**

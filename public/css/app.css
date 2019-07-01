@@ -16525,6 +16525,41 @@ readers do not read off random characters that represent icons */
   padding-top: 26px;
 }
 
+.removable {
+  position: relative;
+  cursor: pointer;
+}
+
+.removable img {
+  max-height: 100px;
+}
+
+.removable:hover:before {
+  content: "";
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+}
+
+.removable:hover:after {
+  content: "X";
+  font-size: 50px;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  line-height: 75%;
+  text-align: center;
+  left: 50%;
+  right: 0;
+  bottom: 0;
+}
+
 #popup_alert {
   position: absolute;
   top: 125%;

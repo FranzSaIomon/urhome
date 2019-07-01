@@ -23,6 +23,16 @@
             <label :for="id" v-if="placeholder && type.toLowerCase() == 'image'" class="custom-file-label">{{placeholder}}</label>
         </div>
 
+        <div class="custom-file"  v-else-if="type.toLowerCase() =='file'">
+            <input :name="name" :class="{
+                    'custom-file-input': true,
+                    'is-invalid': errors[name]
+                }"
+                :id="id" :required="required ? true : false" :multiple="multiple ? true : false"
+                type="file" :accept="accept">
+            <label :for="id" v-if="placeholder && type.toLowerCase() == 'file'" class="custom-file-label">{{placeholder}}</label>
+        </div>
+
         <div class="country-select" v-else-if="type.toLowerCase() =='country'">
             <span ref="country-flag" v-if="values[name]" :class="'flag-icon flag-icon-' + values[name].toLowerCase()"></span>
             <span ref="country-flag" v-else></span>
@@ -60,7 +70,7 @@
                 :required="required ? true : false"/>
 
         <span class="invalid-feedback" role="alert" v-for="error in errors[name]" :key="error">{{error}}</span>
-        <p class="ml-1 form-text text-muted small" v-html="help"></p>
+        <small class="ml-1 form-text text-muted" v-html="help"></small>
     </div>
 </template>
 
@@ -80,6 +90,7 @@
                 required: this.$attrs['required'] != undefined,
                 id: this.$attrs['id'] || '',
                 multiple: this.$attrs['multiple'] != undefined,
+                accept: this.$attrs['accept'] || '',
             }
         },
         mounted() {

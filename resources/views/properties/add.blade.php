@@ -1,10 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid" id="vue-listing-add">
-        <div class="row" v-if="success">
+    <form class="container-fluid w-75" id="vue-listing-add" @submit.prevent="post">
+        @csrf
+        <div class="row" v-if="info">
             <div class="col-md-12">
-                <div class="alert alert-success" v-html="success"></div>
+                <div class="alert alert-info" v-html="info"></div>
             </div>
         </div>
         <div class="row mb-2 mt-3">
@@ -14,9 +15,13 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <input-group :errors="errors" id="PropertyImages" name="PropertyImages" label="Property Images" type="image" placeholder="Choose Files" multiple></input-group>
+                <input-group :errors="errors" id="PropertyImages" name="PropertyImages" label="Property Images" type="image" placeholder="Choose Files" help="<b>Note: </b> You can only have 10 property images per listing. Maximum image size: 3MB." multiple></input-group>
             </div>
-            
+        </div>
+        <div class="row col-md-12 d-flex justify-content-start">
+            <div class="removable mx-auto mt-2" v-for="image in images" @click.prevent="remove_image(image)">
+                <img :src='image.src' class="img-fluid"/>
+            </div>
         </div>
         <div class="row mb-2 mt-4">
             <h2 class="col-md-12 font-weight-bold">
@@ -109,9 +114,44 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-md-5">
+                <input-group :errors="errors" id="PropertyFiles" name="PropertyFiles" label="Property Files" type="file" placeholder="Choose Files" help="<b>Note: </b> You can only submit 5 property files per listing. Maximum image size: 5MB." accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" multiple></input-group>
+            </div>
+            <div class="col-md-7">
+                <div class="row"  v-for="file in files">
+                    <div class="alert w-100 alert-sm alert-dismissible alert-light mb-2">
+                        <span>@{{file.name}}</span>
+                        <button type="button" class="close" @click.prevent="remove_file(file)">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-12">
                 <multi-select :Values="values" :errors="errors" :options="options" name="Amenities" label="Amenities"></multi-select>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6 align-self-end mt-2 text-right">
+                <input-group type="check" :errors="errors" :values="values" name="panorama" id="panorama" label="Request 360&#176; panoramas"></input-group>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="alert alert-success" v-if="success" v-html="success"></div>
+            </div>
+            <div class="col-md-8">
+                <div class="alert alert-danger" v-if="error" v-html="error"></div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="px-4 btn btn-sm btn-sm-block btn-xs-block btn-md-block btn-primary float-right">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
+                    Post Listing
+                </button>
+            </div>
+        </div>
+    </form>
 @endsection

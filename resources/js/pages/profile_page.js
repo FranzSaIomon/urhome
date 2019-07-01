@@ -1,3 +1,5 @@
+import { delay } from "q";
+
 export function profile_page(FormMixin, PropertyCardsMixin, countries) {
   if ($("#vue-profile-page").length) {
     const userInfo = this
@@ -28,8 +30,41 @@ export function profile_page(FormMixin, PropertyCardsMixin, countries) {
           this.changeSegment($.urlParam("segment"))
         }
       },
+      mounted() {
+        let deactivate = $(this.$refs.deactivate)
+
+        deactivate.confirmation({
+          rootSelector: '[data-toggle=confirmation]',
+        })
+
+        deactivate.on('confirmed.bs.confirmation', this.deactivate)
+      },
       methods: {
+        deactivate() {
+          let alertDiv = $("<div class='alert'></div>")
+          let dismiss = $("<button type='button' class='close' data-dismiss='modal'>&times;</button>")
+          alertDiv.append(dismiss)
+          $("#modalAlert").html(alertDiv)
+
+          $.ajax({
+            url: "/users/destroy/" + this.userInfo.id,
+            success: (e) => {
+              alertDiv.html("<b>Success: </b> Your account has been deactivated. Please wait to be redirected.")
+              alertDiv.addClass("alert-success");
+
+              setTimeout(() => location.reload(), 800);
+            },
+            error: (e) => {
+              alertDiv.html("<b>Error: </b> Something went wrong while deactivating your account. Please try again later.")
+              alertDiv.addClass("alert-danger");
+            }
+          }).always((e) => {
+            $("#modalAlert").parent(".modal").modal('show')
+          })
+        },
         changeSegment(type) {
+          this.success = undefined
+          this.errors = {}
           if (this.current_segment !== type) {
             this.current_segment = type
 

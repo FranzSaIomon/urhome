@@ -46,6 +46,12 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row" v-if="info">
+                            <div class="col-md-12">
+                                <div class="alert alert-info" v-html="info">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="modal-body container" v-else>
@@ -58,6 +64,12 @@
                         <div class="row" v-if="success">
                             <div class="col-md-12">
                                 <div class="alert alert-success" v-html="success">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" v-if="info">
+                            <div class="col-md-12">
+                                <div class="alert alert-info" v-html="info">
                                 </div>
                             </div>
                         </div>

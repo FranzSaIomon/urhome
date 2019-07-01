@@ -32,6 +32,9 @@
     @yield('header')
 </head>
 <body class="{{ isset($nolanding) ? $nolanding : '' }}" style="overflow-x: hidden !important">
+    <div class="modal fade">
+        <div class="modal-dialog" id="modalAlert"></div>
+    </div>
     @include('includes.navigation')
     <div class="content">
         @yield('content')

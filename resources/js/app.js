@@ -2,7 +2,7 @@ import FormMixin from './components/mixins/FormMixin'
 import PropertyCardsMixin from './components/mixins/PropertyCardsMixin'
 
 /* Vue Objects */
-import { filter, login, property_update, register, simple_search, profile_page, listing_add } from './pages'
+import { filter, login, property_update, register, simple_search, profile_page, listing_add, reactivate } from './pages'
 
 require('./bootstrap')
 
@@ -14,6 +14,10 @@ Vue.component('properties', require('./components/Properties.vue').default);
 Vue.component('multi-select', require('./components/MultiSelect.vue').default);
 Vue.component('input-group', require('./components/InputGroup.vue').default);
 Vue.component('toggle-button', require('./components/ToggleButton.vue').default);
+
+function delay (callback, time) {
+    setTimeout(callback, time);
+}
 
 $.urlParam = function(name){
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -34,6 +38,7 @@ $(document).ready(() => {
     simple_search(FormMixin, PropertyCardsMixin) // call vue creation for simple search segment
     property_update(FormMixin, countries) // call vue creation for property update modal
     listing_add(FormMixin, countries) // call vue creation for property update modal
+    reactivate(FormMixin) // call vue creation for account reactivation
 
     /* Bound the function profile_page to give it access to the generated user information in the page */
     const bound_profile_page = profile_page.bind((typeof userInfo !== 'undefined') ? userInfo : {}) // call vue creation for profile page

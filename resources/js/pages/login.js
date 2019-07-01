@@ -11,6 +11,7 @@ export function login(FormMixin) {
                 loginForm: true,
                 formChanged: false,
                 success: undefined,
+                info: undefined,
             },
             mixins: [FormMixin],
             updated() {
@@ -32,35 +33,72 @@ export function login(FormMixin) {
 
                         this.errors = {}
                         this.success = undefined
+                        this.info = undefined
                         $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden')
                         $("#vue-login button[type=submit]").attr('disabled', 'disabled')
 
                         $.ajax({
-                            url: '/login',
+                            url: "/users/check_deactivated",
                             method: "POST",
                             data: this.values,
                             success: (e) => {
-                                this.success = "<b>Success!</b> You've successfully logged in, please wait to be redirected..."
-                                location.reload()
+                                this.info = e.message
                             },
                             error: (e) => {
-                                $.each(e.responseJSON.errors, (key, val) => Vue.set(this.errors, key, val))
-                                this.success = undefined
-                                if (e.responseJSON.errors["g-recaptcha-response"]) {
-                                    let captcha_elem = $(this.$el).find('.g-recaptcha');
-
-                                    captcha_elem.find('> div')
-                                        .css("border", '1px solid #e3342f')
-
-                                    captcha_elem.find('+.invalid-feedback')
-                                        .css('display', 'block')
-                                        .text(e.responseJSON.errors['g-recaptcha-response'])
+                                if (!e.responseJSON.errors) {
+                                    $.ajax({
+                                        url: '/login',
+                                        method: "POST",
+                                        data: this.values,
+                                        success: (e) => {
+                                            this.success = "<b>Success!</b> You've successfully logged in, please wait to be redirected..."
+                                            location.reload()
+                                        },
+                                    }).always((e) => {
+                                        if (e.responseJSON) {
+                                            if (e.responseJSON.errors)
+                                                this.success = undefined
+                                        
+                                            if (e.responseJSON.errors) {
+                                                $.each(e.responseJSON.errors, (key, val) => Vue.set(this.errors, key, val))
+                                                if (e.responseJSON.errors["g-recaptcha-response"]) {
+                                                    let captcha_elem = $(this.$el).find('.g-recaptcha');
+            
+                                                    captcha_elem.find('> div')
+                                                        .css("border", '1px solid #e3342f')
+            
+                                                    captcha_elem.find('+.invalid-feedback')
+                                                        .css('display', 'block')
+                                                        .text(e.responseJSON.errors['g-recaptcha-response'])
+                                                }
+                                            }
+                                        }
+                                    })
                                 }
                             }
                         }).always((e) => {
                             $("#vue-login button[type=submit] .spinner-border").attr('hidden', 'hidden')
                             $("#vue-login button[type=submit]").removeAttr('disabled')
                             grecaptcha.reset()
+
+                            if (e.responseJSON) {
+                                if (e.responseJSON.errors)
+                                    this.success = undefined
+                            
+                                if (e.responseJSON.errors) {
+                                    $.each(e.responseJSON.errors, (key, val) => Vue.set(this.errors, key, val))
+                                    if (e.responseJSON.errors["g-recaptcha-response"]) {
+                                        let captcha_elem = $(this.$el).find('.g-recaptcha');
+
+                                        captcha_elem.find('> div')
+                                            .css("border", '1px solid #e3342f')
+
+                                        captcha_elem.find('+.invalid-feedback')
+                                            .css('display', 'block')
+                                            .text(e.responseJSON.errors['g-recaptcha-response'])
+                                    }
+                                }
+                            }
                         })
                     }
                 },
@@ -69,6 +107,7 @@ export function login(FormMixin) {
                     Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0])
 
                     this.success = undefined
+                    this.info = undefined
                     $("#vue-login button[type=submit] .spinner-border").removeAttr('hidden')
                     $("#vue-login button[type=submit]").attr('disabled', 'disabled')
 
