@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Property;
 use Illuminate\Database\Eloquent\Model;
 
 class PanoramaRequest extends Model
@@ -15,7 +16,7 @@ class PanoramaRequest extends Model
     public static function request($property) {
         $request = new PanoramaRequest();
         
-        if (count(PanoramaRequest::where('PropertyID', $property)->get())) {
+        if (count(Property::where('id', $property)->get())) {
             $request->PropertyID = $property;
             $request->save();
         }

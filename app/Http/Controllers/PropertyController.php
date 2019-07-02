@@ -7,6 +7,7 @@ use App\Property;
 use App\PropertyAmenity;
 use App\PropertyDocument;
 use App\Status;
+use App\PanoramaRequest;
 use Illuminate\Http\Request;
 use File;
 use Image;
@@ -212,6 +213,11 @@ class PropertyController extends Controller
             $propertyDocument->Files = $files;
             $propertyDocument->PropertyID = $property->id;
             $propertyDocument->save();
+
+            if (isset($request['panorama']) && strcasecmp ($request["panorama"], 'true') == 0) {
+                PanoramaRequest::request($property->id);
+            }
+
             return response()->json(["message" => "You've successfully posted a listing."]);
         } catch(Exception $e) {
             return response()->json(["message" => "Something went wrong while posting your property. Please try again later."],422);
