@@ -325,7 +325,18 @@
                         })
                     </script>
                 @else
-                    <button class="btn btn-sm btn-sm-block btn-xs-block mt-2 btn-primary">Message Seller</button>
+                    <script>
+                        function converse(id) {
+                            $.ajax({
+                                url: '/conversations/converse/' + id,
+                                method: "GET",
+                                success: (e) => {
+                                    window.location = "/users?segment=messages&id=" + id
+                                }
+                            }).always((e) => console.log(e))
+                        }
+                    </script>
+                    <button class="btn btn-sm btn-sm-block btn-xs-block mt-2 btn-primary" onclick="converse({{$property->user->id}})">Say Hi!</button>
                 @endif
             </div>
         </div>

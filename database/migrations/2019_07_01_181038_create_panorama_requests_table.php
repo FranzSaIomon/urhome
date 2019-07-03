@@ -19,7 +19,7 @@ class CreatePanoramaRequestsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('property_documents', function (Blueprint $table) {
+        Schema::table('panorama_requests', function (Blueprint $table) {
             $table->foreign("PropertyID")->references('id')->on('properties');
         });
     }

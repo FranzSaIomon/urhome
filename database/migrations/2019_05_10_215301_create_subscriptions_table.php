@@ -18,7 +18,7 @@ class CreateSubscriptionsTable extends Migration
             $table->string("Name");
             $table->decimal("Price");
             $table->integer("NumberOfUnits");
-            $table->string("Features");
+            $table->json("Features");
             $table->integer("Period");
             $table->timestamps();
         });

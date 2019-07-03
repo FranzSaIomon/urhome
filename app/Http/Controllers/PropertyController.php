@@ -352,6 +352,8 @@ class PropertyController extends Controller
             if (!auth()->check() || (auth()->check() && auth()->user()->id != $property->UserID))
                 return redirect('/');
 
+        $property->Views = $property->Views + 1;
+        $property->save();
         return view('properties.view')->with(['property' => $property, 'title' => $property->Name, 'nolanding' => 'nolanding']);
     }
 }

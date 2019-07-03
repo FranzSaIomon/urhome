@@ -40,10 +40,12 @@
                     @if(Auth::check())
                         <a href="/users" class="dropdown-item">Profile</a>
                         @if(Auth::user()->user_type->id == 2)
-                            @if (Auth::user()->Status == 1)
+                            @if (Auth::user()->Status == 1 && App\BrokerInformation::toBroker(Auth::user()->id)->can(App\Feature::UPLOAD))
                                 <a href="/properties/post" class="dropdown-item">Post a Listing</a>
                             @endif
-                            <a href="/reports" class="dropdown-item">Generate Reports</a>
+                            @if (App\BrokerInformation::toBroker(Auth::user()->id)->can(App\Feature::REPORT))
+                                <a href="/reports" class="dropdown-item">Generate Reports</a>
+                            @endif
                         @endif
                         @if(Auth::user()->user_type->id == 3)
                             <a href="/reports" class="dropdown-item">Generate Reports</a>
@@ -57,7 +59,7 @@
             </li>
         </ul>
     </div>
-    
+
     @if(Session::has('verified') || isset($verified))
         @php
             $alert = "<b>Success!</b> Your email has been verified.";
@@ -72,7 +74,7 @@
 
     @if(isset($alert))
         <div id="popup_alert" class="alert alert-sm alert-success alert-dismissible fade show">
-            <span>{!! $alert !!}</span>
+            <span>{!! $alert !!}</span> 
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>

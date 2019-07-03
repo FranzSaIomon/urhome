@@ -8,7 +8,7 @@ export default {
     methods: {
         getSecurities() {
             return {
-                _token: $(this.$el).find("[name=_token]").val(),
+                _token: $(this.$el).find("[name=_token]").val() || $("[name=csrf-token]").attr("content"),
                 'g-recaptcha-response': $(this.$el).find("[name=g-recaptcha-response]").val()
             }
         }

@@ -1,5 +1,7 @@
 import FormMixin from './components/mixins/FormMixin'
 import PropertyCardsMixin from './components/mixins/PropertyCardsMixin'
+import Echo from "laravel-echo"
+import Pusher from "pusher-js"
 
 /* Vue Objects */
 import { filter, login, property_update, register, simple_search, profile_page, listing_add, reactivate } from './pages'

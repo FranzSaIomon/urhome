@@ -7,6 +7,10 @@
     <script>
         var userInfo = '{{$user}}'
         userInfo = JSON.parse(userInfo.replace(/&quot;/g, "\""))
+        var myInfo = '{{auth()->user()}}'
+        myInfo = JSON.parse(myInfo.replace(/&quot;/g, "\""))
+
+        userInfo.myInfo = myInfo
     </script>
     
     <div class="container-fluid" id="vue-profile-page">
@@ -38,6 +42,13 @@
                     <span class="text-muted">{{$user->LotNo}}, {{$user->Street}}, {{$user->City}}</span>
                     </div>
                 </div>
+                @if(Auth::check() && Auth::user()->id != $user->id)
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" @click.prevent="converse({{$user->id}})" class="btn btn-sm px-4 mt-2 btn-primary">Say Hi!</button>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
         <br/>
@@ -49,7 +60,9 @@
                         <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'profile') ? 'active' : '')" @click.prevent="changeSegment('profile')">View Profile</a>
                         <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'messages') ? 'active' : '')" @click.prevent="changeSegment('messages')">
                             Messages 
-                            <span :class="'badge badge-pill ' + ((current_segment === 'messages') ? 'badge-light' : 'badge-primary')">14</span>
+                            <span :class="'badge badge-pill ' + ((current_segment === 'messages') ? 'badge-light' : 'badge-primary')">
+                                @{{unread_count}}
+                            </span>
                         </a>
                         <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'update') ? 'active' : '')" @click.prevent="changeSegment('update')">Update Account Details</a>
                         <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'c_password') ? 'active' : '')" @click.prevent="changeSegment('c_password')">Change Password</a>
@@ -192,6 +205,53 @@
                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
                                         Change Password
                                     </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-10" v-if="current_segment === 'messages'">
+                    {{Auth::user()->messages}}
+                    <div class="row">
+                        <div class="col-md-3 bg-white rounded w-100 border mb-3" id="chats">
+                            <div class="row" v-for="chathead in chatheads">
+                                <button :class="'col-md-12 btn border-bottom px-1 d-flex align-items-center ' + ((chathead.id == selected_chat) ? 'btn-primary' : '')" @click.prevent="loadConversation(chathead.id, null)">
+                                    <img :src="chathead.User1 == {{Auth::id()}} ? chathead.user2.ProfileImage : chathead.user1.ProfileImage" class="mr-2 rounded-circle bg-white border" style="padding: 3px; max-height: 50px; width: 50px !important   ;">
+                                    <b v-if="chathead.User1 == {{Auth::id()}}">@{{chathead.user2.FirstName}} @{{chathead.user2.LastName}}</b>
+                                    <b v-else>@{{chathead.user1.FirstName}} @{{chathead.user1.LastName}}</b>
+                                </button>
+                            </div>
+                        </div>
+                        <form class="col-md-8" @submit.prevent="send">
+                            @csrf
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div id="messages" ref="messages" class="bg-white rounded w-100 mb-3 border">
+                                        <div class="row no-gutters" v-for="message in messages">
+                                            <div class="col-lg-6">
+                                                <div class="row p-2 mx-2" v-if="message.user_id != {{Auth::id()}}">
+                                                    <div class="col-lg-12 border bg-light rounded">
+                                                        <small class="font-weight-bold">@{{message.user.FirstName}} @{{message.user.LastName}}</small>
+                                                        <p class="pb-2">@{{message.content}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="row p-2 mx-2" v-if="message.user_id == {{Auth::id()}}">
+                                                    <div class="col mw-25 pull-right text-md-left border bg-primary rounded" style="color: white">
+                                                        <small class="font-weight-bold">@{{message.user.FirstName}} @{{message.user.LastName}}</small>
+                                                        <div class="pb-2">@{{message.content}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12" id="text">
+                                    <textarea name="message" id="message" rows="5" placeholder="Talk to each other through here" v-model="message" resize="false" class="form-control"></textarea>
                                 </div>
                             </div>
                         </form>

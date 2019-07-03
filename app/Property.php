@@ -10,7 +10,8 @@ class Property extends Model
         "Name","Description","Developer","LotNo","Street","City",
         "Country","YearBuilt","FloorArea","LotArea","Price",
         "NumberOfBedrooms","NumberOfBathrooms","CapacityOfGarage",
-        "Verified","UserID","ListingTypeID","StatusID","PropertyTypeID"
+        "Verified","UserID","ListingTypeID","StatusID","PropertyTypeID",
+        "Views"
     ];
 
     // Relationships

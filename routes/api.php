@@ -13,10 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::get('/property', 'PropertyController@index');
 Route::get('/property/paginate', 'PropertyController@paginate');
 Route::get('/property/types', 'PropertyTypeController@index');

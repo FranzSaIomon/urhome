@@ -16560,6 +16560,20 @@ readers do not read off random characters that represent icons */
   bottom: 0;
 }
 
+#messages {
+  min-height: 500px;
+  max-height: 500px !important;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#chatheads {
+  min-height: 500px !important;
+  max-height: 500px !important;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 #popup_alert {
   position: absolute;
   top: 125%;

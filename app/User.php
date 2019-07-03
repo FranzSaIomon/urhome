@@ -41,8 +41,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function property() {return $this->hasMany('App\Property', 'UserID', 'id');}
     public function transaction() {return $this->hasOne('App\Transaction', 'UserID', 'id');}
     public function user_document() {return $this->hasOne('App\UserDocument', 'UserID', 'id');}
-    public function user_type() {return $this->hasOne('App\UserType', 'id', 'UserType');} // remember dis pls
-    public function messages() {return $this->hasMany('App\Message', 'Sender', 'UserID');}
+    public function user_type() {return $this->hasOne('App\UserType', 'id', 'UserType');}
     public function log() {return $this->hasMany('App\Log', 'UserID', 'id');}
-    
 }

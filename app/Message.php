@@ -2,31 +2,39 @@
 
 namespace App;
 
-use Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-    protected $fillable = [
-        "Message","TimeSent","TimeReceived","Receiver","Sender"
-    ];
-    
-    /**
-     * The attributes that should be cast to native types.
+     /**
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $casts = [
-        'TimeSent' => 'datetime',
-        'TimeReceived' => 'datetime'
+    protected $fillable = [
+        'conversation_id',
+        'user_id',
+        'content',
+        'read_at'
     ];
 
-    protected $appends = [
-        'SelfMessage'
-    ];
+    /**
+     * Conversation associated to this message.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function conversation()
+    {
+        return $this->belongsTo(Conversation::class);
+    }
 
-    // Relationships
-    public function user() {return $this->belongsToOne('App\User');}
-
-    public function selfMessage() { return $this->id == auth()->user()->id;}
+    /**
+     * Sender of the message.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

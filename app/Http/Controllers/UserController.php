@@ -27,6 +27,8 @@ class UserController extends Controller
             return redirect('/');
     }
 
+    
+
     public function is_deactivated(Request $request) {
         $validated = $this->validate($request, [
             'email' => 'required',

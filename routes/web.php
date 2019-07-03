@@ -11,6 +11,7 @@
 |
 */
 
+
 // Generic Page Routs
 Route::get('/', "PageController@index");
 Route::get('about', 'PageController@about');
@@ -27,6 +28,7 @@ Route::post('properties/post', 'PropertyController@store')->middleware("auth");
 
 // Users
 Route::get('users', 'UserController@index');
+Route::get('users/reports', 'PageController@huh');
 Route::post('users/update/{user}', 'UserController@update');
 Route::post('users/update/email/{user}', 'UserController@update_email');
 Route::post('users/update/password/{user}', 'UserController@update_password');
@@ -36,6 +38,14 @@ Route::get('users/destroy/{user}', 'UserController@destroy');
 Route::post('users/check_deactivated', 'UserController@is_deactivated');
 Route::get('users/reactivate', 'UserController@show_reactivate');
 Route::post('users/reactivate', 'UserController@reactivate');
+
+// Conversations
+Route::get('conversations/unread/count/{user}', 'ConversationController@count_new_conversations');
+Route::get('conversations/converse/{user}', 'ConversationController@create_conversation');
+Route::get('conversations/chatheads', 'ConversationController@get_conversations');
+Route::get('conversations/messages/read/{msg}', 'ConversationController@read');
+Route::get('conversations/messages/{conv}', 'ConversationController@paginate_messages');
+Route::post('conversations/send/{conversation}', 'ConversationController@send');
 
 // Auth Routes
 Auth::routes(["verify" => true]);   
