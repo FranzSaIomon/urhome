@@ -35,7 +35,7 @@ class ConversationController extends Controller
                     $message->save();
                     event(new MessagePosted($message));
                     
-                    Log::log(auth()->id(), "User {" . auth()->id() . "} started a conversation with User {" . $user>id . "}");
+                    Log::log(auth()->id(), "User {" . auth()->id() . "} started a conversation with User {" . $user->id . "}");
                     return response()->json();
                 } else if (isset($check_conversation)) {
                     $receiver = ($check_conversation->User1 == auth()->id()) ? $check_conversation->User2 : $check_conversation->User1;

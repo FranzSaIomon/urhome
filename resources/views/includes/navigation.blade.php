@@ -14,12 +14,6 @@
             <li class="nav-item dropdown {{Request::segment(1) == 'properties' ? 'active' : ''}}">
                 <a href="/properties" class="nav-link">Properties</a>
             </li>
-            <li class="nav-item {{Request::segment(1) == 'about' ? 'active' : ''}}">
-                <a class="nav-link" href="/about">About Us</a>
-            </li>
-            <li class="nav-item {{Request::segment(1) == 'contact' ? 'active' : ''}}">
-                <a class="nav-link" href="/contact">Contact Us</a>
-            </li>
             
         </ul>
         <ul class="navbar-nav"> 
