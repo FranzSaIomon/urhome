@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FeedbackSeeder::class);
         $this->call(SubscriptionSeeder::class);
         $this->call(BrokerInformationSeeder::class);
+        $this->call(LogSeeder::class);
 
         Model::reguard();
     }

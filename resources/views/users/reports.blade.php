@@ -1,15 +1,6 @@
 @extends('layouts.app')
 
 @section('header')
-<style>
-@media print
-{    
-    .no-print, .no-print *
-    {
-        display: none !important;
-    }
-}
-</style>   
 @endsection
 @section('content')
 <div class="container w-50 mx-auto pt-5">
@@ -61,7 +52,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Property Type</th>
-                        <th scope="col">Data</th>
+                        <th scope="col">Listing Count</th>
                     </tr>
                 </thead>
                 <tbody>

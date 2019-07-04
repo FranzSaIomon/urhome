@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Log;
 use App\Feature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -84,6 +85,8 @@ class UserController extends Controller
                     }
 
                     $user->save();
+
+                    Log::log($user->id, "User {" . $user->id . "} reactivated their account");
                     return response()->json(['message' => 'Your account has been reactivated. You may now login again.']);
                 } else {
                     return response()->json(['message' => 'Your account is already activated']);
@@ -162,6 +165,8 @@ class UserController extends Controller
                 $user->Country = $validated["Country"];
                 $user->save();
     
+
+                Log::log($user->id, "User {" . $user->id . "} updated their profile details.");
                 return response()->json(["success" => "<b>Success: </b> You have updated your profile."]);
             } 
 
@@ -184,6 +189,8 @@ class UserController extends Controller
             $user->sendEmailVerificationNotification();
             $user->save();
 
+
+            Log::log($user->id, "User {" . $user->id . "} updated their email address.");
             return response()->json(["success" => "<b>Success: </b> You have changed your email address. Please check your new email address for a verification link."]);
         }
           
@@ -202,6 +209,8 @@ class UserController extends Controller
                 $user->password = Hash::make($validated['new_password']);
                 $user->save();
 
+
+                Log::log($user->id, "User {" . $user->id . "} updated their password.");
                 return response()->json(["success" => "<b>Success: </b> You have changed your password."]);
             }
 
@@ -216,6 +225,8 @@ class UserController extends Controller
         if (auth()->check() && auth()->user()->id == $user->id && !$user->hasVerifiedEmail()) {
             $user->sendEmailVerificationNotification();
 
+
+            Log::log($user->id, "User {" . $user->id . "} requested a verification email.");
             return response()->json(["success" => "<b>Info: </b> A new verification link has been sent to your email address."]);
         }
           
@@ -242,6 +253,8 @@ class UserController extends Controller
         }
 
         $user->save();
+
+        Log::log($user->id, "User {" . $user->id . "} deactivated their account.");
         auth()->logout();
     }
 

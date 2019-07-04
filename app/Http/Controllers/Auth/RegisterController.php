@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Log;
 use App\User;
+use App\UserDocument;
+use App\BrokerInformation;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use File;
+use Image;
 
 class RegisterController extends Controller
 {
@@ -82,6 +87,7 @@ class RegisterController extends Controller
             'City' => $data['City'],
             'Country' => $data['Country'],
             'email' => $data['email'],
+            'UserType' => $data['UserType'],
             'password' => Hash::make($data['password']),
         ]);
     }
@@ -91,35 +97,39 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
         $doc = new UserDocument();
-        $files = []
+        $files = [];
         $imgLoc = 'https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png';
 
-        if ($request->file('image') != null) {
-            $folder = public_path('img/' . $user->id . '/' . $property->id . '/');
-            $imageName = time(). $key . '.' . $value->getClientOriginalExtension();
-            
-            if (!File::exists($folder)) {
-                File::makeDirectory($folder, 0775, true, true);
+        foreach ($request->file() as $key => $value) {
+            if (strpos($key, 'file') !== false && $user->UserType == 2) {
+                $folder = public_path('files/' . $user->id . '/broker_files/');
+                $fileName = time(). $key . '.' . $value->getClientOriginalExtension();
+
+                if (!File::exists($folder)) {
+                    File::makeDirectory($folder, 0775, true, true);
+                }
+                $value->move(public_path('files/' . $user->id . '/broker_files/'), $fileName);
+                array_push($files,'/files/' . $user->id . '/broker_files/' . $fileName);
+            } else {
+                $folder = public_path('img/' . $user->id . '/profile/');
+                $imageName = time(). $key . '.' . $value->getClientOriginalExtension();
+                
+                if (!File::exists($folder)) {
+                    File::makeDirectory($folder, 0775, true, true);
+                }
+                
+                $value->move(public_path('img/' . auth()->id() . '/profile/'), $imageName);
+                $imgLoc = '/img/' . auth()->id() . '/profile/' . $imageName;
             }
-            
-            $location = public_path('img/' . auth()->id() . '/' . $property->id . '/' . $imageName);
-            Image::make($value)->save($location);
-            $imgLoc = '/img/' . auth()->id() . '/' . $property->id . '/' . $imageName;
         }
 
-        if ($user->UserTypeID == 2) { // if broker
-            foreach ($request->file() as $key => $value) {
-                if (strpos($key, 'file') !== false) {
-                    $folder = public_path('files/' . $user->id . '/broker_files/');
-                    $fileName = time(). $key . '.' . $value->getClientOriginalExtension();
+        if ($user->UserType == 2) { // if broker
+            $user->Status = 2; // unverified broker
+            $user->save();
 
-                    if (!File::exists($folder)) {
-                        File::makeDirectory($folder, 0775, true, true);
-                    }
-                    $value->move(public_path('files/' . $user->id . '/broker_files/'), $fileName);
-                    array_push($files,'/files/' . $user->id . '/broker_files/' . $fileName);
-                }
-            }
+            $info = new BrokerInformation();
+            $info->UserID = $user->id;
+            $info->save();
         }
 
         $user->ProfileImage = $imgLoc;
@@ -128,6 +138,8 @@ class RegisterController extends Controller
         $doc->Files = $files;
         $doc->UserID = $user->id;
         $doc->save();
+
+        Log::log($user->id, "User " . $user->id . " registered as a " . ($user->UserType == 2 ? " Broker" : " Client"));
 
         return $this->registered($request, $user)
                             ?: redirect($this->redirectPath());

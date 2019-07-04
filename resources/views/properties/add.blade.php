@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    @if (Auth::check() && Auth::user()->user_type->id == 2 && count(Auth::user()->property) < )
+    @if (Auth::check() && Auth::user()->broker_information && Auth::user()->user_type->id == 2 && count(Auth::user()->property) >= Auth::user()->broker_information->subscription->NumberOfUnits)
+        <div class="container w-50 mx-auto pt-5">
+            <div class="alert alert-info">
+                <b>Info: </b> You have reached the maximum number of allowed posts for your subscription type. Please subscribe to a higher type or purchase additional listings.
+            </div>
+        </div>
     @else
     <form class="container-fluid w-75" id="vue-listing-add" @submit.prevent="post">
             @csrf
@@ -121,7 +126,7 @@
                 </div>
                 <div class="col-md-7">
                     <div class="row"  v-for="file in files">
-                        <div class="alert w-100 alert-sm alert-dismissible alert-light mb-2">
+                        <div class="alert border w-100 alert-sm alert-dismissible alert-light mb-2">
                             <span>@{{file.name}}</span>
                             <button type="button" class="close" @click.prevent="remove_file(file)">
                                 <span aria-hidden="true">&times;</span>

@@ -45115,6 +45115,7 @@ function register(FormMixin, countries) {
         countries: countries,
         errors: {},
         success: null,
+        info: null,
         values: {
           FirstName: "Miguel",
           LastName: "Quiambao",
@@ -45135,11 +45136,32 @@ function register(FormMixin, countries) {
         }, {
           name: 'Broker',
           value: 2
-        }]
+        }],
+        files: [],
+        image: undefined
+      },
+      updated: function updated() {
+        var _this = this;
+
+        if (this.values.UserType && this.values.UserType[0] == this.toggles[1].value) {
+          $("input[name=BrokerFiles]").change(function (e) {
+            _this.add_file($("input[name=BrokerFiles]")[0].files);
+          });
+        } else {
+          $("input[name=BrokerFiles]").off('change');
+        }
+      },
+      mounted: function mounted() {
+        var _this2 = this;
+
+        $("input[name=ProfilePhoto]").change(function (e) {
+          _this2.image = $("input[name=ProfilePhoto]")[0].files[0];
+          $("label[for=ProfilePhoto]").text(_this2.image.name);
+        });
       },
       methods: {
         register: function register() {
-          var _this = this;
+          var _this3 = this;
 
           var securities = this.getSecurities();
           Vue.set(this.values, Object.keys(securities)[0], Object.values(securities)[0]);
@@ -45148,25 +45170,82 @@ function register(FormMixin, countries) {
           value_copy.UserType = this.values.UserType[0];
           this.errors = {};
           this.success = null;
+          this.info = null;
+          var fmd = new FormData();
+          $.each(value_copy, function (key, obj) {
+            fmd.append(key, obj);
+          });
+          $.each(this.files, function (i, o) {
+            fmd.append('file' + i, o.file);
+          });
+          fmd.append('image', this.image);
           $("#vue-register button[type=submit] .spinner-border").removeAttr('hidden');
           $("#vue-register button[type=submit]").attr("disabled", "disabled");
           $.ajax({
             url: '/register',
             method: 'POST',
-            data: value_copy,
+            data: fmd,
+            headers: {
+              'X-CSRF-Token': this.values._token
+            },
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
             success: function success(e) {
-              _this.success = "<b>Success!</b> You've successfully registered, please check your email for the verification link";
+              _this3.success = "<b>Success!</b> You've successfully registered, please check your email for the verification link";
             },
             error: function error(e) {
               $.each(e.responseJSON.errors, function (key, val) {
-                return Vue.set(_this.errors, key, val);
+                return Vue.set(_this3.errors, key, val);
               });
-              _this.success = null;
+              _this3.success = null;
             }
           }).always(function (e) {
             $("#vue-register button[type=submit] .spinner-border").attr('hidden', 'hidden');
             $("#vue-register button[type=submit]").removeAttr("disabled");
           });
+        },
+        add_file: function add_file(files) {
+          var _this4 = this;
+
+          if (this.files.length < 3) {
+            $.each(files, function (i, file) {
+              if (!_this4.lookup_file(_this4.files, file)) {
+                var f = {
+                  id: _this4.files.length,
+                  file: file,
+                  name: file.name
+                };
+
+                if (_this4.files.length < 3 && f.file.size <= 5000000) {
+                  _this4.files.push(f);
+                } else {
+                  if (f.file.size > 5000000) _this4.info = "<b>Info: </b> You can only upload images with sizes up to 5MB.";else _this4.info = "<b>Info: </b> You have reached the maximum number of allowable property files. Please remove some to add a new files.";
+                  return false;
+                }
+              }
+            });
+          } else {
+            this.info = "<b>Info: </b> You have reached the maximum number of allowable property images. Please remove some to add a new image.";
+          }
+        },
+        remove_file: function remove_file(file) {
+          this.info = undefined;
+          var i = 0;
+
+          for (i = 0; i < this.files.length; i++) {
+            if (this.files[i].id == file.id) break;
+          }
+
+          this.files.splice(i, 1);
+        },
+        lookup_file: function lookup_file(array, file) {
+          $.each(array, function (i, o) {
+            if (o.file === file) {
+              return true;
+            }
+          });
+          return false;
         }
       }
     });

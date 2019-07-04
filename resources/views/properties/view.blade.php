@@ -32,7 +32,6 @@
 
         function viewPanorama(link) {
             let pano = $(link).attr('data-pano')
-            let title = $(link).attr('data-title')
             $("#panorama").empty()
 
             pannellum.viewer('panorama', {
@@ -41,7 +40,6 @@
             })
 
             $("#panomodal").modal("show")
-            $("#panotitle").text(title)
         }
     </script>
 
@@ -224,7 +222,7 @@
     </div>
 
     @php
-        $panoCount = count($property->property_document->Images['3d']);
+        $panoCount = ($property->property_document != null) ? count($property->property_document->Images['3d']) : 0;
     @endphp
     @if ($panoCount > 0)
         <div class="modal fade" id="panomodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -240,7 +238,7 @@
                 <div class="modal-footer justify-content-between">
                     <div class="owl-carousel owl-theme" id="images">
                         @foreach ($property->property_document->Images['3d'] as $key => $value)
-                            <img class="owl-lazy d-block p-1" data-src="/{{$value}}" alt="" height="70px" width="auto" onclick="viewPanorama(this)" data-pano="{{$value}}" data-title="{{$key}}">
+                            <img class="owl-lazy d-block p-1" data-src="{{$value}}" alt="" height="70px" width="auto" onclick="viewPanorama(this)" data-pano="{{$value}}" data-title="{{$key}}">
                         @endforeach
                     </div>
                 </div>
@@ -325,18 +323,21 @@
                         })
                     </script>
                 @else
+                    @if (Auth::check())
                     <script>
-                        function converse(id) {
-                            $.ajax({
-                                url: '/conversations/converse/' + id,
-                                method: "GET",
-                                success: (e) => {
-                                    window.location = "/users?segment=messages&id=" + id
-                                }
-                            }).always((e) => console.log(e))
-                        }
-                    </script>
-                    <button class="btn btn-sm btn-sm-block btn-xs-block mt-2 btn-primary" onclick="converse({{$property->user->id}})">Say Hi!</button>
+                            function converse(id) {
+                                $.ajax({
+                                    url: '/conversations/converse/' + id,
+                                    method: "GET",
+                                    success: (e) => {
+                                        window.location = "/users?segment=messages&id=" + id
+                                    }
+                                }).always((e) => console.log(e))
+                            }
+                        </script>
+                        <button class="btn btn-sm btn-sm-block btn-xs-block mt-2 btn-primary" onclick="converse({{$property->user->id}})">Say Hi!</button>
+                    
+                    @endif
                 @endif
             </div>
         </div>
@@ -349,12 +350,25 @@
         </div>
         <div class="row">
             <div class="col-md-12 text-muted">
+                <h6><b>Feedback: </b> {{$property->feedback_value() == null ? 0.0 : $property->feedback_value()}} / 5.0</h6>
+                @if (Auth::check() && !Auth::user()->has_voted($property->id))
+                    <b class="mr-2">Leave a Feedback: </b> 
+                    <a href="/properties/vote/1/{{$property->id}}" class="btn btn-sm btn-primary">Vote 1</a>
+                    <a href="/properties/vote/2/{{$property->id}}" class="btn btn-sm btn-primary">Vote 2</a>
+                    <a href="/properties/vote/3/{{$property->id}}" class="btn btn-sm btn-primary">Vote 3</a>
+                    <a href="/properties/vote/4/{{$property->id}}" class="btn btn-sm btn-primary">Vote 4</a>
+                    <a href="/properties/vote/5/{{$property->id}}" class="btn btn-sm btn-primary">Vote 5</a>
+                @endif
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12 text-muted">
                 <h6><b>Price: &#8369; {{number_format($property->Price, 2)}}</b></h6>
                 <p>
                     {{$property->Description}}
                 </p>
                 @if ($panoCount > 0)
-                    <a href="#" onclick="viewPanorama(this)" data-title="{{array_keys($property->property_document->Images["3d"])[0]}}" data-pano="{{$property->property_document->Images['3d'][array_keys($property->property_document->Images['3d'])[0]]}}">View 3D Panoramas</a>
+                    <a href="#" onclick="viewPanorama(this)" data-pano="{{$property->property_document->Images['3d'][array_keys($property->property_document->Images['3d'])[0]]}}">View 3D Panoramas</a>
                 @endif
             </div>
         </div>

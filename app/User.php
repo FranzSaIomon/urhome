@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Feedback;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -37,6 +38,13 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function has_voted($property_id) {
+        if (Feedback::where("UserID", $this->id)->where("PropertyID", $property_id)->first() == null)
+            return false;
+        
+        return true;
+    }
 
     public function property() {return $this->hasMany('App\Property', 'UserID', 'id');}
     public function transaction() {return $this->hasOne('App\Transaction', 'UserID', 'id');}

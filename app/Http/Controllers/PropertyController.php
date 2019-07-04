@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Log;
 use App\Property;
+use App\Feedback;
 use App\PropertyAmenity;
 use App\PropertyDocument;
 use App\Status;
@@ -215,9 +217,12 @@ class PropertyController extends Controller
             $propertyDocument->save();
 
             if (isset($request['panorama']) && strcasecmp ($request["panorama"], 'true') == 0) {
-                PanoramaRequest::request($property->id);
+                $panorama = PanoramaRequest::request($property->id);
+                
+                Log::log(auth()->id(), "User {" . auth()->id() . "} requested for a Panorama {" . $panorama->id . "}");
             }
 
+            Log::log(auth()->id(), "User {" . auth()->id() . "} posted a Property {" . $property->id . "}");
             return response()->json(["message" => "You've successfully posted a listing."]);
         } catch(Exception $e) {
             return response()->json(["message" => "Something went wrong while posting your property. Please try again later."],422);
@@ -225,15 +230,19 @@ class PropertyController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Property  $property
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Property $property)
+    public function vote(Request $request, int $vote, Property $property)
     {
-        //
+        $user = auth()->user();
+
+        if (Feedback::where('UserID', $user->id)->where("PropertyID", $property->id)->first() == null) {
+            $feedback = new Feedback();
+            $feedback->UserID = $user->id;
+            $feedback->PropertyID = $property->id;
+            $feedback->Feedback = ($vote < 1) ? 1 : ($vote > 5) ? 5 : $vote;
+            $feedback->save();
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -333,6 +342,8 @@ class PropertyController extends Controller
                 ->delete();
 
         $property->save();
+        
+        Log::log(auth()->id(), "User {" . auth()->id() . "} updated a Property {" . $property->id . "}");
         return $removed;
     }
 

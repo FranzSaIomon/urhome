@@ -20,6 +20,7 @@ Route::get('contact', 'PageController@contact');
 // Properties
 Route::get('properties', 'PageController@search');
 Route::get('properties/post', 'PropertyController@create')->middleware("auth");
+Route::get('properties/vote/{vote}/{property}', 'PropertyController@vote')->middleware("auth");
 Route::get('properties/search', 'PageController@search');
 Route::get('properties/view/{property}', 'PropertyController@view');
 Route::get('properties/update/{property}', 'PropertyController@update')->middleware("auth");
@@ -53,3 +54,15 @@ Route::get('login', 'PageController@invalid')->name("login");
 Route::get('register', 'PageController@invalid');
 Route::get('password/reset', 'PageController@invalid');
 Route::get('logout', 'PageController@logout');
+
+// Admin Routes
+Route::post('admin/requests/{property}', 'AdminController@add_panorama');
+Route::get('admin/brokers', 'AdminController@brokers');
+Route::get('admin/brokers/verify/{user}', 'AdminController@verify');
+Route::get('admin/logs', 'AdminController@logs');
+Route::get('admin/logs/download', 'AdminController@logs_download');
+Route::get('admin/advertisements', 'AdminController@advertisements');
+Route::get('admin/advertisements/remove/{ad}', 'AdminController@remove_advertisement');
+Route::get('admin/requests', 'AdminController@requests');
+Route::get('admin/reports', 'AdminController@reports');
+Route::post('admin/advertisements', 'AdminController@add_advertisements');

@@ -11,7 +11,7 @@
                 </button>
             </div>
 
-            <form method="POST" id="vue-register">
+            <form method="POST" id="vue-register" @submit.prevent="register">
                 @csrf
                 <div class="modal-body">
                     <div class="container">
@@ -48,7 +48,7 @@
 
                                 <div class="row mt-3" v-if="values['UserType'][0] == 2">
                                     <div class="col-md-12">
-                                        <input-group :errors="errors" id="BrokerFiles" name="BrokerFiles" label="Broker Verification Files" type="image" placeholder="Choose Files" help="<b>Note: </b> You can only submit 3 verification files. Maximum size: 5mb." multiple></input-group>
+                                        <input-group :errors="errors" id="BrokerFiles" name="BrokerFiles" label="Broker Verification Files" type="image" placeholder="Choose Files" help="<b>Note: </b> You can only submit 3 verification files. Maximum size: 5mb." accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" multiple required></input-group>
                                     </div>
                                 </div>
                             </div>
@@ -98,9 +98,24 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-3"  v-for="file in files">
+                                <div class="alert alert-light border w-100 alert-sm alert-dismissible mb-2">
+                                    <span style="text-overflow: ellipsis">@{{file.name}}</span>
+                                    <button type="button" class="close" @click.prevent="remove_file(file)">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row" v-if="success">
                             <div class="col-md-12">
                                 <div class="alert alert-success" v-html="success"></div>
+                            </div>
+                        </div>
+                        <div class="row" v-if="info">
+                            <div class="col-12">
+                                <div class="alert alert-info" v-html="info"></div>
                             </div>
                         </div>
                     </div>    
@@ -122,7 +137,7 @@
                                     <button type="button" class="btn btn-block btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                                 <div class="col-md-6">
-                                    <button type="submit" class="btn btn-block btn-primary" @click.prevent="register">
+                                    <button type="submit" class="btn btn-block btn-primary">
                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" hidden></span>
                                         Sign Up
                                     </button>
