@@ -16,13 +16,14 @@ class CreateFeedbackTable extends Migration
         Schema::create('feedback', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('PropertyID')->unsigned();
-            $table->bigInteger('Votes')->unsigned()->default(0);
+            $table->bigInteger('UserID')->unsigned();
             $table->bigInteger('Feedback')->unsigned()->default(0);
             $table->timestamps();
         });
 
         Schema::table('feedback', function (Blueprint $table) {
             $table->foreign("PropertyID")->references('id')->on('properties');
+            $table->foreign("UserID")->references('id')->on('users');
         });
     }
 

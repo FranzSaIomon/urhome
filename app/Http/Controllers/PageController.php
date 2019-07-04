@@ -14,8 +14,4 @@ class PageController extends Controller
     public function login() { return view('auth.login'); }
 
     public function invalid() { return redirect('/'); }
-
-    public function huh(Request $request) {
-        return 1;
-    }
 }

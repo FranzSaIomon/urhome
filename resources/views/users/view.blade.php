@@ -16,7 +16,7 @@
     <div class="container-fluid" id="vue-profile-page">
         <div class="row">
             <div class="col-md-3 text-center">
-                <img src="{{$user->ProfileImage}}" class="img-thumbnail rounded-circle"/>
+                <img src="{{$user->ProfileImage}}" class="img-thumbnail rounded-circle" style="height: 200px !important; width: 200px !important;"/>
             </div>
             <div class="col-md">
                 <div class="row">

@@ -90,6 +90,44 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
+        $doc = new UserDocument();
+        $files = []
+        $imgLoc = 'https://www.winhelponline.com/blog/wp-content/uploads/2017/12/user.png';
+
+        if ($request->file('image') != null) {
+            $folder = public_path('img/' . $user->id . '/' . $property->id . '/');
+            $imageName = time(). $key . '.' . $value->getClientOriginalExtension();
+            
+            if (!File::exists($folder)) {
+                File::makeDirectory($folder, 0775, true, true);
+            }
+            
+            $location = public_path('img/' . auth()->id() . '/' . $property->id . '/' . $imageName);
+            Image::make($value)->save($location);
+            $imgLoc = '/img/' . auth()->id() . '/' . $property->id . '/' . $imageName;
+        }
+
+        if ($user->UserTypeID == 2) { // if broker
+            foreach ($request->file() as $key => $value) {
+                if (strpos($key, 'file') !== false) {
+                    $folder = public_path('files/' . $user->id . '/broker_files/');
+                    $fileName = time(). $key . '.' . $value->getClientOriginalExtension();
+
+                    if (!File::exists($folder)) {
+                        File::makeDirectory($folder, 0775, true, true);
+                    }
+                    $value->move(public_path('files/' . $user->id . '/broker_files/'), $fileName);
+                    array_push($files,'/files/' . $user->id . '/broker_files/' . $fileName);
+                }
+            }
+        }
+
+        $user->ProfileImage = $imgLoc;
+        $user->save();
+
+        $doc->Files = $files;
+        $doc->UserID = $user->id;
+        $doc->save();
 
         return $this->registered($request, $user)
                             ?: redirect($this->redirectPath());

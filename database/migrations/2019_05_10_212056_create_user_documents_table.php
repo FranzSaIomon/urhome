@@ -15,7 +15,6 @@ class CreateUserDocumentsTable extends Migration
     {
         Schema::create('user_documents', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->json("Images")->nullable();
             $table->json("Files")->nullable();
             $table->bigInteger("UserID")->unsigned();
             $table->timestamps();

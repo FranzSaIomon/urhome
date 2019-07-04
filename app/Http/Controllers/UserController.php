@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Feature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -242,5 +243,12 @@ class UserController extends Controller
 
         $user->save();
         auth()->logout();
+    }
+
+    public function reports(Request $request) {
+        if (auth()->check() && auth()->user()->broker_information->can(Feature::REPORT))
+            return view('users.reports')->with(['nolanding' => 'nolanding']);
+        else
+            return redirect('/');
     }
 }

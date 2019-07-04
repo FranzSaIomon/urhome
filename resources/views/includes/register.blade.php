@@ -19,6 +19,11 @@
                             <div class="col-md-5">
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <input-group :errors="errors" id="ProfilePhoto" name="ProfilePhoto" label="Profile Photo" type="image" placeholder="Choose File" help="Maximum image size: 3MB."></input-group>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <input-group :errors="errors" :values="values" name="email" type="email" id="regEmail" label="Email Address" placeholder="example@example.com" required></input-group>
                                     </div>
                                 </div>
@@ -38,6 +43,12 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <toggle-button ref="purpose" :default-value=1 label="Account Type" :errors="errors" :values="values" type="joined" :toggles="toggles" name="UserType" id="userType" required></toggle-button>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3" v-if="values['UserType'][0] == 2">
+                                    <div class="col-md-12">
+                                        <input-group :errors="errors" id="BrokerFiles" name="BrokerFiles" label="Broker Verification Files" type="image" placeholder="Choose Files" help="<b>Note: </b> You can only submit 3 verification files. Maximum size: 5mb." multiple></input-group>
                                     </div>
                                 </div>
                             </div>

@@ -7,12 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Feedback extends Model
 {
     protected $fillable = [
-        "PropertyID","Votes","Feedback"
+        "PropertyID","UserID","Feedback"
     ];
 
     public function property() {return $this->belongsTo('App\Property', 'PropertyID', 'id');}
-
-    public function get_feedback() {
-        return $this->Feedback / $this->Votes;
-    }
+    public function user() {return $this->belongsTo('App\User', 'UserID', 'id');}
 }

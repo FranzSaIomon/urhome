@@ -7,11 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class UserDocument extends Model
 {
     protected $fillable = [
-        "Images", "Files", "UserID"
+        "Files", "UserID"
     ];
 
     protected $casts = [
-        "Images" => "array",
         "Files" => "array"
     ];
 

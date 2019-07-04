@@ -28,7 +28,7 @@ Route::post('properties/post', 'PropertyController@store')->middleware("auth");
 
 // Users
 Route::get('users', 'UserController@index');
-Route::get('users/reports', 'PageController@huh');
+Route::get('users/reports', 'UserController@reports');
 Route::post('users/update/{user}', 'UserController@update');
 Route::post('users/update/email/{user}', 'UserController@update_email');
 Route::post('users/update/password/{user}', 'UserController@update_password');

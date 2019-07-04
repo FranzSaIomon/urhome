@@ -27,9 +27,10 @@ class BrokerInformation extends Model
     }
 
     public function can($i) {
-        for ($j = 0; $j < count($this->subscription->Features); $j++)
-            if ($this->subscription->Features[$j] == $i)
-                return true;
+        if ($this->subscription != null)
+            for ($j = 0; $j < count($this->subscription->Features); $j++)
+                if ($this->subscription->Features[$j] == $i)
+                    return true;
 
         return false;
     }

@@ -43,4 +43,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function user_document() {return $this->hasOne('App\UserDocument', 'UserID', 'id');}
     public function user_type() {return $this->hasOne('App\UserType', 'id', 'UserType');}
     public function log() {return $this->hasMany('App\Log', 'UserID', 'id');}
+    public function feedback() {return $this->hasMany('App\Feedback', 'UserID', 'id');}
+    public function broker_information() {return $this->hasOne('App\BrokerInformation', 'UserID', 'id');}
 }

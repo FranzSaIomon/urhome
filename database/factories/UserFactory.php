@@ -33,7 +33,7 @@ $factory->define(User::class, function (Faker $faker) {
         'City' => $faker->city(),
         'Country' => $faker->country(),
         'Status' => rand(0, 1),
-        'ProfileImage' => 'https://via.placeholder.com/150',
+        'ProfileImage' => $faker->imageUrl(),
         'UserType' => rand(1, 3) // foreign key
     ];
 });
