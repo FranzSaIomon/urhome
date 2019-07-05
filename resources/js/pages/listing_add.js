@@ -6,7 +6,7 @@ export function listing_add(FormMixin, countries) {
             data: {
                 countries,
                 errors: {},
-                values: {"Name":"Test Property Name","Developer":"Test Developer","Description":"Test","LotNo":"12","Street":"Street 23","City":"Manila","Country":"AM","PropertyTypeID":1,"ListingTypeID":1,"Price":"1500","YearBuilt":2019,"FloorArea":"123","LotArea":"123","NumberOfBedrooms":"12","NumberOfBathrooms":"12","CapacityOfGarage":"3","Amenities":["7","2","3"]},
+                values: {},
                 defaults: {},
                 options: [],
                 property_types: [],

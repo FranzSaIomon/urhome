@@ -9,17 +9,6 @@ export function register(FormMixin, countries) {
                 success: null,
                 info: null,
                 values: {
-                    FirstName: "Miguel",
-                    LastName: "Quiambao",
-                    BirthDate: "1998-03-31",
-                    ContactNo: "09178510533",
-                    LotNo: 123,
-                    Street: "N. Domingo",
-                    City: "San Juan",
-                    Country: "PH",
-                    email: "miguelalfonsoquiambao@gmail.com",
-                    password: "password",
-                    password_confirmation: "password",
                     UserType: [1],
                 },
                 toggles: [{
