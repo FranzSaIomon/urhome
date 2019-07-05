@@ -16,7 +16,7 @@
         @csrf
         <div class="col-md">
             <div class="form-group">
-                <label for="Title" class="form-label">Advertisement Title:</label>
+                <label for="Title" class="form-label">Advertisement Link:</label>
                 <input type="text" name="Title" id="Title" placeholder="Enter advertisement title here..." class="form-control" required>
             </div>
         </div>
@@ -64,18 +64,18 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th scope="col">Title</th>
+                            <th scope="col">Ad ID</th>
                             <th scope="col">Link</th>
-                            <th scope="col">Added On</th>
+                            <th scope="col">Image Link</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($advertisements as $advertisement)
                         <tr>
-                            <th scope="row">{{$advertisement->Title}}</th>
+                            <th scope="row">{{$advertisement->id}}</th>
+                            <td scope="col">{{$advertisement->Title}}</td>
                             <td scope="col"><a href="{{$advertisement->Image}}" target="_blank">{{$advertisement->Image}}</a></td>
-                            <td scope="col">{{$advertisement->created_at}}</td>
                             <td scope="col"><a href="/admin/advertisements/remove/{{$advertisement->id}}" class="btn btn-danger">Remove Ad</a></td>
                         </tr>
                         @endforeach

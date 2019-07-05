@@ -11,6 +11,7 @@
             array_push($user_id, $broker->UserID);
         
         $ptypes = App\PropertyType::all();
+        $i = 0;
     @endphp
     <div class="container mt-5">
         <div class="row">
@@ -20,6 +21,23 @@
         </div>
 
         @foreach ($ptypes as $ptype)
+            @if($i != 0 && $i % 2 == 0)
+                @php
+                    $ad = App\Advertisement::inRandomOrder()->first();
+                @endphp
+
+                <div class="row">
+                    <div class="col text-center">
+                        <a href="{{$ad->Title}}">
+                            <img src="{{$ad->Image}}" alt="{{$ad->Title}}" style="height: 70px; width: auto;">
+                        </a>
+                    </div>
+                </div>
+            @endif
+
+            @php
+                $i++;    
+            @endphp
             <div class="row">
                 <div class="col-md-12">
                     <h5 class="mt-5">{{$ptype->PropertyType}}</h5>

@@ -79,10 +79,10 @@ class PaymentController extends Controller
             dd($ex);
             if (\Config::get('app.debug')) {
             \Session::put('error', 'Connection timeout');
-                            return Redirect::route('paywithpaypal');
+                            return Redirect::route('subscription');
             } else {
             \Session::put('error', 'Some error occur, sorry for inconvenient');
-                            return Redirect::route('paywithpaypal');
+                            return Redirect::route('subscription');
             }
         }
         foreach ($payment->getLinks() as $link) {
@@ -100,7 +100,7 @@ class PaymentController extends Controller
                     return Redirect::away($redirect_url);
         }
         \Session::put('error', 'Unknown error occurred');
-                return Redirect::route('paywithpaypal');
+                return Redirect::route('subscription');
     }
 
     public function getPaymentStatus()

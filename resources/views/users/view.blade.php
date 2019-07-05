@@ -64,9 +64,11 @@
                                 @{{unread_count}}
                             </span>
                         </a>
-                        <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'update') ? 'active' : '')" @click.prevent="changeSegment('update')">Update Account Details</a>
                         <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'c_password') ? 'active' : '')" @click.prevent="changeSegment('c_password')">Change Password</a>
-                        <button href="#" class="list-group-item list-group-item-action list-group-item-danger" data-content="Clicking yes will deactivate your account and archive all your listings." data-toggle="confirmation" data-singleton="true" ref="deactivate">Deactivate Account</button>
+                        @if(Auth::check() && Auth::user()->user_type->id != 3)
+                        <a href="#" :class="'list-group-item list-group-item-action ' + ((current_segment === 'update') ? 'active' : '')" @click.prevent="changeSegment('update')">Update Account Details</a>
+                            <button href="#" class="list-group-item list-group-item-action list-group-item-danger" data-content="Clicking yes will deactivate your account and archive all your listings." data-toggle="confirmation" data-singleton="true" ref="deactivate">Deactivate Account</button>
+                        @endif
                     </div>
                 </div>
             </div>

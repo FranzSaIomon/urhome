@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top" id="nav">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="/">
         <img src="{{ asset('img/icons/logo.svg') }}" alt=""> 
         <span><b>urhome</b></span>
     </a>
@@ -14,6 +14,9 @@
             <li class="nav-item dropdown {{Request::segment(1) == 'properties' ? 'active' : ''}}">
                 <a href="/properties" class="nav-link">Properties</a>
             </li>
+            <li class="nav-item dropdown {{Request::segment(1) == 'contact' ? 'active' : ''}}">
+                    <a href="/contact" class="nav-link">Contact Us</a>
+                </li>
             
         </ul>
         <ul class="navbar-nav"> 
@@ -32,9 +35,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="accountDropdown">
                     @if(Auth::check())
-                        @if(Auth::user()->user_type->id != 3)
-                            <a href="/users" class="dropdown-item">Profile</a>
-                        @endif
+                        <a href="/users" class="dropdown-item">Profile</a>
                         @if(Auth::user()->user_type->id == 2)
                             @if (Auth::user()->Status == 1 && Auth::user()->broker_information->can(App\Feature::UPLOAD))
                                 <a href="/properties/post" class="dropdown-item">Post a Listing</a>
@@ -71,6 +72,33 @@
             $alert = Session::get('status');
         @endphp
     @endif
+
+    @if (Auth::check())
+        @php
+        $user = Auth::user();
+
+        if ($user->broker_information != null) {
+            if($user->broker_information->is_expired()) {
+                $user->broker_information->SubscriptionID = null;
+                $user->broker_information->SubscriptionStart = null;
+                $user->broker_information->save();
+            }
+        }
+
+        @endphp
+    @endif
+
+    @if (Auth::check())
+        @if(Auth::user()->user_type->id == 2 && AUth::user()->broker_information->SubscriptionID == null)
+        <div id="popup_alert" class="alert alert-sm alert-success alert-dismissible fade show">
+            <span>You have not subscribed to any broker package yet. Please <a href='/paypal'>click here</a> to purchase a package</span> 
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        @endif
+    @endif
+    
 
     @if(isset($alert))
         <div id="popup_alert" class="alert alert-sm alert-success alert-dismissible fade show">
