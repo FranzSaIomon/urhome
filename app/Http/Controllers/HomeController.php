@@ -11,9 +11,20 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
+    public function __construct() {
+        if (auth()->check()) {
+            $user = auth()->user();
+
+            if ($user->broker_information != null) {
+                if($user->broker_information->is_expired()) {
+                    $user->broker_information->SubscriptionID = null;
+                    $user->broker_information->SubscriptionStart = null;
+                    $user->broker_information->save();
+
+                    return redirect('/paypal')->with(['title' => 'Subscription', 'nolanding' => 'nolanding', 'message' => true]);
+                }
+            }
+        }
     }
 
     /**

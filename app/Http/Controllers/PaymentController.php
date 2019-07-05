@@ -28,6 +28,7 @@ class PaymentController extends Controller
 {
     private $_api_context;
 
+    
     public function index() {
         return view('users.subscription')->with(['title' => 'Subscription', 'nolanding' => 'nolanding']);
     }

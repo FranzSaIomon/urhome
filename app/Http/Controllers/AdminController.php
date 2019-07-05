@@ -13,8 +13,10 @@ use App\PropertyDocument;
 use App\PanoramaRequest;
 use Illuminate\Http\Request;
 
+use App\BrokerInformation;
 class AdminController extends Controller
 {
+
     public function check_admin(Request $request) {
         if (!(auth()->check() && auth()->user()->UserType == 3))
             return redirect('/');

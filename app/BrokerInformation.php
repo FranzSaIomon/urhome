@@ -20,10 +20,12 @@ class BrokerInformation extends Model
 
             if ($current > $time) {
                 return true;
+            } else {
+                return false;
             }
         }
         
-        return false;
+        return true;
     }
 
     public function can($i) {

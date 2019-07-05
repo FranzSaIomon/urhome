@@ -255,6 +255,7 @@ export function profile_page(FormMixin, PropertyCardsMixin, countries) {
                 }
               }
             }).always((e) => {
+              console.log(e)
               this.loading = false
             })
           }

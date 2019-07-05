@@ -8,6 +8,7 @@ use App\Property;
 use App\Feedback;
 use App\PropertyAmenity;
 use App\PropertyDocument;
+use App\BrokerInformation;
 use App\Status;
 use App\PanoramaRequest;
 use Illuminate\Http\Request;
@@ -20,6 +21,22 @@ class PropertyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct() {
+        if (auth()->check()) {
+            $user = auth()->user();
+
+            if ($user->broker_information != null) {
+                if($user->broker_information->is_expired()) {
+                    $user->broker_information->SubscriptionID = null;
+                    $user->broker_information->SubscriptionStart = null;
+                    $user->broker_information->save();
+
+                    return redirect('/paypal')->with(['title' => 'Subscription', 'nolanding' => 'nolanding', 'message' => true]);
+                }
+            }
+        }
+    }
 
     public function index(Request $request)
     {
