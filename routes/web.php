@@ -28,7 +28,7 @@ Route::get('properties/toggleArchive/{property}', 'PropertyController@toggleArch
 Route::post('properties/post', 'PropertyController@store')->middleware("auth");
 
 // Users
-Route::get('users', 'UserController@index');
+Route::get('users', 'UserController@index')->name("profile");
 Route::get('users/reports', 'UserController@reports');
 Route::post('users/update/{user}', 'UserController@update');
 Route::post('users/update/email/{user}', 'UserController@update_email');
@@ -66,3 +66,9 @@ Route::get('admin/advertisements/remove/{ad}', 'AdminController@remove_advertise
 Route::get('admin/requests', 'AdminController@requests');
 Route::get('admin/reports', 'AdminController@reports');
 Route::post('admin/advertisements', 'AdminController@add_advertisements');
+
+// Paypal
+//payment form
+Route::get('paypal', 'PaymentController@index')->name("subscription");
+Route::post('paypal/subscribe/{subscription}', 'PaymentController@payWithpaypal');
+Route::get('paypal/status', 'PaymentController@getPaymentStatus')->name("status");
