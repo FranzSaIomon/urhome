@@ -26,13 +26,15 @@
                     $ad = App\Advertisement::inRandomOrder()->first();
                 @endphp
 
-                <div class="row">
-                    <div class="col text-center">
-                        <a href="{{$ad->Title}}">
-                            <img src="{{$ad->Image}}" alt="{{$ad->Title}}" style="height: 70px; width: auto;">
-                        </a>
+                @if (isset($ad))
+                    <div class="row">
+                        <div class="col text-center">
+                            <a href="{{$ad->Title}}">
+                                <img src="{{$ad->Image}}" alt="{{$ad->Title}}" style="height: 70px; width: auto;">
+                            </a>
+                        </div>
                     </div>
-                </div>
+                @endif
             @endif
 
             @php

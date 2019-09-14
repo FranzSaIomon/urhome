@@ -238,7 +238,7 @@
                 <div class="modal-footer justify-content-between">
                     <div class="owl-carousel owl-theme" id="images">
                         @foreach ($property->property_document->Images['3d'] as $key => $value)
-                            <img class="owl-lazy d-block p-1" data-src="{{$value}}" alt="" height="70px" width="auto" onclick="viewPanorama(this)" data-pano="{{$value}}" data-title="{{$key}}">
+                            <img class="owl-lazy d-block p-1" data-src="/{{$value}}" alt="" height="70px" width="auto" onclick="viewPanorama(this)" data-pano="{{$value}}" data-title="{{$key}}">
                         @endforeach
                     </div>
                 </div>

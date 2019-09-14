@@ -36,15 +36,17 @@
                 <div class="dropdown-menu" aria-labelledby="accountDropdown">
                     @if(Auth::check())
                         <a href="/users" class="dropdown-item">Profile</a>
-                        @if(Auth::user()->user_type->id == 2)
-                            @if (Auth::user()->Status == 1 && Auth::user()->broker_information->can(App\Feature::UPLOAD))
+                        @if(Auth::user()->user_type->id == 2 && Auth::user()->Status == 1)
+                            {{-- broker --}}
+                            @if (Auth::user()->broker_information->can(App\Feature::UPLOAD))
                                 <a href="/properties/post" class="dropdown-item">Post a Listing</a>
                             @endif
                             @if (Auth::user()->broker_information->can(App\Feature::REPORT))
                                 <a href="/users/reports" class="dropdown-item">Generate Reports</a>
                             @endif
                         @endif
-                        @if(Auth::user()->user_type->id == 3)
+                        @if(Auth::user()->user_type->id == 3) 
+                            {{-- admin --}}
                             <a href="/admin/advertisements" class="dropdown-item">Advertisements</a>
                             <a href="/admin/brokers" class="dropdown-item">Broker Requests</a>
                             <a href="/admin/logs" class="dropdown-item">Audit Logs</a>

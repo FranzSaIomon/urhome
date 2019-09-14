@@ -10,7 +10,7 @@ $factory->define(Feedback::class, function (Faker $faker) {
     static $random;
 
     return [
-        'Votes' => ($random = rand(0, 500)) ? $random : 0,
+        'UserID' => ($random = rand(0, 100)) ? $random : 0,
         'Feedback' => $random * rand(0, 5),
         'PropertyID' => $num++,
     ];

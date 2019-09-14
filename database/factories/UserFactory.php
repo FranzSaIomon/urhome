@@ -17,9 +17,20 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(User::class, function (Faker $faker) {
+    static $num = 1;
+
+    $username = $faker->unique()->safeEmail;
+    
+    if ($num == 3) {
+        $username = "admin@admin.com";
+    } else if ($num == 2){
+        $username = "broker@broker.com";
+    } else if ($num == 1){
+        $username = "client@client.com";  
+    } 
 
     return [
-        'email' => $faker->unique()->safeEmail,
+        'email' => $username,
         'email_verified_at' => now(),
         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         'remember_token' => Str::random(10),
@@ -32,8 +43,8 @@ $factory->define(User::class, function (Faker $faker) {
         'Street' => $faker->streetName(),
         'City' => $faker->city(),
         'Country' => $faker->country(),
-        'Status' => rand(0, 1),
+        'Status' => $num < 4 ? 1 : rand(0, 1),
         'ProfileImage' => $faker->imageUrl(),
-        'UserType' => rand(1, 3) // foreign key
+        'UserType' => (++$num > 4) ? rand(1,3) : $num - 1 // foreign key
     ];
 });
